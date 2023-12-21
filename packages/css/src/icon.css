@@ -1,0 +1,9 @@
+.tl-icon {
+  block-size: var(--tl-size, 24px);
+  fill: none;
+  inline-size: var(--tl-size, 24px);
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}

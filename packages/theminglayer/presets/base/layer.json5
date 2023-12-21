@@ -1,0 +1,16 @@
+{
+  layer: {
+    deep: { $value: '-50' },
+    footer: { $value: '50' },
+    header: { $value: '100' },
+    popover: { $value: '150' },
+    tooltip: { $value: '200' },
+    offscreen_menu_underlay: { $value: '249' },
+    offscreen_menu: { $value: '250' },
+    dialog_underlay: { $value: '299' },
+    dialog: { $value: '300' },
+    loading: { $value: '350' },
+    toast: { $value: '400' },
+    skip_nav: { $value: '1000' },
+  },
+}

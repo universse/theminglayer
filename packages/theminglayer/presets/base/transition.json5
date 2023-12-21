@@ -1,0 +1,47 @@
+{
+  duration: {
+    instant: {
+      $value: '0',
+    },
+    fast: {
+      $value: '150ms',
+    },
+    standard: {
+      $value: '300ms',
+    },
+    slow: {
+      $value: '450ms',
+    },
+  },
+  timing_function: {
+    linear: {
+      $value: [0, 0, 1, 1],
+    },
+    ease: {
+      $value: [0.25, 0.1, 0.25, 1],
+    },
+    ease_in: {
+      $value: [0.42, 0, 1, 1],
+    },
+    ease_out: {
+      $value: [0, 0, 0.58, 1],
+    },
+    ease_in_out: {
+      $value: [0.42, 0, 0.58, 1],
+    },
+  },
+  transition_property: {
+    colors: {
+      $value: 'color, background-color, border-color, text-decoration-color, fill, stroke',
+    },
+  },
+  transition: {
+    colors: {
+      $value: {
+        transition_property: '{transition_property.colors}',
+        duration: '{duration.standard}',
+        timing_function: '{timing_function.linear}',
+      },
+    },
+  },
+}

@@ -1,0 +1,18 @@
+{
+  opacity: {
+    pending: {
+      $value: '0.75',
+    },
+    disabled: {
+      $value: '0.4',
+    },
+    high_contrast: {
+      pending: {
+        $value: '0.95',
+      },
+      disabled: {
+        $value: '0.9',
+      },
+    },
+  },
+}

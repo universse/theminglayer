@@ -1,0 +1,24 @@
+name: Install
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - uses: actions/setup-node@v4
+      with:
+        cache: pnpm
+        node-version: 20
+        # registry-url: https://registry.npmjs.org
+
+    # - name: Setup Git User
+    #   shell: bash
+    #   run: |
+    #     git config --global user.email "phuoc317049@gmail.com"
+    #     git config --global user.name "universse"
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm i --ignore-scripts

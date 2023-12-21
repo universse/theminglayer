@@ -1,0 +1,202 @@
+{
+  font_family: {
+    sans: {
+      $value: [
+        '"Mona Sans"',
+        'ui-sans-serif',
+        'system-ui',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        '"Noto Sans"',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+        '"Noto Color Emoji"',
+      ],
+    },
+    serif: {
+      $value: [
+        'ui-serif',
+        'Georgia',
+        'Cambria',
+        '"Times New Roman"',
+        'Times',
+        'serif',
+      ],
+    },
+    mono: {
+      $value: [
+        'ui-monospace',
+        'SFMono-Regular',
+        'Menlo',
+        'Monaco',
+        'Consolas',
+        '"Liberation Mono"',
+        '"Courier New"',
+        'monospace',
+      ],
+    },
+  },
+  font_size: {
+    base: { $value: '16px' },
+    xs: { $value: '12px' },
+    sm: { $value: '14px' },
+    md: { $value: '{font_size.base}' },
+    lg: { $value: '20px' },
+    xl: { $value: '32px' },
+    '2xl': { $value: '48px' },
+    '3xl': { $value: '60px' },
+    '4xl': { $value: '96px' },
+  },
+  font_weight: {
+    thin: { $value: 'Thin' },
+    extralight: { $value: 'Extra Light' },
+    light: { $value: 'Light' },
+    normal: { $value: 'Normal' },
+    medium: { $value: 'Medium' },
+    semibold: { $value: 'Semi Bold' },
+    bold: { $value: 'Bold' },
+    extrabold: { $value: 'Extra Bold' },
+    black: { $value: 'Black' },
+    extrablack: { $value: 'Extra Black' },
+  },
+  leading: {
+    heading: { $value: '1.2' },
+    body: { $value: '1.5' },
+  },
+  tracking: {
+    small_caps: { $value: '2%' },
+    all_caps: { $value: '1.5%' },
+    xs: { $value: '1%' },
+    sm: { $value: '0.5%' },
+    md: { $value: '0%' },
+    lg: { $value: '-0.5%' },
+    xl: { $value: '-1%' },
+    '2xl': { $value: '-2%' },
+    '3xl': { $value: '-2.5%' },
+    '4xl': { $value: '-3%' },
+  },
+  typography: {
+    h1: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.4xl}',
+        font_weight: '{font_weight.normal}',
+        leading: '{leading.heading}',
+        tracking: '{tracking.4xl}',
+      },
+    },
+    h2: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.3xl}',
+        font_weight: '{font_weight.semibold}',
+        leading: '{leading.heading}',
+        tracking: '{tracking.3xl}',
+      },
+    },
+    h3: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.2xl}',
+        font_weight: '{font_weight.normal}',
+        leading: '{leading.heading}',
+        tracking: '{tracking.2xl}',
+      },
+    },
+    h4: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.xl}',
+        font_weight: '{font_weight.semibold}',
+        leading: '{leading.heading}',
+        tracking: '{tracking.xl}',
+      },
+    },
+    h5: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.lg}',
+        font_weight: '{font_weight.semibold}',
+        leading: '{leading.body}',
+        tracking: '{tracking.lg}',
+      },
+    },
+    h6: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.lg}',
+        font_weight: '{font_weight.normal}',
+        leading: '{leading.body}',
+        tracking: '{tracking.lg}',
+      },
+    },
+    subtitle1: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.md}',
+        font_weight: '{font_weight.semibold}',
+        leading: '{leading.body}',
+        tracking: '{tracking.md}',
+      },
+    },
+    body1: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.md}',
+        font_weight: '{font_weight.normal}',
+        leading: '{leading.body}',
+        tracking: '{tracking.md}',
+      },
+    },
+    subtitle2: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.sm}',
+        font_weight: '{font_weight.semibold}',
+        leading: '{leading.body}',
+        tracking: '{tracking.sm}',
+      },
+    },
+    body2: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.sm}',
+        font_weight: '{font_weight.normal}',
+        leading: '{leading.body}',
+        tracking: '{tracking.sm}',
+      },
+    },
+    caption: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.xs}',
+        font_weight: '{font_weight.semibold}',
+        leading: '{leading.body}',
+        tracking: '{tracking.xs}',
+      },
+    },
+    button: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.md}',
+        font_weight: '{font_weight.bold}',
+        leading: '{leading.body}',
+        tracking: '{tracking.sm}',
+      },
+    },
+    code: {
+      $value: {
+        font_family: '{font_family.mono}',
+        font_size: '{font_size.md}',
+        font_weight: '{font_weight.normal}',
+        leading: '{leading.body}',
+      },
+    },
+  },
+}

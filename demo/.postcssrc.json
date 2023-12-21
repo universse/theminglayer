@@ -1,0 +1,19 @@
+{
+  "plugins": {
+    "theminglayer/postcss": {
+      "outputVariable": false,
+      "safelist": ["var(--tl-border-color-primary)"]
+    },
+    "tailwindcss/nesting": {},
+    "tailwindcss": {},
+    "postcss-preset-env": {
+      "features": {
+        "custom-selectors": true,
+        "custom-properties": false,
+        "is-pseudo-class": false,
+        "logical-properties-and-values": false,
+        "nesting-rules": false
+      }
+    }
+  }
+}

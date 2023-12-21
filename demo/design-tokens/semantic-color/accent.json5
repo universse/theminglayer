@@ -1,0 +1,128 @@
+{
+  text_color: {
+    accent: {
+      primary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.blue.11}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.blue_dark.11}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'high' },
+            $value: '{color.blue.12}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'high' },
+            $value: '{color.blue_dark.12}',
+          },
+        ],
+      },
+    },
+  },
+  background_color: {
+    accent: {
+      element: {
+        static: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.blue.9}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.blue_dark.9}',
+            },
+          ],
+        },
+        hover: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.blue.10}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.blue_dark.10}',
+            },
+          ],
+        },
+        active: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.blue.11}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.blue_dark.11}',
+            },
+          ],
+        },
+        inverted: {
+          hover: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.blue.4}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.blue_dark.4}',
+              },
+            ],
+          },
+          active: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.blue.5}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.blue_dark.5}',
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  border_color: {
+    accent: {
+      static: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.blue.7}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.blue_dark.7}',
+          },
+        ],
+      },
+      hover: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.blue.8}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.blue_dark.8}',
+          },
+        ],
+      },
+    },
+  },
+}

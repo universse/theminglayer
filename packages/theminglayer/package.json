@@ -1,0 +1,105 @@
+{
+  "name": "theminglayer",
+  "version": "0.0.1",
+  "description": "ThemingLayer",
+  "keywords": [
+    "design tokens",
+    "theming",
+    "css",
+    "variables",
+    "custom properties",
+    "postcss",
+    "tailwind"
+  ],
+  "homepage": "https://www.theminglayer.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/universse/theminglayer.git",
+    "directory": "packages/theminglayer"
+  },
+  "license": "See LICENSE.md",
+  "author": "Si Phuoc <phuoc317049@gmail.com>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./postcss": {
+      "types": "./dist/postcss.d.ts",
+      "import": "./dist/postcss.js",
+      "require": "./postcss.cjs",
+      "default": "./dist/postcss.js"
+    },
+    "./plugins": {
+      "types": "./dist/plugins.d.ts",
+      "import": "./dist/plugins.js",
+      "default": "./dist/plugins.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "theminglayer": "./cli.js"
+  },
+  "files": [
+    "dist",
+    "presets",
+    "cli.js",
+    "postcss.js"
+  ],
+  "scripts": {
+    "build": "run-s \"build:lib --clean\" build:postcss",
+    "build:lib": "tsup src/index.ts src/cli.ts src/plugins.ts --format=esm --dts --external esbuild",
+    "build:postcss": "tsup-node src/postcss.ts --format=esm,cjs --dts",
+    "dev": "run-p \"build:lib --watch\" \"build:postcss --watch\"",
+    "test": "glob -c \"node --import tsx --test\" \"__tests__/**/*.test.ts\"",
+    "test:watch": "glob -c \"node --import tsx --test --watch\" \"__tests__/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@csstools/selector-specificity": "3.0.1",
+    "cac": "6.7.14",
+    "chalk": "5.3.0",
+    "chokidar": "3.5.3",
+    "culori": "3.3.0",
+    "destr": "2.0.2",
+    "esbuild": "0.19.10",
+    "fast-glob": "3.3.2",
+    "fastest-levenshtein": "1.0.16",
+    "glob-parent": "6.0.2",
+    "js-yaml": "4.1.0",
+    "json5": "2.2.3",
+    "klona": "2.0.6",
+    "lodash.groupby": "4.6.0",
+    "lodash.setwith": "4.3.2",
+    "micromatch": "4.0.5",
+    "postcss": "8.4.32",
+    "postcss-selector-parser": "6.0.13",
+    "ts-pattern": "5.0.6",
+    "valibot": "0.24.1",
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "@theminglayer/design-tokens": "workspace:*",
+    "@types/glob-parent": "5.1.3",
+    "@types/js-yaml": "4.0.9",
+    "@types/lodash.groupby": "4.6.9",
+    "@types/lodash.setwith": "4.3.9",
+    "@types/micromatch": "4.0.6",
+    "@types/node": "20.10.5",
+    "@types/object-hash": "3.0.6",
+    "@types/prettier": "3.0.0",
+    "glob": "10.3.10",
+    "npm-run-all": "4.1.5",
+    "pattycake": "0.0.2",
+    "tailwindcss": "3.4.0",
+    "tsup": "8.0.1",
+    "tsx": "4.7.0",
+    "type-fest": "4.8.3",
+    "typescript": "5.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

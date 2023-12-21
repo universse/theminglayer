@@ -1,0 +1,230 @@
+{
+  text_color: {
+    warning: {
+      primary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.amber.11}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.amber_dark.11}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.amber.12}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.amber_dark.12}',
+          },
+        ],
+      },
+      secondary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.amber.9}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.amber_dark.9}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.amber.10}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.amber_dark.10}',
+          },
+        ],
+      },
+      muted: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.amber.7}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.amber_dark.7}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.amber.8}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.amber_dark.8}',
+          },
+        ],
+      },
+      inverted: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.amber.2}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.amber_dark.2}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.amber.1}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.amber_dark.1}',
+          },
+        ],
+      },
+    },
+  },
+  background_color: {
+    warning: {
+      element: {
+        static: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.amber.9}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.amber_dark.9}',
+            },
+          ],
+        },
+        hover: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.amber.10}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.amber_dark.10}',
+            },
+          ],
+        },
+        active: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.amber.11}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.amber_dark.11}',
+            },
+          ],
+        },
+        inverted: {
+          static: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.amber.3}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.amber_dark.3}',
+              },
+            ],
+          },
+          hover: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.amber.4}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.amber_dark.4}',
+              },
+            ],
+          },
+          active: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.amber.5}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.amber_dark.5}',
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  border_color: {
+    warning: {
+      decorative: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.amber.6}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.amber_dark.6}',
+          },
+        ],
+      },
+      static: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.amber.7}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.amber_dark.7}',
+          },
+        ],
+      },
+      hover: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.amber.8}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.amber_dark.8}',
+          },
+        ],
+      },
+    },
+  },
+}

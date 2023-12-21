@@ -1,0 +1,40 @@
+{
+  box_shadow: {
+    default: {
+      $value: [
+        { color: 'rgb(0 0 0 / 13%)', y: '3px', blur: '6px' },
+        { color: 'rgb(0 0 0 / 16%)', y: '1px', blur: '2px' },
+      ],
+    },
+    hover: {
+      $value: [
+        { color: 'rgb(0 0 0 / 17%)', y: '5px', blur: '12px' },
+        { color: 'rgb(0 0 0 / 14%)', y: '1.5px', blur: '3px' },
+      ],
+    },
+    navigation: {
+      $value: [
+        { color: 'rgb(0 0 0 / 21%)', y: '7px', blur: '18px' },
+        { color: 'rgb(0 0 0 / 12%)', y: '2px', blur: '4px' },
+      ],
+    },
+    popover: {
+      $value: [
+        { color: 'rgb(0 0 0 / 25%)', y: '9px', blur: '24px' },
+        { color: 'rgb(0 0 0 / 10%)', y: '2.5px', blur: '5px' },
+      ],
+    },
+    dragged: {
+      $value: [
+        { color: 'rgb(0 0 0 / 29%)', y: '11px', blur: '30px' },
+        { color: 'rgb(0 0 0 / 8%)', y: '3px', blur: '6px' },
+      ],
+    },
+    dialog: {
+      $value: [
+        { color: 'rgb(0 0 0 / 41%)', y: '17px', blur: '48px' },
+        { color: 'rgb(0 0 0 / 2%)', y: '4.5px', blur: '9px' },
+      ],
+    },
+  },
+}

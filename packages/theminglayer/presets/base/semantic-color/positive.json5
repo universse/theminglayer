@@ -1,0 +1,230 @@
+{
+  text_color: {
+    positive: {
+      primary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.green.11}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.green_dark.11}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.green.12}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.green_dark.12}',
+          },
+        ],
+      },
+      secondary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.green.9}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.green_dark.9}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.green.10}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.green_dark.10}',
+          },
+        ],
+      },
+      muted: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.green.7}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.green_dark.7}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.green.8}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.green_dark.8}',
+          },
+        ],
+      },
+      inverted: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.green.2}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.green_dark.2}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.green.1}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.green_dark.1}',
+          },
+        ],
+      },
+    },
+  },
+  background_color: {
+    positive: {
+      element: {
+        static: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.green.9}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.green_dark.9}',
+            },
+          ],
+        },
+        hover: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.green.10}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.green_dark.10}',
+            },
+          ],
+        },
+        active: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.green.11}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.green_dark.11}',
+            },
+          ],
+        },
+        inverted: {
+          static: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.green.3}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.green_dark.3}',
+              },
+            ],
+          },
+          hover: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.green.4}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.green_dark.4}',
+              },
+            ],
+          },
+          active: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.green.5}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.green_dark.5}',
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  border_color: {
+    positive: {
+      decorative: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.green.6}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.green_dark.6}',
+          },
+        ],
+      },
+      static: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.green.7}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.green_dark.7}',
+          },
+        ],
+      },
+      hover: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.green.8}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.green_dark.8}',
+          },
+        ],
+      },
+    },
+  },
+}

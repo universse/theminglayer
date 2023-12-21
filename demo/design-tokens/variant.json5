@@ -1,0 +1,16 @@
+{
+  variant: {
+    hover: {
+      $value: ':is(:hover, [data-hovered])',
+    },
+    active: {
+      $value: ':is(:active, [data-pressed])',
+    },
+    focus: {
+      $value: ':focus',
+    },
+    disabled: {
+      $value: ':is(:disabled, [disabled], [aria-disabled="true"])',
+    },
+  },
+}

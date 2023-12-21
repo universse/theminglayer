@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/eslintrc.json",
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true,
+    "worker": true
+  },
+  "plugins": ["markdown"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "./internals/base-rules"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.mdx"],
+      "extends": [
+        "plugin:react/recommended",
+        "plugin:prettier/recommended",
+        "plugin:mdx/recommended"
+      ],
+      "settings": {
+        "mdx/code-blocks": true
+      }
+    },
+    {
+      "files": ["*.md"],
+      "processor": "markdown/markdown"
+    }
+  ]
+}

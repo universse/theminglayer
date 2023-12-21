@@ -1,0 +1,17 @@
+node_modules
+
+dist
+build
+public
+
+.next
+.svelte
+**/functions/\[\[path\]\].js
+
+*.min.js
+*.generated.*
+
+*.frag
+*.vert
+
+pnpm-lock.yaml

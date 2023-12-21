@@ -1,0 +1,230 @@
+{
+  text_color: {
+    critical: {
+      primary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.crimson.11}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.crimson_dark.11}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.crimson.12}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.crimson_dark.12}',
+          },
+        ],
+      },
+      secondary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.crimson.9}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.crimson_dark.9}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.crimson.10}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.crimson_dark.10}',
+          },
+        ],
+      },
+      muted: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.crimson.7}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.crimson_dark.7}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.crimson.8}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.crimson_dark.8}',
+          },
+        ],
+      },
+      inverted: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.crimson.2}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.crimson_dark.2}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'more' },
+            $value: '{color.crimson.1}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'more' },
+            $value: '{color.crimson_dark.1}',
+          },
+        ],
+      },
+    },
+  },
+  background_color: {
+    critical: {
+      element: {
+        static: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.crimson.9}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.crimson_dark.9}',
+            },
+          ],
+        },
+        hover: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.crimson.10}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.crimson_dark.10}',
+            },
+          ],
+        },
+        active: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.crimson.11}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.crimson_dark.11}',
+            },
+          ],
+        },
+        inverted: {
+          static: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.crimson.3}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.crimson_dark.3}',
+              },
+            ],
+          },
+          hover: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.crimson.4}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.crimson_dark.4}',
+              },
+            ],
+          },
+          active: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.crimson.5}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.crimson_dark.5}',
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  border_color: {
+    critical: {
+      decorative: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.crimson.6}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.crimson_dark.6}',
+          },
+        ],
+      },
+      static: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.crimson.7}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.crimson_dark.7}',
+          },
+        ],
+      },
+      hover: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.crimson.8}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.crimson_dark.8}',
+          },
+        ],
+      },
+    },
+  },
+}

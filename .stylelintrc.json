@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/stylelintrc.json",
+  "extends": ["stylelint-config-standard"],
+  "plugins": ["stylelint-order", "stylelint-use-logical"],
+  "rules": {
+    "at-rule-no-unknown": [true, { "ignoreAtRules": ["config", "tailwind"] }],
+    "function-no-unknown": [true, { "ignoreFunctions": ["theme"] }],
+    "order/order": ["custom-properties", "declarations"],
+    "order/properties-alphabetical-order": true
+  }
+}

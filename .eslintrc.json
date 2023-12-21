@@ -1,0 +1,4 @@
+{
+  "extends": ["@theminglayer/eslint-config/core"],
+  "root": true
+}

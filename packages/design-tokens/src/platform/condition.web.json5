@@ -1,0 +1,197 @@
+{
+  condition: {
+    color_scheme: {
+      light: {
+        $value: '[data-color-scheme="light"]',
+      },
+      dark: {
+        $value: '[data-color-scheme="dark"]',
+      },
+    },
+
+    color_correction: {
+      none: {
+        $value: '[data-color-correction="none"]',
+      },
+      red_green: {
+        $value: '[data-color-correction="red-green"]',
+      },
+      blue_yellow: {
+        $value: '[data-color-correction="blue-yellow"]',
+      },
+      monochrome: {
+        $value: '[data-color-correction="monochrome"]',
+      },
+    },
+
+    contrast: {
+      standard: {
+        $value: '[data-contrast="standard"]',
+      },
+      less: {
+        $value: '[data-contrast="less"]',
+      },
+      more: {
+        $value: '[data-contrast="more"]',
+      },
+    },
+
+    density: {
+      compact: {
+        $value: '[data-density="compact"]',
+      },
+      standard: {
+        $value: '[data-density="standard"]',
+      },
+      spacious: {
+        $value: '[data-density="spacious"]',
+      },
+    },
+
+    motion: {
+      standard: {
+        $value: '[data-motion="standard"]',
+      },
+      reduced: {
+        $value: '[data-motion="reduced"]',
+      },
+    },
+
+    color_scheme_pref: {
+      light: {
+        $value: '@media (prefers-color-scheme: light)',
+      },
+      dark: {
+        $value: '@media (prefers-color-scheme: dark)',
+      },
+    },
+
+    contrast_pref: {
+      less: {
+        $value: '@media (prefers-contrast: less)',
+      },
+      more: {
+        $value: '@media (prefers-contrast: more) and (forced-colors: none)',
+      },
+      forced: {
+        $value: '@media (forced-colors: active)',
+      },
+    },
+
+    motion_pref: {
+      none: {
+        $value: '@media (prefers-reduced-motion: no-preference)',
+      },
+      reduced: {
+        $value: '@media (prefers-reduced-motion: reduce)',
+      },
+    },
+
+    inverted_colors: {
+      inactive: {
+        $value: '@media (inverted-colors: none)',
+      },
+      active: {
+        $value: '@media (inverted-colors: inverted)',
+      },
+    },
+
+    media_type: {
+      screen: {
+        $value: '@media screen',
+      },
+      print: {
+        $value: '@media print',
+      },
+    },
+
+    viewport_width: {
+      below_xs: {
+        $value: '@media (width < {screen.width.xs})',
+      },
+      max_xs: {
+        $value: '@media (width <= {screen.width.xs})',
+      },
+      min_xs: {
+        $value: '@media (width >= {screen.width.xs})',
+      },
+      above_xs: {
+        $value: '@media (width > {screen.width.xs})',
+      },
+
+      below_sm: {
+        $value: '@media (width < {screen.width.sm})',
+      },
+      max_sm: {
+        $value: '@media (width <= {screen.width.sm})',
+      },
+      min_sm: {
+        $value: '@media (width >= {screen.width.sm})',
+      },
+      above_sm: {
+        $value: '@media (width > {screen.width.sm})',
+      },
+
+      below_md: {
+        $value: '@media (width < {screen.width.md})',
+      },
+      max_md: {
+        $value: '@media (width <= {screen.width.md})',
+      },
+      min_md: {
+        $value: '@media (width >= {screen.width.md})',
+      },
+      above_md: {
+        $value: '@media (width > {screen.width.md})',
+      },
+
+      below_lg: {
+        $value: '@media (width < {screen.width.lg})',
+      },
+      max_lg: {
+        $value: '@media (width <= {screen.width.lg})',
+      },
+      min_lg: {
+        $value: '@media (width >= {screen.width.lg})',
+      },
+      above_lg: {
+        $value: '@media (width > {screen.width.lg})',
+      },
+
+      below_xl: {
+        $value: '@media (width < {screen.width.xl})',
+      },
+      max_xl: {
+        $value: '@media (width <= {screen.width.xl})',
+      },
+      min_xl: {
+        $value: '@media (width >= {screen.width.xl})',
+      },
+      above_xl: {
+        $value: '@media (width > {screen.width.xl})',
+      },
+
+      below_2xl: {
+        $value: '@media (width < {screen.width.2xl})',
+      },
+      max_2xl: {
+        $value: '@media (width <= {screen.width.2xl})',
+      },
+      min_2xl: {
+        $value: '@media (width >= {screen.width.2xl})',
+      },
+      above_2xl: {
+        $value: '@media (width > {screen.width.2xl})',
+      },
+    },
+
+    orientation: {
+      portrait: {
+        $value: '@media (orientation: portrait)',
+      },
+      landscape: {
+        $value: '@media (orientation: landscape)',
+      },
+    },
+  },
+}

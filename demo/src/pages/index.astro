@@ -1,0 +1,111 @@
+---
+import { Button as ButtonReact } from '~/components/button/Button'
+import Button from '~/components/button/Button.astro'
+
+import '~/styles/global.css'
+---
+
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta
+      name='viewport'
+      content='width=device-width,initial-scale=1,shrink-to-fit=no'
+    />
+    <title>ThemingLayer Demo</title>
+  </head>
+  <body>
+    <main
+      class='tl-bg-surface tl-typography-body tl-min-h-screen tl-px-96 tl-py-32 tl-text-neutral-primary'
+    >
+      <details open=''>
+        <summary>Theme</summary>
+        <div>
+          <div class='tl-mt-8'>
+            <div>Color scheme:</div>
+            <input
+              type='radio'
+              id='color-scheme-light'
+              name='color-scheme'
+              value='light'
+              checked
+            />
+            <label class='tl-ml-4' for='color-scheme-light'>Light</label><br />
+            <input
+              type='radio'
+              id='color-scheme-dark'
+              name='color-scheme'
+              value='dark'
+            />
+            <label class='tl-ml-4' for='color-scheme-dark'>Dark</label><br />
+          </div>
+          <div class='tl-mt-8'>
+            <div>Contrast:</div>
+            <input
+              type='radio'
+              id='contrast-standard'
+              name='contrast'
+              value='standard'
+              checked
+            />
+            <label class='tl-ml-4' for='contrast-standard'>Standard</label><br
+            />
+            <input
+              type='radio'
+              id='contrast-high'
+              name='contrast'
+              value='high'
+            />
+            <label class='tl-ml-4' for='contrast-high'>High</label><br />
+          </div>
+        </div>
+      </details>
+
+      <div class='tl-mt-32'>HTML buttons</div>
+      <div class='tl-mt-16 tl-flex tl-gap-12'>
+        <Button intent='primary' visual='filled'>Button</Button>
+        <Button intent='primary' visual='outline'>Button</Button>
+      </div>
+      <div class='tl-mt-24 tl-flex tl-gap-12'>
+        <Button intent='critical' visual='filled'>Button</Button>
+        <Button intent='critical' visual='outline'>Button</Button>
+      </div>
+      <div class='tl-mt-32'>React buttons</div>
+      <div class='tl-mt-16 tl-flex tl-gap-12'>
+        <ButtonReact intent='primary' visual='filled'>Button</ButtonReact>
+        <ButtonReact intent='primary' visual='outline'>Button</ButtonReact>
+      </div>
+      <div class='tl-mt-24 tl-flex tl-gap-12'>
+        <ButtonReact intent='critical' visual='filled'>Button</ButtonReact>
+        <ButtonReact intent='critical' visual='outline'>Button</ButtonReact>
+      </div>
+      <div class='tl-mt-32'>
+        <div>
+          Also, use Chrome DevTools and turn on CSS forced-colors: active
+          emulation to see the component in forced contrast mode.
+        </div>
+      </div>
+    </main>
+    <script>
+      if (!CSS.supports('selector(:has(> *))')) {
+        ;[...document.querySelectorAll('input[type="radio"]')].forEach(
+          (radio) => {
+            if (radio.checked) {
+              document.documentElement.setAttribute(
+                `data-${radio.name}`,
+                radio.value
+              )
+            }
+
+            radio.addEventListener('change', (e) => {
+              document.documentElement.setAttribute(
+                `data-${e.target.name}`,
+                e.target.value
+              )
+            })
+          }
+        )
+      }
+    </script>
+  </body>
+</html>

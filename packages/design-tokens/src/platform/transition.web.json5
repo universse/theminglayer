@@ -1,0 +1,17 @@
+{
+  transition_property: {
+    colors: {
+      $value: 'color, background-color, border-color, text-decoration-color, fill, stroke',
+    },
+  },
+  transition: {
+    colors: {
+      $value: {
+        transition_property: '{transition_property.colors}',
+        duration: '{duration.standard}',
+        timing_function: '{timing_function.linear}',
+        delay: '0',
+      },
+    },
+  },
+}

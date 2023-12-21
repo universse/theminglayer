@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/eslintrc.json",
+  "rules": {
+    "react/jsx-sort-props": [
+      "error",
+      {
+        "ignoreCase": true,
+        "reservedFirst": true
+      }
+    ],
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": "(useIsomorphicLayoutEffect)"
+      }
+    ]
+  }
+}
