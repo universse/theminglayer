@@ -1,0 +1,16 @@
+{
+  background_color: {
+    surface: {
+      $set: [
+        {
+          $condition: { color_scheme: 'light' },
+          $value: '{color.white}',
+        },
+        {
+          $condition: { color_scheme: 'dark' },
+          $value: '{color.gray_dark.2}',
+        },
+      ],
+    },
+  },
+}

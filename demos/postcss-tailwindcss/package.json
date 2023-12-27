@@ -1,11 +1,11 @@
 {
-  "name": "demo",
+  "name": "demo-postcss-tailwindcss",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "run-p dev:**",
     "dev:site": "astro dev --port 3000",
-    "dev:tl": "pnpm build:tl -w",
+    "dev:tl": "theminglayer build -w",
     "build": "run-s build:tl build:site",
     "build:site": "astro build",
     "build:tl": "theminglayer build"

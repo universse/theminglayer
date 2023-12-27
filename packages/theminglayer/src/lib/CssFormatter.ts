@@ -53,11 +53,11 @@ export class CssFormatter {
 
   tokenToCssRules(token: Token, { outputVariable = false } = {}) {
     const {
-      $category: category,
+      $type: type,
       $extensions: { component },
     } = token
 
-    if (category === `condition`) {
+    if (type === `condition`) {
       const resolvedValue = this.resolveReferencesToCss(token.$value)
       const atRule = resolvedValue.match(/@(\S*)/)?.[1]
 
@@ -103,7 +103,7 @@ export class CssFormatter {
       }
     }
 
-    if (category === `variant`) {
+    if (type === `variant`) {
       let resolvedValue = this.resolveReferencesToCss(token.$value).trim()
 
       if (resolvedValue.startsWith(`:is(`) && resolvedValue.endsWith(`)`)) {
@@ -126,7 +126,7 @@ export class CssFormatter {
       ]
     }
 
-    if (category === `typography`) {
+    if (type === `typography`) {
       return this.typographyTokenToCssRules(
         { token, originalToken: token },
         { outputVariable }

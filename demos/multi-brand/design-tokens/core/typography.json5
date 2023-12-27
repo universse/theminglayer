@@ -1,0 +1,57 @@
+{
+  font_family: {
+    sans: {
+      $value: [
+        'ui-sans-serif',
+        'system-ui',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        '"Noto Sans"',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+        '"Noto Color Emoji"',
+      ],
+    },
+  },
+  font_size: {
+    base: { $value: '16px' },
+    md: { $value: '{font_size.base}' },
+  },
+  font_weight: {
+    normal: { $value: 'Normal' },
+    bold: { $value: 'Bold' },
+  },
+  leading: {
+    body: { $value: '1.5' },
+  },
+  tracking: {
+    text_sm: { $value: '0.5%' },
+    text_md: { $value: '0%' },
+  },
+  typography: {
+    body: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.md}',
+        font_weight: '{font_weight.normal}',
+        leading: '{leading.body}',
+        tracking: '{tracking.text_md}',
+      },
+    },
+    button: {
+      $value: {
+        font_family: '{font_family.sans}',
+        font_size: '{font_size.md}',
+        font_weight: '{font_weight.bold}',
+        leading: '{leading.body}',
+        tracking: '{tracking.text_sm}',
+      },
+    },
+  },
+}

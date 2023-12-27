@@ -1,0 +1,128 @@
+{
+  text_color: {
+    accent: {
+      primary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.purple.11}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.purple_dark.11}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'high' },
+            $value: '{color.purple.12}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'high' },
+            $value: '{color.purple_dark.12}',
+          },
+        ],
+      },
+    },
+  },
+  background_color: {
+    accent: {
+      element: {
+        static: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.purple.9}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.purple_dark.9}',
+            },
+          ],
+        },
+        hover: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.purple.10}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.purple_dark.10}',
+            },
+          ],
+        },
+        active: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.purple.11}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.purple_dark.11}',
+            },
+          ],
+        },
+        inverted: {
+          hover: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.purple.4}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.purple_dark.4}',
+              },
+            ],
+          },
+          active: {
+            $set: [
+              {
+                $condition: { color_scheme: 'light' },
+                $value: '{color.purple.5}',
+              },
+              {
+                $condition: { color_scheme: 'dark' },
+                $value: '{color.purple_dark.5}',
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  border_color: {
+    accent: {
+      static: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.purple.7}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.purple_dark.7}',
+          },
+        ],
+      },
+      hover: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.purple.8}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.purple_dark.8}',
+          },
+        ],
+      },
+    },
+  },
+}

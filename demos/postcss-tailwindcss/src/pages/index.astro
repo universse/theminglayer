@@ -1,8 +1,6 @@
 ---
 import { Button as ButtonReact } from '~/components/button/Button'
 import Button from '~/components/button/Button.astro'
-
-import '~/styles/global.css'
 ---
 
 <html lang='en'>
@@ -86,6 +84,19 @@ import '~/styles/global.css'
         </div>
       </div>
     </main>
+    <style is:global>
+      @import '~/components/button/style.css';
+
+      @config '../../tailwind.config.js';
+
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+
+      @layer base {
+        @theminglayer;
+      }
+    </style>
     <script>
       if (!CSS.supports('selector(:has(> *))')) {
         ;[...document.querySelectorAll('input[type="radio"]')].forEach(

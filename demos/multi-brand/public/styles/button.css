@@ -1,0 +1,38 @@
+/* 
+For demo purpose, only color and typography properties are made design tokens.
+By updating the design tokens, you can generate new variants without touching the component's styling.
+Design token files become the true source of truth for your design system.
+Take a look at dist-tokens/theme.css for the full CSS output generated.
+*/
+
+.tl-button {
+  align-items: center;
+  appearance: none;
+  background-color: var(--tl-background-color);
+  block-size: 44px;
+  border: 2px solid var(--tl-border-color);
+  border-radius: 4px;
+  color: var(--tl-foreground-color);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--tl-font-family);
+  font-size: var(--tl-font-size);
+  font-weight: var(--tl-font-weight);
+  gap: 4px;
+  justify-content: center;
+  letter-spacing: var(--tl-letter-spacing);
+  line-height: var(--tl-line-height);
+  margin: 0;
+  padding: 0 24px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+}
+
+@media (forced-colors: active) {
+  .tl-button[data-intent='primary'][data-visual='filled']
+    .tl-button-label {
+    forced-color-adjust: none;
+  }
+}

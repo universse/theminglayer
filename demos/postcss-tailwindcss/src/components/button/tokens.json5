@@ -1,0 +1,151 @@
+{
+  component: {
+    button: {
+      $variant: {
+        intent: {
+          primary: {
+            $value: '[data-intent="primary"]',
+            $color: 'accent',
+          },
+          critical: {
+            $value: '[data-intent="critical"]',
+            $color: 'critical',
+          },
+        },
+        visual: {
+          filled: {
+            $value: '[data-visual="filled"]',
+          },
+          outline: {
+            $value: '[data-visual="outline"]',
+          },
+        },
+        disabled: {
+          true: '{variant.disabled}',
+        },
+        _state: {
+          hover: '{variant.hover}',
+          active: '{variant.active}',
+          focus: '{variant.focus}',
+        },
+      },
+      typography: { $value: '{typography.button}' },
+      foreground_color: {
+        $type: 'color',
+        $set: [
+          { $variant: { visual: 'filled' }, $value: '{color.white}' },
+          {
+            $variant: { intent: '*', visual: 'outline' },
+            $value: '{text_color[$color]primary}',
+          },
+
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: { intent: 'primary', visual: 'filled' },
+            $value: 'ButtonFace',
+          },
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: { intent: 'primary', visual: 'filled', _state: 'hover' },
+            $value: 'ButtonFace',
+          },
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: { intent: 'primary', visual: 'filled', _state: 'active' },
+            $value: 'ButtonFace',
+          },
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: { intent: 'primary', visual: 'filled', _state: 'focus' },
+            $value: 'ButtonFace',
+          },
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: {
+              intent: 'primary',
+              visual: 'filled',
+              disabled: true,
+            },
+            $value: 'GrayText',
+          },
+        ],
+      },
+      background_color: {
+        $type: 'color',
+        $set: [
+          {
+            $variant: { intent: '*', visual: 'filled' },
+            $value: '{background_color[$color]element.static}',
+          },
+          {
+            $variant: { intent: '*', visual: 'filled', _state: 'hover' },
+            $value: '{background_color[$color]element.hover}',
+          },
+          {
+            $variant: { intent: '*', visual: 'filled', _state: 'active' },
+            $value: '{background_color[$color]element.active}',
+          },
+
+          {
+            $variant: { intent: '*', visual: 'outline', _state: 'hover' },
+            $value: '{background_color[$color]element.inverted.hover}',
+          },
+          {
+            $variant: { intent: '*', visual: 'outline', _state: 'active' },
+            $value: '{background_color[$color]element.inverted.active}',
+          },
+
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: { intent: 'primary', visual: 'filled' },
+            $value: 'ButtonText',
+          },
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: { intent: 'primary', visual: 'filled', _state: 'hover' },
+            $value: 'Highlight',
+          },
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: { intent: 'primary', visual: 'filled', _state: 'active' },
+            $value: 'Highlight',
+          },
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: { intent: 'primary', visual: 'filled', _state: 'focus' },
+            $value: 'Highlight',
+          },
+          {
+            $condition: { contrast_pref: 'forced' },
+            $variant: {
+              intent: 'primary',
+              visual: 'filled',
+              disabled: true,
+            },
+            $value: 'ButtonFace',
+          },
+        ],
+      },
+      border_color: {
+        $set: [
+          {
+            $variant: { intent: '*' },
+            $value: '{border_color[$color]static}',
+          },
+          {
+            $variant: { intent: '*', visual: 'filled' },
+            $value: '{color.transparent}',
+          },
+          {
+            $variant: { intent: '*', _state: 'hover' },
+            $value: '{border_color[$color]hover}',
+          },
+          {
+            $variant: { intent: '*', visual: 'filled', _state: 'hover' },
+            $value: '{color.transparent}',
+          },
+        ],
+      },
+    },
+  },
+}

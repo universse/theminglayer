@@ -1,10 +1,7 @@
 {
   "plugins": {
-    "theminglayer/postcss": {
-      "outputVariable": false,
-      "safelist": ["var(--tl-border-color-primary)"]
-    },
-    "tailwindcss/nesting": {},
+    "theminglayer/postcss": {},
+    "tailwindcss/nesting": "postcss-nesting",
     "tailwindcss": {},
     "postcss-preset-env": {
       "features": {

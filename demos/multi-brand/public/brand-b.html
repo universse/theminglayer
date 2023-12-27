@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,shrink-to-fit=no"
+    />
+    <title>ThemingLayer Demo</title>
+    <link rel="stylesheet" href="/styles/global.css" />
+    <link rel="stylesheet" href="/styles/button.css" />
+    <link rel="stylesheet" href="/dist-tokens/brand-b/styles.css" />
+    <link
+      rel="stylesheet"
+      href="/dist-tokens/brand-a/forced-contrast-styles.css"
+    />
+    <!-- 'media' attribute does not work with Chrome emululation
+    <link
+      rel="stylesheet"
+      href="/dist-tokens/brand-b/forced-contrast-styles.css"
+      media="@media (forced-colors: active)"
+    /> -->
+    <script type="module" src="/script.js"></script>
+  </head>
+  <body>
+    <main
+      class="tl-bg-surface tl-typography-body tl-min-h-screen tl-px-96 tl-py-32 tl-text-neutral-primary"
+    >
+        <a
+          href="/"
+          style="text-decoration-line: underline; color: var(--tl-color-blue-9)"
+        >
+          Brand A
+        </a>
+        <a
+          href="/brand-b"
+          style="text-decoration-line: underline; color: var(--tl-color-blue-9)"
+          class="tl-ml-4"
+        >
+          Brand B
+        </a>
+        <details class="tl-mt-16" open="">
+        <summary>Theme</summary>
+        <div>
+          <div class="tl-mt-8">
+            <div>Color scheme:</div>
+            <input
+              type="radio"
+              id="color-scheme-light"
+              name="color-scheme"
+              value="light"
+              checked
+            />
+            <label class="tl-ml-4" for="color-scheme-light">Light</label><br />
+            <input
+              type="radio"
+              id="color-scheme-dark"
+              name="color-scheme"
+              value="dark"
+            />
+            <label class="tl-ml-4" for="color-scheme-dark">Dark</label><br />
+          </div>
+          <div class="tl-mt-8">
+            <div>Contrast:</div>
+            <input
+              type="radio"
+              id="contrast-standard"
+              name="contrast"
+              value="standard"
+              checked
+            />
+            <label class="tl-ml-4" for="contrast-standard">Standard</label
+            ><br />
+            <input
+              type="radio"
+              id="contrast-high"
+              name="contrast"
+              value="high"
+            />
+            <label class="tl-ml-4" for="contrast-high">High</label><br />
+          </div>
+        </div>
+      </details>
+      <div class="tl-mt-16 tl-flex tl-gap-12">
+        <button
+          class="tl-button"
+          data-intent="primary"
+          data-visual="filled"
+          type="button"
+        >
+          <span class="tl-button-label"> Button</span>
+        </button>
+        <button
+          class="tl-button"
+          data-intent="primary"
+          data-visual="outline"
+          type="button"
+        >
+          <span class="tl-button-label"> Button</span>
+        </button>
+      </div>
+      <div class="tl-mt-24 tl-flex tl-gap-12">
+        <button
+          class="tl-button"
+          data-intent="critical"
+          data-visual="filled"
+          type="button"
+        >
+          <span class="tl-button-label"> Button</span>
+        </button>
+        <button
+          class="tl-button"
+          data-intent="critical"
+          data-visual="outline"
+          type="button"
+        >
+          <span class="tl-button-label"> Button</span>
+        </button>
+      </div>
+      <div class="tl-mt-32">
+        <div>
+          Also, use Chrome DevTools and turn on CSS forced-colors: active
+          emulation to see the component in forced contrast mode.
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

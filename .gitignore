@@ -65,3 +65,6 @@ dist-tokens
 # Misc
 .DS_Store
 *.pem
+
+# Generated
+*.gen.*

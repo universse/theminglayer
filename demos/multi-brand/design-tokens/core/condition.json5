@@ -1,0 +1,31 @@
+{
+  condition: {
+    color_scheme: {
+      light: {
+        $value: ':is(:has([name="color-scheme"][value="light"]:checked), [data-color-scheme="light"])',
+      },
+      dark: {
+        $value: ':is(:has([name="color-scheme"][value="dark"]:checked), [data-color-scheme="dark"])',
+      },
+    },
+    contrast: {
+      standard: {
+        $value: ':is(:has([name="contrast"][value="standard"]:checked), [data-contrast="standard"])',
+      },
+      high: {
+        $value: ':is(:has([name="contrast"][value="high"]:checked), [data-contrast="high"])',
+      },
+    },
+    contrast_pref: {
+      less: {
+        $value: '@media (prefers-contrast: less)',
+      },
+      more: {
+        $value: '@media (prefers-contrast: more) and (forced-colors: none)',
+      },
+      forced: {
+        $value: '@media (forced-colors: active)',
+      },
+    },
+  },
+}

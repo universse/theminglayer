@@ -1,4 +1,4 @@
 {
-  "*.css": "stylelint --fix",
+  "*.css": "stylelint --fix --allow-empty-input",
   "*.{js,jsx,mjs,json,json5,ts,tsx,css,md,mdx,yaml,yml}": "prettier -w"
 }

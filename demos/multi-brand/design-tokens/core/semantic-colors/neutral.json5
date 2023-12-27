@@ -1,0 +1,32 @@
+{
+  text_color: {
+    neutral: {
+      primary: {
+        $set: [
+          {
+            $condition: {
+              color_scheme: 'light',
+              contrast: 'standard',
+            },
+            $value: '{color.black_alpha.10}',
+          },
+          {
+            $condition: {
+              color_scheme: 'dark',
+              contrast: 'standard',
+            },
+            $value: '{color.white_alpha.10}',
+          },
+          {
+            $condition: { color_scheme: 'light', contrast: 'high' },
+            $value: '{color.black_alpha.12}',
+          },
+          {
+            $condition: { color_scheme: 'dark', contrast: 'high' },
+            $value: '{color.white_alpha.12}',
+          },
+        ],
+      },
+    },
+  },
+}

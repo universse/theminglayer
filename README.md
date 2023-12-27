@@ -20,7 +20,13 @@ Extensible design token management & cross-platform code generation tool with po
 
 Detailed documentation is coming soon. Meanwhile, take a look at our demo.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/universse/theminglayer/tree/main/demo?title=ThemingLayer%20Demo&file=theminglayer.config.js,design-tokens%2Fcolor.json5,src%2Fcomponents%2Fbutton%2Ftokens.json5)
+- PostCSS + TailwindCSS
+
+  [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/universse/theminglayer/tree/main/demos/postcss-tailwindcss?title=ThemingLayer%20Demo&file=theminglayer.config.js,design-tokens%2Fcolor.json5,src%2Fcomponents%2Fbutton%2Ftokens.json5)
+
+- Multi-brand
+
+  [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/universse/theminglayer/tree/main/demos/multi-brand?title=ThemingLayer%20Demo&file=theminglayer.config.js,design-tokens%2Fcore%2Fcolor.json5,design-tokens%2Fbrand-a%2Faccent.json5)
 
 ## Getting Started
 
@@ -98,7 +104,7 @@ Go to the [Plugins and Integration](#plugins-and-integrations) section for more 
 
 - `defineConfig` also accepts an array of config object. This is useful for generating code in different formats for different platforms.
 
-  <details>
+  <details open>
     <summary>View configuration</summary>
     <br />
 
