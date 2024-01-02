@@ -22,9 +22,9 @@ export function traverseObj(
           run(current[key])
         }
       } catch (error) {
-        if (error === `break`) {
+        if (error === 'break') {
           break
-        } else if (error === `continue`) {
+        } else if (error === 'continue') {
           continue
         } else {
           throw error
@@ -68,7 +68,7 @@ export function isPrimitive(val: unknown): boolean {
 }
 
 export function isNullish(val: unknown): boolean {
-  return typeof val === `undefined` || val === null
+  return typeof val === 'undefined' || val === null
 }
 
 // export function fileNameFromPath(filePath) {
@@ -80,23 +80,23 @@ export function isNullish(val: unknown): boolean {
 // }
 
 export function generateKeyString(keys: string[]): string {
-  return keys.join(`.`)
+  return keys.join('.')
 }
 
 export function toKebabCase(str) {
   return (
     str
       // TODO improve camelCase to kebab-case conversion to handle uppercase word
-      .replace(/([a-z])([A-Z])/g, `$1-$2`)
-      .replace(/[\s_]+/g, `-`)
+      .replace(/([a-z])([A-Z])/g, '$1-$2')
+      .replace(/[\s_]+/g, '-')
       .toLowerCase()
   )
 }
 
 export function toSnakeCase(str: string): string {
   return str
-    .replace(/([a-z])([A-Z])/g, `$1_$2`)
-    .replace(/[\s-]+/g, `_`)
+    .replace(/([a-z])([A-Z])/g, '$1_$2')
+    .replace(/[\s-]+/g, '_')
     .toLowerCase()
 }
 
@@ -110,5 +110,5 @@ export function toSnakeCase(str: string): string {
 
 export async function writeFile(filePath: string, data: string) {
   await fsp.mkdir(nodePath.dirname(filePath), { recursive: true })
-  await fsp.writeFile(filePath, data, `utf8`)
+  await fsp.writeFile(filePath, data, 'utf8')
 }

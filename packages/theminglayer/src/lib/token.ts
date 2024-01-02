@@ -11,8 +11,8 @@ import { toSnakeCase } from '~/utils/misc'
 
 export async function importTokens(filePath: string) {
   switch (nodePath.extname(filePath).slice(1)) {
-    case `js`:
-    case `ts`: {
+    case 'js':
+    case 'ts': {
       const { module } = await importJs(filePath, { watch: watchMode.active })
       return module.default ?? module
     }
@@ -33,26 +33,28 @@ export async function importTokens(filePath: string) {
     //   const url = URL.pathToFileURL(filePath).toString()
     //   return importMjs(url, ms)
     // }
-    case `json`:
-    case `json5`: {
-      return JSON5.parse(await fsp.readFile(filePath, `utf-8`))
+    case 'json': {
+      return JSON.parse(await fsp.readFile(filePath, 'utf8'))
     }
-    case `yaml`:
-      return yaml.load(await fsp.readFile(filePath, `utf8`))
+    case 'json5': {
+      return JSON5.parse(await fsp.readFile(filePath, 'utf8'))
+    }
+    case 'yaml':
+      return yaml.load(await fsp.readFile(filePath, 'utf8'))
     default: {
-      throw new Error(`Unsupported token collection file extension`)
+      throw new Error('Unsupported token collection file extension')
     }
   }
 }
 
-export const ALIAS_REGEXP = /{([^}]+)}/
+export const ALIAS_RE = /{([^}]+)}/
 
 export function isAlias(value: unknown): value is string {
-  return typeof value === `string` && ALIAS_REGEXP.test(value)
+  return typeof value === 'string' && ALIAS_RE.test(value)
 }
 
 export function getReferences(value: unknown): string[] {
-  return [...(value?.matchAll?.(new RegExp(ALIAS_REGEXP, `g`)) || [])].map(
+  return [...(value?.matchAll?.(new RegExp(ALIAS_RE, 'g')) || [])].map(
     (match) => match[1]
   )
 }
@@ -65,17 +67,17 @@ export function getCategorySpec(
 }
 
 export function isToken(obj: unknown): obj is Token {
-  if (typeof obj !== `object` || obj === null) return false
-  return `$value` in obj
+  if (typeof obj !== 'object' || obj === null) return false
+  return '$value' in obj
 }
 
 export function isTokenSet(obj: unknown): obj is TokenSet {
-  if (typeof obj !== `object` || obj === null) return false
-  return `$set` in obj
+  if (typeof obj !== 'object' || obj === null) return false
+  return '$set' in obj
 }
 
 // TODO arg should be token?
 export function generateTokenNameKeys(keys: string[]): string[] {
-  const setIndex = keys.indexOf(`$set`)
+  const setIndex = keys.indexOf('$set')
   return setIndex > -1 ? keys.slice(0, setIndex) : [...keys]
 }

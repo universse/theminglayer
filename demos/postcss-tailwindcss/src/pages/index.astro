@@ -1,6 +1,8 @@
 ---
 import { Button as ButtonReact } from '~/components/button/Button'
 import Button from '~/components/button/Button.astro'
+
+import '~/style.css'
 ---
 
 <html lang='en'>
@@ -77,26 +79,30 @@ import Button from '~/components/button/Button.astro'
         <ButtonReact intent='critical' visual='filled'>Button</ButtonReact>
         <ButtonReact intent='critical' visual='outline'>Button</ButtonReact>
       </div>
-      <div class='tl-mt-32'>
-        <div>
-          Also, use Chrome DevTools and turn on CSS forced-colors: active
-          emulation to see the component in forced contrast mode.
+      <p class='tl-mt-32'>
+        Also, use Chrome DevTools and turn on CSS forced-colors: active
+        emulation to see the component in forced contrast mode.
+      </p>
+
+      <div
+        class='theme tl-bg-surface tl-mt-32 tl-p-24 tl-text-neutral-primary'
+        data-color-scheme='dark'
+        data-contrast='high'
+      >
+        <p>
+          This is a section with independent theming, enabled by setting custom
+          containerSelector.
+        </p>
+        <div class='tl-mt-16 tl-flex tl-gap-12'>
+          <Button intent='primary' visual='filled'>Button</Button>
+          <Button intent='primary' visual='outline'>Button</Button>
+        </div>
+        <div class='tl-mt-24 tl-flex tl-gap-12'>
+          <Button intent='critical' visual='filled'>Button</Button>
+          <Button intent='critical' visual='outline'>Button</Button>
         </div>
       </div>
     </main>
-    <style is:global>
-      @import '~/components/button/style.css';
-
-      @config '../../tailwind.config.js';
-
-      @tailwind base;
-      @tailwind components;
-      @tailwind utilities;
-
-      @layer base {
-        @theminglayer;
-      }
-    </style>
     <script>
       if (!CSS.supports('selector(:has(> *))')) {
         ;[...document.querySelectorAll('input[type="radio"]')].forEach(

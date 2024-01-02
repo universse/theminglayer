@@ -1,6 +1,6 @@
 {
   "name": "@theminglayer/design-tokens",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ThemingLayer Design Tokens",
   "keywords": [
     "design tokens",
@@ -25,7 +25,7 @@
   "scripts": {},
   "devDependencies": {
     "@radix-ui/colors": "3.0.0",
-    "@types/node": "20.10.5",
+    "@types/node": "20.10.6",
     "tailwindcss": "3.4.0"
   },
   "publishConfig": {

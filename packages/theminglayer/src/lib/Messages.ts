@@ -1,11 +1,11 @@
 import { toArray } from '~/utils/misc'
 
 export const MessageHeaders = {
-  MISSING_ALIAS: `Aliases not found:`,
-  MULTIPLE_WILDCARD_VARIANT: `Multiple wildcard variants are not supported:`,
-  TOKEN_COLLISION: `Token collisions found:`,
-  UNKNOWN_TOKEN_CATEGORY: `Unknown token category:`,
-  UNKNOWN_TOKEN_TYPE: `Unknown token type:`,
+  MISSING_ALIAS: 'Aliases not found:',
+  MULTIPLE_WILDCARD_VARIANT: 'Multiple wildcard variants are not supported:',
+  TOKEN_COLLISION: 'Token collisions found:',
+  UNKNOWN_TOKEN_CATEGORY: 'Unknown token category:',
+  UNKNOWN_TOKEN_TYPE: 'Unknown token type:',
 } as const
 
 function createWarningMessages() {
@@ -13,11 +13,11 @@ function createWarningMessages() {
 
   return {
     add(messageLine: string | string[]) {
-      warningMessageLines.push(`----------`)
+      warningMessageLines.push('----------')
       warningMessageLines.push(...toArray(messageLine))
     },
     flush() {
-      console.log(warningMessageLines.join(`\n`))
+      console.log(warningMessageLines.join('\n'))
       this.clear()
     },
     clear() {

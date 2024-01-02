@@ -26,7 +26,7 @@ async function convertTailwindColorsToTokens() {
   const output = {}
 
   for (const [hue, scale] of Object.entries(scales)) {
-    if (typeof scale === `string`) {
+    if (typeof scale === 'string') {
       output[hue] = { $value: scale }
       continue
     }
@@ -39,40 +39,40 @@ async function convertTailwindColorsToTokens() {
   }
 
   await fsp.writeFile(
-    `tailwind-color.json5`,
+    'tailwind-color.json5',
     JSON.stringify({ color: output }),
-    `utf8`
+    'utf8'
   )
 }
 
 async function convertRadixColorsToTokens() {
   const picked = new Set([
-    `black_alpha`,
-    `white_alpha`,
-    `amber`,
-    `amber_alpha`,
-    `amber_dark`,
-    `amber_dark_alpha`,
-    `blue`,
-    `blue_alpha`,
-    `blue_dark`,
-    `blue_dark_alpha`,
-    `crimson`,
-    `crimson_alpha`,
-    `crimson_dark`,
-    `crimson_dark_alpha`,
-    `gray`,
-    `gray_alpha`,
-    `gray_dark`,
-    `gray_dark_alpha`,
-    `plum`,
-    `plum_alpha`,
-    `plum_dark`,
-    `plum_dark_alpha`,
-    `teal`,
-    `teal_alpha`,
-    `teal_dark`,
-    `teal_dark_alpha`,
+    'black_alpha',
+    'white_alpha',
+    'amber',
+    'amber_alpha',
+    'amber_dark',
+    'amber_dark_alpha',
+    'blue',
+    'blue_alpha',
+    'blue_dark',
+    'blue_dark_alpha',
+    'crimson',
+    'crimson_alpha',
+    'crimson_dark',
+    'crimson_dark_alpha',
+    'gray',
+    'gray_alpha',
+    'gray_dark',
+    'gray_dark_alpha',
+    'plum',
+    'plum_alpha',
+    'plum_dark',
+    'plum_dark_alpha',
+    'teal',
+    'teal_alpha',
+    'teal_dark',
+    'teal_dark_alpha',
   ])
   const scales = { ...radixColors.default }
 
@@ -80,7 +80,7 @@ async function convertRadixColorsToTokens() {
 
   for (const [hue, scale] of Object.entries(scales)) {
     const hueInSnakeCase = camelToSnakeCase(
-      hue.replace(`P3`, `_p3`).replace(/A$/, `_alpha`)
+      hue.replace('P3', '_p3').replace(/A$/, '_alpha')
     )
 
     if (picked.has(hueInSnakeCase)) {
@@ -88,8 +88,8 @@ async function convertRadixColorsToTokens() {
 
       for (const [shade, $value] of Object.entries(scale)) {
         const step = shade.replace(
-          hue.replace(`P3`, ``).replace(`Dark`, ``),
-          ``
+          hue.replace('P3', '').replace('Dark', ''),
+          ''
         )
         output[hueInSnakeCase][step] = { $value }
       }
@@ -97,15 +97,15 @@ async function convertRadixColorsToTokens() {
   }
 
   await fsp.writeFile(
-    `radix-color.json5`,
+    'radix-color.json5',
     JSON.stringify({ color: output }),
-    `utf8`
+    'utf8'
   )
 }
 
 function camelToSnakeCase(str) {
   return str
-    .replace(/([a-z])([A-Z])/g, `$1_$2`)
-    .replace(/\s+/g, `_`)
+    .replace(/([a-z])([A-Z])/g, '$1_$2')
+    .replace(/\s+/g, '_')
     .toLowerCase()
 }

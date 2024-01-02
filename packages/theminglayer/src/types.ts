@@ -29,14 +29,14 @@ export type Token = {
 } & UserTokenOptionaLAttributes
 
 export type RESERVED_TOKEN_KEYS =
-  | `$type`
-  | `$value`
-  | `$description`
-  | `$category`
-  | `$condition`
-  | `$variant`
-  | `$set`
-  | `$extensions`
+  | '$type'
+  | '$value'
+  | '$description'
+  | '$category'
+  | '$condition'
+  | '$variant'
+  | '$set'
+  | '$extensions'
 
 export type TokenSet = {
   $set: Token[]
@@ -44,7 +44,6 @@ export type TokenSet = {
 
 interface SharedBuildOptions {
   outDir: string
-  [key: string]: unknown
 }
 
 export interface BuildOptions extends SharedBuildOptions {
@@ -52,11 +51,13 @@ export interface BuildOptions extends SharedBuildOptions {
   plugins: Plugin[]
 }
 
-export type CachedBuild = {
-  data: {
-    collectionData: Collection
-    buildOptions: SharedBuildOptions
-  }[]
+export type PostcssCachedData = {
+  rulesByCustomPropertyName: Record<string, any>
+  rulesByComponentClassSelector: Record<string, any>
+  typographyRules: any
+  customAtRules: any
+  safelist: string[]
+  containerSelector: string
 }
 
 export type PluginOutputFile = { filePath: string; content: string }
@@ -65,7 +66,6 @@ export type Plugin = {
   name: string
   build: (args: {
     collection: Collection
-    buildOptions: SharedBuildOptions
     addOutputFile: (args: PluginOutputFile) => void
     getPluginData: (pluginName: string, key: string) => string | undefined
     setPluginData: (key: string, value: string) => void

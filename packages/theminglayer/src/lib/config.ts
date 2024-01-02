@@ -1,25 +1,25 @@
 import fs from 'node:fs'
 
 import { watchMode } from '~/lib/watchMode'
+import { postcssIntegrationPlugin } from '~/plugins'
 import { type BuildOptions } from '~/types'
 import { importJs } from '~/utils/importJs'
 import { toArray } from '~/utils/misc'
 
 export function findConfigFilePath() {
   const filePath = [
-    `theminglayer.config.js`,
-    `theminglayer.config.mjs`,
-    `theminglayer.config.ts`,
+    'theminglayer.config.js',
+    'theminglayer.config.mjs',
+    'theminglayer.config.ts',
   ].find((filePath) => fs.existsSync(filePath))
 
   return filePath
 }
 
 const DEFAULT_BUILD_CONFIG = {
-  sources: `design-tokens.json`,
-  plugins: [],
-  outDir: `dist-tokens`,
-  prefix: `tl-`,
+  sources: 'design-tokens.json',
+  plugins: [postcssIntegrationPlugin()],
+  outDir: 'dist-tokens',
 }
 
 type UserBuildOptions = Partial<BuildOptions> & {

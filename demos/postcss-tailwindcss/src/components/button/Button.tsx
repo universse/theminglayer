@@ -12,8 +12,8 @@ export interface ButtonProps extends ButtonVariants {
 }
 
 export function Button({
-  intent = `primary`,
-  visual = `filled`,
+  intent = 'primary',
+  visual = 'filled',
   disabled = false,
   children,
   ...props
@@ -32,4 +32,4 @@ export function Button({
   )
 }
 
-Button.displayName = `Button`
+Button.displayName = 'Button'

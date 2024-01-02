@@ -6,7 +6,7 @@ import { context, type BuildContext } from 'esbuild'
 import { require } from '~/utils/node'
 
 export async function importJs(filePath: string, { watch = false } = {}) {
-  if (!watch && nodePath.extname(filePath) === `.js`) {
+  if (!watch && nodePath.extname(filePath) === '.js') {
     return {
       module: await import(pathToFileURL(filePath).toString()),
       dependencies: [],
@@ -32,11 +32,11 @@ async function bundleFile(filePath: string) {
     buildContext = await context({
       bundle: true,
       entryPoints: [filePath],
-      mainFields: [`module`, `main`],
+      mainFields: ['module', 'main'],
       metafile: true,
-      platform: `node`,
+      platform: 'node',
       write: false,
-      external: [`esbuild`],
+      external: ['esbuild'],
     })
     buildContextCache.set(filePath, buildContext)
   }
@@ -46,7 +46,7 @@ async function bundleFile(filePath: string) {
   return {
     code: bundle.outputFiles[0]!.text,
     dependencies: Object.keys(bundle.metafile.inputs).filter(
-      (path) => !path.includes(`node_modules`)
+      (path) => !path.includes('node_modules')
     ),
   }
 }

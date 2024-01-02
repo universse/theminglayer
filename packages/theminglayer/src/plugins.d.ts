@@ -1,21 +1,31 @@
 import { PluginCreator, Token } from './common.js'
 
 declare const cssPlugin: PluginCreator<{
+  prefix?: string
+  containerSelector?: string
   files?: {
     path: string
     filter: (token: Token) => boolean
-    outputVariable?: boolean
+    keepAliases?: boolean
   }[]
 }>
 
-type ModuleFormat = 'esm' | 'cjs'
 declare const tailwindPresetPlugin: PluginCreator<{
+  prefix?: string
+  containerSelector?: string
   files?: {
     path: string
     filter: (token: Token) => boolean
-    format?: ModuleFormat
-    outputVariable?: boolean
+    format?: 'esm' | 'cjs'
+    keepAliases?: boolean
   }[]
 }>
 
-export { cssPlugin, tailwindPresetPlugin }
+declare const postcssIntegrationPlugin: PluginCreator<{
+  prefix?: string
+  containerSelector?: string
+  keepAliases?: boolean
+  safelist?: string[]
+}>
+
+export { cssPlugin, postcssIntegrationPlugin, tailwindPresetPlugin }

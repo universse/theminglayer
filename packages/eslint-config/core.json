@@ -6,20 +6,65 @@
     "node": true,
     "worker": true
   },
-  "plugins": ["markdown"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "./internals/base-rules"
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-params": "off",
+    "prefer-const": "error"
+  },
   "settings": {
     "react": {
       "version": "detect"
     }
   },
   "overrides": [
+    {
+      "files": ["*.tsx"],
+      "env": {
+        "browser": true,
+        "es2020": true,
+        "node": true
+      },
+      "extends": [
+        "plugin:import/recommended",
+        "plugin:jsx-a11y/strict",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended"
+      ],
+      "rules": {
+        "import/no-unresolved": "off",
+        "react/jsx-sort-props": [
+          "error",
+          {
+            "ignoreCase": true,
+            "reservedFirst": true
+          }
+        ],
+        "react-hooks/exhaustive-deps": [
+          "warn",
+          {
+            "additionalHooks": "(useIsomorphicLayoutEffect)"
+          }
+        ]
+      },
+      "settings": {
+        "react": {
+          "version": "detect"
+        }
+      }
+    },
+    {
+      "files": ["*.md"],
+      "plugins": ["markdown"],
+      "processor": "markdown/markdown"
+    },
     {
       "files": ["*.mdx"],
       "extends": [
@@ -30,10 +75,6 @@
       "settings": {
         "mdx/code-blocks": true
       }
-    },
-    {
-      "files": ["*.md"],
-      "processor": "markdown/markdown"
     }
   ]
 }

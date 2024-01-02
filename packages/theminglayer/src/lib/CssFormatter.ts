@@ -22,48 +22,46 @@ import {
 } from '~/utils/misc'
 
 const SystemColors = new Set([
-  `Canvas`,
-  `CanvasText`,
-  `LinkText`,
-  `VisitedText`,
-  `ActiveText`,
-  `ButtonFace`,
-  `ButtonText`,
-  `ButtonBorder`,
-  `Field`,
-  `FieldText`,
-  `Highlight`,
-  `HighlightText`,
-  `SelectedItem`,
-  `SelectedItemText`,
-  `Mark`,
-  `MarkText`,
-  `GrayText`,
-  `AccentColor`,
-  `AccentColorText`,
+  'Canvas',
+  'CanvasText',
+  'LinkText',
+  'VisitedText',
+  'ActiveText',
+  'ButtonFace',
+  'ButtonText',
+  'ButtonBorder',
+  'Field',
+  'FieldText',
+  'Highlight',
+  'HighlightText',
+  'SelectedItem',
+  'SelectedItemText',
+  'Mark',
+  'MarkText',
+  'GrayText',
+  'AccentColor',
+  'AccentColorText',
 ])
-
-const ROOT_SELECTOR = `:where(:root)`
 
 export class CssFormatter {
   constructor(
     public collection: Collection,
-    public options: { prefix: string }
+    public options: { prefix: string; containerSelector: string }
   ) {}
 
-  tokenToCssRules(token: Token, { outputVariable = false } = {}) {
+  tokenToCssRules(token: Token, { keepAliases = false } = {}) {
     const {
       $type: type,
       $extensions: { component },
     } = token
 
-    if (type === `condition`) {
-      const resolvedValue = this.resolveReferencesToCss(token.$value)
+    if (type === 'condition') {
+      const resolvedValue = this.aliasesToCssValue(token.$value)
       const atRule = resolvedValue.match(/@(\S*)/)?.[1]
 
       if (atRule) {
         // TODO container, supports
-        if (atRule !== `media`) return []
+        if (atRule !== 'media') return []
 
         return [
           {
@@ -71,18 +69,18 @@ export class CssFormatter {
               atRules: [
                 {
                   name: `custom-${atRule}`,
-                  params: `${this.tokenToCssVariableName(token)} ${resolvedValue
-                    .replace(`@${atRule}`, ``)
-                    .trim()}`,
+                  params: `${this.tokenToCssCustomPropertyName(
+                    token
+                  )} ${resolvedValue.replace(`@${atRule}`, '').trim()}`,
                 },
               ],
             },
           },
         ]
       } else {
-        let resolvedValue = this.resolveReferencesToCss(token.$value).trim()
+        let resolvedValue = this.aliasesToCssValue(token.$value).trim()
 
-        if (resolvedValue.startsWith(`:is(`) && resolvedValue.endsWith(`)`)) {
+        if (resolvedValue.startsWith(':is(') && resolvedValue.endsWith(')')) {
           resolvedValue = resolvedValue.slice(4, -1)
         }
 
@@ -91,8 +89,8 @@ export class CssFormatter {
             rule: {
               atRules: [
                 {
-                  name: `custom-selector`,
-                  params: `:${this.tokenToCssVariableName(
+                  name: 'custom-selector',
+                  params: `:${this.tokenToCssCustomPropertyName(
                     token
                   )} ${resolvedValue}`,
                 },
@@ -103,10 +101,10 @@ export class CssFormatter {
       }
     }
 
-    if (type === `variant`) {
-      let resolvedValue = this.resolveReferencesToCss(token.$value).trim()
+    if (type === 'variant') {
+      let resolvedValue = this.aliasesToCssValue(token.$value).trim()
 
-      if (resolvedValue.startsWith(`:is(`) && resolvedValue.endsWith(`)`)) {
+      if (resolvedValue.startsWith(':is(') && resolvedValue.endsWith(')')) {
         resolvedValue = resolvedValue.slice(4, -1)
       }
 
@@ -115,8 +113,8 @@ export class CssFormatter {
           rule: {
             atRules: [
               {
-                name: `custom-selector`,
-                params: `:${this.tokenToCssVariableName(
+                name: 'custom-selector',
+                params: `:${this.tokenToCssCustomPropertyName(
                   token
                 )} ${resolvedValue}`,
               },
@@ -126,44 +124,43 @@ export class CssFormatter {
       ]
     }
 
-    if (type === `typography`) {
+    if (type === 'typography') {
       return this.typographyTokenToCssRules(
         { token, originalToken: token },
-        { outputVariable }
+        { keepAliases }
       )
     }
 
-    const { selector: conditionSelector = ``, atRules } =
+    const { selector: conditionSelector = '', atRules } =
       this.#parseConditions(token)
 
-    const { selector: variantSelector = `` } = this.#parseVariants(token)
+    const { selector: variantSelector = '' } = this.#parseVariants(token)
 
-    const componentSelector = component
-      ? `.${this.options.prefix}${component}`.trim()
-      : ``
+    const componentSelector = this.tokenToComponentClassSelector(token)
 
     let selector: string
+    const containerSelector = this.options.containerSelector.trim()
 
     if (componentSelector) {
       const parentSelector = conditionSelector
-        ? `${ROOT_SELECTOR}${conditionSelector}`
-        : ``
+        ? `${containerSelector}${conditionSelector}`
+        : ''
 
       selector =
         `${parentSelector} ${componentSelector}${variantSelector}`.trim()
     } else {
-      selector = `${ROOT_SELECTOR}${conditionSelector}`
+      selector = `${containerSelector}${conditionSelector}`
     }
 
     const declarations = [
       {
-        prop: this.tokenToCssVariableName(token),
+        prop: this.tokenToCssCustomPropertyName(token),
         value: this.convertToCssValue(
           {
             type: token.$type,
             value: token.$value,
           },
-          { outputVariable }
+          { keepAliases }
         ),
       },
     ]
@@ -175,10 +172,7 @@ export class CssFormatter {
         component,
         rule: {
           atRules,
-          selector:
-            selector === ROOT_SELECTOR
-              ? `:where(::backdrop)`
-              : selector + ` :where(::backdrop)`,
+          selector: `${selector} ::backdrop`,
           declarations,
         },
       })
@@ -197,7 +191,7 @@ export class CssFormatter {
       originalToken: Token
       rules?: []
     },
-    { outputVariable = false } = {}
+    { keepAliases = false } = {}
   ) {
     const { tokenObject } = this.collection
     const { prefix } = this.options
@@ -206,7 +200,7 @@ export class CssFormatter {
 
     while (isAlias(resolvedValue)) {
       const ref = getReferences(resolvedValue)[0]
-      resolvedValue = getObjValue(tokenObject, ref.split(`.`)).$value
+      resolvedValue = getObjValue(tokenObject, ref.split('.')).$value
     }
 
     if (isTokenSet(resolvedValue)) {
@@ -217,7 +211,7 @@ export class CssFormatter {
             originalToken,
             rules,
           },
-          { outputVariable }
+          { keepAliases }
         )
       })
       return rules
@@ -225,71 +219,71 @@ export class CssFormatter {
 
     const { component } = originalToken.$extensions
 
-    const { selector: conditionSelector = ``, atRules } =
+    const { selector: conditionSelector = '', atRules } =
       this.#parseConditions(token)
 
-    const { selector: variantSelector = `` } = this.#parseVariants(token)
+    const { selector: variantSelector = '' } = this.#parseVariants(token)
 
-    const componentSelector = component ? `.${prefix}${component}`.trim() : ``
+    const componentSelector = this.tokenToComponentClassSelector(originalToken)
 
     const selector = componentSelector
       ? `${conditionSelector} ${componentSelector}${variantSelector}`.trim()
-      : `${conditionSelector} ${this.tokenToClassSelector(
+      : `${conditionSelector} ${this.typographyTokenToClassSelector(
           originalToken
         )}`.trim()
 
     const properties: { type: TokenType; prop: string; value: any }[] = [
       {
-        type: `font_family`,
-        prop: `font-family`,
+        type: 'font_family',
+        prop: 'font-family',
         value:
           resolvedValue.family ||
           resolvedValue.font_family ||
           resolvedValue.fontFamily,
       },
       {
-        type: `dimension`,
-        prop: `font-size`,
+        type: 'dimension',
+        prop: 'font-size',
         value:
           resolvedValue.size ||
           resolvedValue.font_size ||
           resolvedValue.fontSize,
       },
       {
-        type: `font_style`,
-        prop: `font-style`,
+        type: 'font_style',
+        prop: 'font-style',
         value:
           resolvedValue.style ||
           resolvedValue.font_style ||
           resolvedValue.fontStyle,
       },
       {
-        type: `font_variant`,
-        prop: `font-variant`,
+        type: 'font_variant',
+        prop: 'font-variant',
         value:
           resolvedValue.variant ||
           resolvedValue.font_variant ||
           resolvedValue.fontVariant,
       },
       {
-        type: `font_weight`,
-        prop: `font-weight`,
+        type: 'font_weight',
+        prop: 'font-weight',
         value:
           resolvedValue.weight ||
           resolvedValue.font_weight ||
           resolvedValue.fontWeight,
       },
       {
-        type: `tracking`,
-        prop: `letter-spacing`,
+        type: 'tracking',
+        prop: 'letter-spacing',
         value:
           resolvedValue.tracking ||
           resolvedValue.letter_spacing ||
           resolvedValue.letterSpacing,
       },
       {
-        type: `leading`,
-        prop: `line-height`,
+        type: 'leading',
+        prop: 'line-height',
         value:
           resolvedValue.leading ||
           resolvedValue.line_height ||
@@ -298,14 +292,14 @@ export class CssFormatter {
     ]
 
     // TODO extract to function?
-    const propPrefix = component ? `--${prefix}` : ``
+    const propPrefix = component ? `--${prefix}` : ''
     const declarations = []
 
     properties.forEach(({ type, prop, value }) => {
       !isNullish(value) &&
         declarations.push({
           prop: `${propPrefix}${prop}`,
-          value: this.convertToCssValue({ type, value }, { outputVariable }),
+          value: this.convertToCssValue({ type, value }, { keepAliases }),
         })
     })
 
@@ -316,46 +310,46 @@ export class CssFormatter {
 
   convertToCssValue(
     { type, value }: { type: TokenType; value: unknown },
-    { outputVariable = false } = {}
+    { keepAliases = false } = {}
   ): string {
-    if (outputVariable && isAlias(value)) {
-      return this.#replaceReferencesWithCssVariables(value)
+    if (keepAliases && isAlias(value)) {
+      return this.#aliasesToCustomProperty(value)
     }
 
-    const resolvedValue = this.resolveReferencesToCss(value, {
-      outputVariable,
+    const resolvedValue = this.aliasesToCssValue(value, {
+      keepAliases,
     })
 
     // if (!type) return resolvedValue
 
     try {
       if (isNullish(resolvedValue) || !type) {
-        throw new Error(`This should not happen.`)
+        throw new Error('This should not happen.')
       }
 
       switch (toSnakeCase(type) as TokenType) {
-        case `color`: {
+        case 'color': {
           return resolvedValue
         }
-        case `cubic_bezier`: {
-          if (typeof resolvedValue === `string`) return resolvedValue
-          return `cubic-bezier(${resolvedValue.join(`, `)})`
+        case 'cubic_bezier': {
+          if (typeof resolvedValue === 'string') return resolvedValue
+          return `cubic-bezier(${resolvedValue.join(', ')})`
         }
-        case `dimension`: {
+        case 'dimension': {
           return String(resolvedValue)
         }
-        case `duration`: {
+        case 'duration': {
           return String(resolvedValue)
         }
-        case `font_family`: {
-          if (typeof resolvedValue === `string`) return resolvedValue
-          return resolvedValue.join(`, `)
+        case 'font_family': {
+          if (typeof resolvedValue === 'string') return resolvedValue
+          return resolvedValue.join(', ')
         }
-        case `font_style`: {
+        case 'font_style': {
           return resolvedValue
         }
-        case `font_weight`: {
-          const value = resolvedValue.toLowerCase().replace(/[\s-_]/g, ``)
+        case 'font_weight': {
+          const value = resolvedValue.toLowerCase().replace(/[\s-_]/g, '')
 
           if (FontWeightMap[value]) {
             return FontWeightMap[value]
@@ -363,51 +357,51 @@ export class CssFormatter {
 
           return resolvedValue
         }
-        case `number`: {
+        case 'number': {
           return String(resolvedValue)
         }
 
-        case `border`: {
+        case 'border': {
           // TODO warn missing border style
-          if (typeof resolvedValue === `string`) return resolvedValue
+          if (typeof resolvedValue === 'string') return resolvedValue
 
           const border = []
 
           const parts: { type: TokenType; value: any }[] = [
-            { type: `dimension`, value: resolvedValue.width || `medium` },
-            { type: `stroke_style`, value: resolvedValue.style || `none` },
-            { type: `color`, value: resolvedValue.color || `currentcolor` },
+            { type: 'dimension', value: resolvedValue.width || 'medium' },
+            { type: 'stroke_style', value: resolvedValue.style || 'none' },
+            { type: 'color', value: resolvedValue.color || 'currentcolor' },
           ]
 
           parts.forEach((part) => {
             !isNullish(part.value) &&
-              border.push(this.convertToCssValue(part, { outputVariable }))
+              border.push(this.convertToCssValue(part, { keepAliases }))
           })
 
-          return border.join(` `)
+          return border.join(' ')
         }
         // case `gradient`: {
         //   if (typeof resolvedValue === `string`) return resolvedValue
         //   return resolvedValue
         // }
-        case `shadow`: {
-          if (typeof resolvedValue === `string`) return resolvedValue
+        case 'shadow': {
+          if (typeof resolvedValue === 'string') return resolvedValue
 
           if (Array.isArray(resolvedValue)) {
             return resolvedValue
               .map((shadow) => {
                 return this.convertToCssValue(
-                  { type: `shadow`, value: shadow },
-                  { outputVariable }
+                  { type: 'shadow', value: shadow },
+                  { keepAliases }
                 )
               })
-              .join(`, `)
+              .join(', ')
           }
-          const shadow = resolvedValue.inset ? [`inset`] : []
+          const shadow = resolvedValue.inset ? ['inset'] : []
 
           const parts: { type: TokenType; value: any }[] = [
             {
-              type: `dimension`,
+              type: 'dimension',
               value:
                 resolvedValue.offset_x ||
                 resolvedValue.offsetX ||
@@ -415,123 +409,123 @@ export class CssFormatter {
                 0,
             },
             {
-              type: `dimension`,
+              type: 'dimension',
               value:
                 resolvedValue.offset_y ||
                 resolvedValue.offsetY ||
                 resolvedValue.y ||
                 0,
             },
-            { type: `dimension`, value: resolvedValue.blur || 0 },
-            { type: `dimension`, value: resolvedValue.spread || 0 },
-            { type: `color`, value: resolvedValue.color || `#000000` },
+            { type: 'dimension', value: resolvedValue.blur || 0 },
+            { type: 'dimension', value: resolvedValue.spread || 0 },
+            { type: 'color', value: resolvedValue.color || '#000000' },
           ]
 
           parts.forEach((part) => {
-            shadow.push(this.convertToCssValue(part, { outputVariable }))
+            shadow.push(this.convertToCssValue(part, { keepAliases }))
           })
 
-          return shadow.join(` `)
+          return shadow.join(' ')
         }
-        case `stroke_style`: {
-          if (typeof resolvedValue === `string`) return resolvedValue
-          return `dashed`
+        case 'stroke_style': {
+          if (typeof resolvedValue === 'string') return resolvedValue
+          return 'dashed'
         }
-        case `transition`: {
-          if (typeof resolvedValue === `string`) return resolvedValue
+        case 'transition': {
+          if (typeof resolvedValue === 'string') return resolvedValue
 
           const transition = []
 
           const parts: { type: TokenType; value: any }[] = [
             {
-              type: `transition_property`,
+              type: 'transition_property',
               value:
                 resolvedValue.transition_property ||
                 resolvedValue.transitionProperty ||
-                `all`,
+                'all',
             },
             {
-              type: `duration`,
+              type: 'duration',
               value: resolvedValue.duration || 0,
             },
             {
-              type: `cubic_bezier`,
+              type: 'cubic_bezier',
               value:
                 resolvedValue.timing_function ||
                 resolvedValue.timingFunction ||
                 resolvedValue.cubic_bezier ||
                 resolvedValue.cubicBezier ||
                 resolvedValue.easing ||
-                `ease`,
+                'ease',
             },
-            { type: `duration`, value: resolvedValue.delay || 0 },
+            { type: 'duration', value: resolvedValue.delay || 0 },
           ]
 
           parts.forEach((part) => {
-            transition.push(this.convertToCssValue(part, { outputVariable }))
+            transition.push(this.convertToCssValue(part, { keepAliases }))
           })
 
-          return transition.join(` `)
+          return transition.join(' ')
         }
 
-        case `font_variant`: {
+        case 'font_variant': {
           return resolvedValue
         }
-        case `leading`: {
+        case 'leading': {
           return resolvedValue
         }
-        case `tracking`: {
-          if (typeof resolvedValue === `number`) {
+        case 'tracking': {
+          if (typeof resolvedValue === 'number') {
             return `${resolvedValue}em`
           }
-          if (resolvedValue.endsWith(`%`)) {
+          if (resolvedValue.endsWith('%')) {
             return `${Number(resolvedValue.slice(0, -1)) / 100}em`
           }
 
           return resolvedValue
         }
-        case `transition_property`: {
+        case 'transition_property': {
           return resolvedValue
         }
 
-        case `outline`: {
+        case 'outline': {
           // TODO warn missing outline style
-          if (typeof resolvedValue === `string`) return resolvedValue
+          if (typeof resolvedValue === 'string') return resolvedValue
 
           const outline = []
 
           const parts: { type: TokenType; value: any }[] = [
-            { type: `dimension`, value: resolvedValue.width || `medium` },
-            { type: `stroke_style`, value: resolvedValue.style || `none` },
-            { type: `color`, value: resolvedValue.color || `currentcolor` },
+            { type: 'dimension', value: resolvedValue.width || 'medium' },
+            { type: 'stroke_style', value: resolvedValue.style || 'none' },
+            { type: 'color', value: resolvedValue.color || 'currentcolor' },
           ]
 
           parts.forEach((part) => {
             !isNullish(part.value) &&
-              outline.push(this.convertToCssValue(part, { outputVariable }))
+              outline.push(this.convertToCssValue(part, { keepAliases }))
           })
 
-          return outline.join(` `)
+          return outline.join(' ')
         }
-        case `drop_shadow`: {
+        case 'drop_shadow': {
           // TODO
-          if (typeof resolvedValue === `string`) return resolvedValue
+          if (typeof resolvedValue === 'string') return resolvedValue
 
           if (Array.isArray(resolvedValue)) {
             return resolvedValue
               .map((shadow) => {
                 return this.convertToCssValue(
-                  { type: `drop_shadow`, value: shadow },
-                  { outputVariable }
+                  { type: 'drop_shadow', value: shadow },
+                  { keepAliases }
                 )
               })
-              .join(` `)
+              .join(' ')
           }
           const shadow = []
 
           const parts: { type: TokenType; value: any }[] = [
             {
-              type: `dimension`,
+              type: 'dimension',
               value:
                 resolvedValue.offset_x ||
                 resolvedValue.offsetX ||
@@ -539,22 +533,22 @@ export class CssFormatter {
                 0,
             },
             {
-              type: `dimension`,
+              type: 'dimension',
               value:
                 resolvedValue.offset_y ||
                 resolvedValue.offsetY ||
                 resolvedValue.y ||
                 0,
             },
-            { type: `dimension`, value: resolvedValue.blur || 0 },
-            { type: `color`, value: resolvedValue.color || `#000000` },
+            { type: 'dimension', value: resolvedValue.blur || 0 },
+            { type: 'color', value: resolvedValue.color || '#000000' },
           ]
 
           parts.forEach((part) => {
-            shadow.push(this.convertToCssValue(part, { outputVariable }))
+            shadow.push(this.convertToCssValue(part, { keepAliases }))
           })
 
-          return `drop-shadow(${shadow.join(` `)})`
+          return `drop-shadow(${shadow.join(' ')})`
         }
         // case `keyframes`: {
         //   return resolvedValue
@@ -562,26 +556,23 @@ export class CssFormatter {
 
         default: {
           if (
-            typeof resolvedValue !== `string` &&
-            typeof resolvedValue !== `number`
+            typeof resolvedValue !== 'string' &&
+            typeof resolvedValue !== 'number'
           ) {
-            throw new Error(`This should not happen.`)
+            throw new Error('This should not happen.')
           }
           return String(resolvedValue)
         }
       }
     } catch {
-      console.log(`error`, type, value)
+      console.log('error', type, value)
       // TODO add a generic error message with warningMessages
-      return ``
+      return ''
     }
   }
 
   // TODO return value type is string or any valid token schema
-  resolveReferencesToCss(
-    value: unknown,
-    { outputVariable = false } = {}
-  ): unknown {
+  aliasesToCssValue(value: unknown, { keepAliases = false } = {}): unknown {
     const clone = klona({ value })
 
     traverseObj(clone, (obj, key) => {
@@ -591,7 +582,7 @@ export class CssFormatter {
         refs.forEach((ref) => {
           const referenced = getObjValue(
             this.collection.tokenObject,
-            ref.split(`.`)
+            ref.split('.')
           )
           const refString = `{${ref}}`
 
@@ -600,17 +591,17 @@ export class CssFormatter {
               refString,
               this.convertToCssValue(
                 { type: referenced.$type, value: referenced.$value },
-                { outputVariable }
+                { keepAliases }
               )
             )
           } else if (isTokenSet(referenced)) {
             obj[key] = obj[key].replace(
               refString,
-              `var(${this.tokenToCssVariableName(referenced)})`
+              `var(${this.tokenToCssCustomPropertyName(referenced)})`
             )
-          } else if (typeof referenced === `undefined`) {
-            const cssVariable = `var(--${cssNameFromKey(ref.split(`.`))})`
-            obj[key] = obj[key].replace(refString, cssVariable)
+          } else if (typeof referenced === 'undefined') {
+            const cssCustomProperty = `var(--${cssNameFromKey(ref.split('.'))})`
+            obj[key] = obj[key].replace(refString, cssCustomProperty)
           } else if (isPrimitive(referenced)) {
             obj[key] = obj[key].replace(refString, referenced)
           } else {
@@ -626,13 +617,17 @@ export class CssFormatter {
     return clone.value as string
   }
 
-  tokenToCssVariableName(tokenOrSet: Token | TokenSet): string {
+  tokenToCssCustomPropertyName(tokenOrSet: Token | TokenSet): string {
     const name = this.tokenToCssName(tokenOrSet)
 
     return `--${this.options.prefix}${name}`
   }
 
-  tokenToClassSelector(token: Token) {
+  tokenToComponentClassSelector({ $extensions: { component } }: Token): string {
+    return component ? `.${this.options.prefix}${component}`.trim() : ''
+  }
+
+  typographyTokenToClassSelector(token: Token) {
     const name = this.tokenToCssName(token)
 
     return `.${this.options.prefix}${name}`
@@ -644,7 +639,7 @@ export class CssFormatter {
 
     const nameKeys = generateTokenNameKeys(keys)
 
-    if (nameKeys[0] === `variant` || nameKeys[0] === `condition`) {
+    if (nameKeys[0] === 'variant' || nameKeys[0] === 'condition') {
       nameKeys.splice(0, 1)
     }
 
@@ -652,7 +647,7 @@ export class CssFormatter {
       // remove 'component' from keys
       nameKeys.splice(0, 1)
 
-      if (nameKeys[1] === `$variant`) {
+      if (nameKeys[1] === '$variant') {
         // remove '$variant' from keys
         nameKeys.splice(1, 1)
       } else {
@@ -675,7 +670,7 @@ export class CssFormatter {
       supports = [],
     } = groupBy(token.$extensions.conditionTokens, (conditionToken) => {
       const atRule = conditionToken.$value!.match(/@(\S*)/)?.[1]
-      return atRule || `selector`
+      return atRule || 'selector'
     })
 
     const atRules = []
@@ -683,29 +678,29 @@ export class CssFormatter {
     if (media.length) {
       const params = media
         .map((token) => {
-          // TODO alternatively, output the variable name
-          // return `(${this.tokenToCssVariableName(token)})`
-          return this.resolveReferencesToCss(token.$value)
-            .replace(`@media`, ``)
+          // TODO alternatively, output the custom property name
+          // return `(${this.tokenToCssCustomPropertyName(token)})`
+          return this.aliasesToCssValue(token.$value)
+            .replace('@media', '')
             .trim()
         })
         .sort()
-        .join(` and `)
+        .join(' and ')
 
-      atRules.push({ name: `media`, params })
+      atRules.push({ name: 'media', params })
     }
 
     // TODO container, supports
 
     return {
       selector: selector
-        // TODO alternatively, output the variable name
+        // TODO alternatively, output the custom property name
         .map((token) => {
-          // return `:${this.tokenToCssVariableName(token)}`
-          return this.resolveReferencesToCss(token.$value).trim()
+          // return `:${this.tokenToCssCustomPropertyName(token)}`
+          return this.aliasesToCssValue(token.$value).trim()
         })
         .sort()
-        .join(``),
+        .join(''),
       atRules,
     }
   }
@@ -714,27 +709,29 @@ export class CssFormatter {
     return {
       selector: token.$extensions.variantTokens
         .map((token) => {
-          // TODO alternatively, output the variable name
-          // return `:${this.tokenToCssVariableName(token)}`
-          return this.resolveReferencesToCss(token.$value).trim()
+          // TODO alternatively, output the custom property name
+          // return `:${this.tokenToCssCustomPropertyName(token)}`
+          return this.aliasesToCssValue(token.$value).trim()
         })
         .sort()
-        .join(``),
+        .join(''),
     }
   }
 
-  #replaceReferencesWithCssVariables(value) {
+  #aliasesToCustomProperty(value) {
     const refs = getReferences(value)
 
     refs.forEach((ref) => {
-      const obj = getObjValue(this.collection.tokenObject, ref.split(`.`))
+      const obj = getObjValue(this.collection.tokenObject, ref.split('.'))
 
       if (isToken(obj) || isTokenSet(obj)) {
-        const cssVariable = `var(${this.tokenToCssVariableName(obj)})`
-        value = value.replace(`{${ref}}`, cssVariable)
+        const cssCustomProperty = `var(${this.tokenToCssCustomPropertyName(
+          obj
+        )})`
+        value = value.replace(`{${ref}}`, cssCustomProperty)
       } else {
-        const cssVariable = `var(--${cssNameFromKey(ref.split(`.`))})`
-        value = value.replace(`{${ref}}`, cssVariable)
+        const cssCustomProperty = `var(--${cssNameFromKey(ref.split('.'))})`
+        value = value.replace(`{${ref}}`, cssCustomProperty)
       }
     })
 

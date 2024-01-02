@@ -50,7 +50,7 @@ export class Collection {
               warningMessages.add([
                 MessageHeaders.TOKEN_COLLISION,
                 `- Key: ${chalk.yellowBright(keyString)}`,
-                `- Sources:`,
+                '- Sources:',
                 chalk.yellowBright(existingSourceUnit),
                 chalk.yellowBright(sourceUnit),
               ])
@@ -67,7 +67,7 @@ export class Collection {
 
     // resolve any references except for those in token-like objects
     traverseObj(this.tokenObject, (obj, key, _) => {
-      if (isToken(obj)) throw `break`
+      if (isToken(obj)) throw 'break'
       if (!isAlias(obj[key])) return
       obj[key] = this.#expandReferences(obj[key], { clone: true })
     })
@@ -78,7 +78,7 @@ export class Collection {
     traverseObj(this.tokenObject, (obj, _, keys) => {
       if (!isToken(obj)) return
 
-      const isComponent = keys[0] === `component`
+      const isComponent = keys[0] === 'component'
       let category: string | null = isComponent ? null : keys[0]!
       const component = isComponent ? keys[1] : null
 
@@ -86,8 +86,8 @@ export class Collection {
         category = obj.$category
       }
 
-      if (isComponent && keys[2] === `$variant`) {
-        category = `variant`
+      if (isComponent && keys[2] === '$variant') {
+        category = 'variant'
       }
 
       // TODO references may not be a token or token set
@@ -101,18 +101,18 @@ export class Collection {
       )
 
       const conditionTokens = Object.entries(obj.$condition || {}).map((keys) =>
-        this.#expandReferences(`{${[`condition`, ...keys].join(`.`)}}`)
+        this.#expandReferences(`{${['condition', ...keys].join('.')}}`)
       )
 
       const variantTokens = Object.entries(obj.$variant || {}).flatMap(
         ([key, value]) => {
-          if (!key.startsWith(`_`) && Array.isArray(value)) {
+          if (!key.startsWith('_') && Array.isArray(value)) {
             // TODO warn
           }
 
           return toArray(value).map((value) =>
             this.#expandReferences(
-              `{${[`component`, component, `$variant`, key, value].join(`.`)}}`
+              `{${['component', component, '$variant', key, value].join('.')}}`
             )
           )
         }
@@ -157,7 +157,7 @@ export class Collection {
         tokensWithUnknownCategoryOrType.push(obj)
       }
 
-      throw `break`
+      throw 'break'
     })
 
     // resolve $category and $type from referenced tokens
@@ -177,21 +177,21 @@ export class Collection {
       )
 
       for (const referencedToken of referencedTokens) {
-        if (!(`$category` in token) && `$category` in referencedToken) {
+        if (!('$category' in token) && '$category' in referencedToken) {
           const category = referencedToken.$category
           token.$category = category
           const type = getCategorySpec(category)?.type
           type && (token.$type = type)
         }
-        if (!(`$type` in token) && `$type` in referencedToken) {
+        if (!('$type' in token) && '$type' in referencedToken) {
           token.$type = referencedToken.$type
         }
-        if (`$type` in token && `$category` in token) {
+        if ('$type' in token && '$category' in token) {
           break
         }
       }
 
-      if (!(`$type` in token) || !(`$category` in token)) {
+      if (!('$type' in token) || !('$category' in token)) {
         tokensWithUnknownCategoryOrType.push(token)
       }
     }
@@ -209,7 +209,7 @@ export class Collection {
           // `- Source: ${chalk.yellowBright(source)}`,
         ])
       }
-      throw `break`
+      throw 'break'
     })
   }
 
@@ -240,7 +240,7 @@ export class Collection {
         } else {
           deepSet(target, keys, obj)
         }
-        throw `break`
+        throw 'break'
       }
 
       if (isPrimitive(obj[key])) {
@@ -257,10 +257,10 @@ export class Collection {
     const tokenSetsWithWildcardVariant = []
 
     traverseObj(tokenObject, (obj, key, keys) => {
-      if (!isToken(obj) || !obj.$variant || key !== `$variant`) return
+      if (!isToken(obj) || !obj.$variant || key !== '$variant') return
 
       if (
-        Object.values(obj.$variant).filter((value) => value === `*`).length > 1
+        Object.values(obj.$variant).filter((value) => value === '*').length > 1
       ) {
         warningMessages.add([
           MessageHeaders.MULTIPLE_WILDCARD_VARIANT,
@@ -273,7 +273,7 @@ export class Collection {
       const expandedTokens = []
 
       Object.entries(obj.$variant).forEach(([variantKey, variantValue]) => {
-        if (variantValue !== `*`) return
+        if (variantValue !== '*') return
 
         const variants = tokenObject.component[component].$variant[variantKey]
 
@@ -284,7 +284,7 @@ export class Collection {
             $value: isAlias(obj.$value)
               ? obj.$value.replace(
                   /\[([^[^\]]+)\]/g,
-                  (_, ref) => `.${getObjValue(variantData, ref.split(`.`))}.`
+                  (_, ref) => `.${getObjValue(variantData, ref.split('.'))}.`
                 )
               : obj.$value,
           })
@@ -293,7 +293,7 @@ export class Collection {
 
       if (!expandedTokens.length) return
 
-      const isTokenSet = keys[keys.length - 2] === `$set`
+      const isTokenSet = keys[keys.length - 2] === '$set'
 
       if (isTokenSet) {
         const tokenSet = getObjValue(tokenObject, keys.slice(0, -1))
@@ -334,11 +334,11 @@ export class Collection {
     const refs = getReferences(value)
 
     refs.forEach((ref) => {
-      const referenced = getObjValue(this.tokenObject, ref.split(`.`))
+      const referenced = getObjValue(this.tokenObject, ref.split('.'))
       const refString = `{${ref}}`
 
       // TODO warn missing references
-      if (typeof referenced === `undefined`) {
+      if (typeof referenced === 'undefined') {
         warningMessages.add([
           MessageHeaders.MISSING_ALIAS,
           `- Alias: ${chalk.yellowBright(ref)}`,

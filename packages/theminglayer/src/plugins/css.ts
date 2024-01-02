@@ -1,29 +1,30 @@
-import nodePath from 'node:path'
 import postcss, {
   type AtRule,
   type PluginCreator as PostcssPluginCreator,
 } from 'postcss'
-import { z } from 'zod'
 
 import { name as packageName } from '~/../package.json'
 import { CssFormatter } from '~/lib/CssFormatter'
-import { compareRuleSpecificity, createCachedInsertRules } from '~/lib/cssUtils'
+import {
+  createCachedInsertRules,
+  createCompareRuleSpecificity,
+} from '~/lib/cssUtils'
+import { cssOptions } from '~/plugins/cssOptions'
 import { type PluginCreator, type Token } from '~/types'
 import * as promises from '~/utils/promises'
 
-const buildOptionsSchema = z.object({
-  outDir: z.string(),
-  prefix: z.string(),
-})
-
 export const cssPlugin: PluginCreator<{
+  prefix?: string
+  containerSelector?: string
   files?: {
     path: string
     filter: (token: Token) => boolean
-    outputVariable?: boolean
+    keepAliases?: boolean
   }[]
 }> = ({
-  files = [{ path: `theme.css`, filter: () => true, outputVariable: false }],
+  prefix = cssOptions.prefix,
+  containerSelector = cssOptions.containerSelector,
+  files = [{ path: 'theme.css', filter: () => true, keepAliases: false }],
 } = {}) => {
   const postcssPlugin: PostcssPluginCreator<{
     rules: unknown[]
@@ -31,13 +32,17 @@ export const cssPlugin: PluginCreator<{
     const insertRules = createCachedInsertRules()
 
     return {
-      postcssPlugin: `postcss-name`,
+      postcssPlugin: 'postcss-name',
       Once(root, { postcss }) {
         let directive: AtRule
         root.walkAtRules(packageName, (atRule) => {
           directive = atRule
         })
-        insertRules(rules.sort(compareRuleSpecificity), directive!, postcss)
+        insertRules(
+          rules.sort(createCompareRuleSpecificity(containerSelector)),
+          directive!,
+          postcss
+        )
         directive!.remove()
       },
     }
@@ -46,54 +51,44 @@ export const cssPlugin: PluginCreator<{
   postcssPlugin.postcss = true
 
   return {
-    name: `theminglayer/css`,
-    async build({ collection, buildOptions, addOutputFile }) {
-      const parsedBuildOptions = buildOptionsSchema.safeParse(buildOptions)
-
-      if (!parsedBuildOptions.success) {
-        // TODO throw
-        return
-      }
-
-      const { outDir, prefix } = parsedBuildOptions.data
-
-      const cssFormatter = new CssFormatter(collection, { prefix })
+    name: 'theminglayer/css',
+    async build({ collection, addOutputFile }) {
+      const cssFormatter = new CssFormatter(collection, {
+        prefix,
+        containerSelector,
+      })
 
       await promises.mapParallel(
         files,
-        async ({ path, filter = () => true, outputVariable = false }) => {
+        async ({ path, filter = () => true, keepAliases = false }) => {
           const rules = []
 
           collection.tokens.forEach((token) => {
             const { $type: type } = token
 
             if (
-              type === `condition` ||
-              type === `variant` ||
-              type === `text` ||
+              type === 'condition' ||
+              type === 'variant' ||
+              type === 'text' ||
               // TODO future
-              type === `gradient` ||
-              type === `keyframes`
+              type === 'gradient' ||
+              type === 'keyframes'
             )
               return
 
             if (!filter(token)) return
 
-            rules.push(
-              ...cssFormatter.tokenToCssRules(token, { outputVariable })
-            )
+            rules.push(...cssFormatter.tokenToCssRules(token, { keepAliases }))
           })
 
           // TODO add postcss preset env?
           const result = await postcss([postcssPlugin({ rules })]).process(
-            `@theminglayer`,
+            '@theminglayer',
             { from: undefined! }
           )
 
           addOutputFile({
-            filePath: nodePath.isAbsolute(path)
-              ? path
-              : nodePath.join(outDir, path),
+            filePath: path,
             content: result.css,
           })
         }

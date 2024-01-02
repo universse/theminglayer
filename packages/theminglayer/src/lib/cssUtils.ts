@@ -15,37 +15,40 @@ const getSpecificity = (() => {
     selectorSpecificity(processor.astSync(selector))
 })()
 
-export function compareRuleSpecificity(ruleA, ruleB): number {
-  // TODO sort viewport size atRules?
+export function createCompareRuleSpecificity(containerSelector: string) {
+  return (ruleA, ruleB): number => {
+    // TODO sort viewport size atRules?
 
-  if (ruleA.component === ruleB.component) {
-    // :root always comes first
-    if (ruleA.rule.selector === `:root` && ruleB.rule.selector === `:root`)
-      return ruleA.rule.atRules.length - ruleB.rule.atRules.length
+    if (ruleA.component === ruleB.component) {
+      // containerSelector always comes first
+      if (
+        ruleA.rule.selector === containerSelector &&
+        ruleB.rule.selector === containerSelector
+      )
+        return ruleA.rule.atRules.length - ruleB.rule.atRules.length
 
-    if (ruleA.rule.selector === `:root`) return -1
-    if (ruleB.rule.selector === `:root`) return 1
+      if (ruleA.rule.selector === containerSelector) return -1
+      if (ruleB.rule.selector === containerSelector) return 1
 
-    return (
-      compare(
-        getSpecificity(ruleA.rule.selector),
-        getSpecificity(ruleB.rule.selector)
-      ) +
-      ruleA.rule.atRules.length * 1_000 -
-      ruleB.rule.atRules.length * 1_000
-    )
+      return (
+        compare(
+          getSpecificity(ruleA.rule.selector),
+          getSpecificity(ruleB.rule.selector)
+        ) || ruleA.rule.atRules.length - ruleB.rule.atRules.length
+      )
+    }
+    if (ruleA.component === null) return -1
+    if (ruleB.component === null) return 1
+    return ruleA.component < ruleB.component ? -1 : 1
   }
-  if (ruleA.component === null) return -1
-  if (ruleB.component === null) return 1
-  return ruleA.component < ruleB.component ? -1 : 1
 }
 
 export function cssNameFromKey(keys: string[]): string {
-  return cssName(keys.join(`-`))
+  return cssName(keys.join('-'))
 }
 
 function cssName(name: string) {
-  return toKebabCase(name.replace(/\$/g, ``))
+  return toKebabCase(name.replace(/\$/g, ''))
 }
 
 function generateNodeCacheKey(
@@ -59,15 +62,15 @@ function generateNodeCacheKey(
   atRules.forEach(({ name, params }) => cacheKeys.push(`${name}:${params}`))
   selector && cacheKeys.push(selector)
 
-  return cacheKeys.join(`|`).replace(/['"]/g, ``)
+  return cacheKeys.join('|').replace(/['"]/g, '')
 }
 
 export function createCachedInsertRules() {
   const nodeCache = new Map()
 
   return function (rules, directive: AtRule, postcss: Postcss) {
-    rules.forEach(({ component = ``, rule }) => {
-      const { atRules = [], selector = ``, declarations = [] } = rule
+    rules.forEach(({ component = '', rule }) => {
+      const { atRules = [], selector = '', declarations = [] } = rule
 
       const nodeCacheKey = generateNodeCacheKey(component, atRules, selector)
       let node = nodeCache.get(nodeCacheKey)

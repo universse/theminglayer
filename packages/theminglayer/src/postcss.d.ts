@@ -1,9 +1,5 @@
 import { PluginCreator } from 'postcss'
 
-type PluginOptions = {
-  safelist?: string[]
-  outputVariable?: boolean
-}
-declare const plugin: PluginCreator<PluginOptions>
+declare const plugin: PluginCreator<never>
 
-export { type PluginOptions, plugin as default }
+export { plugin as default }

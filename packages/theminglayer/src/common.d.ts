@@ -8,6 +8,7 @@ type TokenType =
   | 'font_weight'
   | 'number'
   | 'border'
+  | 'gradient'
   | 'shadow'
   | 'stroke_style'
   | 'transition'
@@ -18,8 +19,11 @@ type TokenType =
   | 'tracking'
   | 'transition_property'
   | 'variant'
+  | 'text'
   | 'outline'
   | 'drop_shadow'
+  | 'keyframes'
+  | 'animation'
 
 type UserTokenOptionaLAttributes = {
   $category?: string
@@ -31,7 +35,7 @@ type UserTokenOptionaLAttributes = {
 type Token = {
   $value: unknown
   $type: TokenType
-  $tl: {
+  $extensions: {
     keys: string[]
     component: string | null
     conditionTokens: Token[]
@@ -46,7 +50,6 @@ type TokenSet = {
 }
 interface SharedBuildOptions {
   outDir: string
-  [key: string]: unknown
 }
 interface BuildOptions extends SharedBuildOptions {
   sources: string | string[]
@@ -60,7 +63,6 @@ type Plugin = {
   name: string
   build: (args: {
     collection: Collection
-    buildOptions: SharedBuildOptions
     addOutputFile: (args: PluginOutputFile) => void
     getPluginData: (pluginName: string, key: string) => string | undefined
     setPluginData: (key: string, value: string) => void

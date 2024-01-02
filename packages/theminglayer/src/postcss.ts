@@ -2,146 +2,107 @@ import fsp from 'node:fs/promises'
 import { type AtRule, type PluginCreator, type Postcss } from 'postcss'
 
 import { name as packageName } from '~/../package.json'
-import { cacheFilePath } from '~/lib/cache'
-import { CssFormatter } from '~/lib/CssFormatter'
-import { compareRuleSpecificity, createCachedInsertRules } from '~/lib/cssUtils'
-import { type CachedBuild, type Token } from '~/types'
+import { CACHE_DIRECTORY, readCachedFile } from '~/lib/cache'
+import {
+  createCachedInsertRules,
+  createCompareRuleSpecificity,
+} from '~/lib/cssUtils'
+import { type Token } from '~/types'
+import * as promises from '~/utils/promises'
 
-export type PluginOptions = {
-  safelist?: string[]
-  outputVariable?: boolean
-}
+const PLUGIN_NAME = 'postcss-plugin-theminglayer'
 
-const PLUGIN_NAME = `postcss-plugin-theminglayer`
+async function createJitEngine() {
+  const CUSTOM_PROPERTY_RE = `var\\(\\s*(--[\\w\\d-_]+)`
+  const SELECTOR_RE = `\\.[\\w\\d-_]+`
 
-async function createJitEngine({
-  safelist,
-  outputVariable,
-}: Required<PluginOptions>) {
   const JIT: {
-    cssFormattersByPrefix: Map<string, CssFormatter>
-    tokensByVariableName: Record<string, Token[]>
-    tokensByComponentClassSelector: Record<string, Token[]>
-    processVariableNamesAndClassSelectors: Set<string>
-    prefixesToMatch: string[]
-    collectedRules: any
+    rulesByCustomPropertyName: Record<string, Token[]>
+    rulesByComponentClassSelector: Record<string, Token[]>
+    processedCustomPropertyNamesAndClassSelectors: Set<string>
     collectedCustomAtRules: any
+    collectedRules: any
+    containerSelector: string
   } = {
-    cssFormattersByPrefix: new Map(),
-    tokensByVariableName: {},
-    tokensByComponentClassSelector: {},
-    processVariableNamesAndClassSelectors: new Set(),
-    prefixesToMatch: [],
-    collectedRules: [],
+    rulesByCustomPropertyName: {},
+    rulesByComponentClassSelector: {},
+    processedCustomPropertyNamesAndClassSelectors: new Set(),
     collectedCustomAtRules: [],
+    collectedRules: [],
+    containerSelector: '',
   }
 
-  const { Collection } = await import(`theminglayer`)
+  const cacheFilePaths = await fsp.readdir(CACHE_DIRECTORY)
 
-  const { data }: CachedBuild = JSON.parse(
-    await fsp.readFile(cacheFilePath, `utf-8`)
-  )
+  await promises.mapParallel(cacheFilePaths, async (cacheFilePath) => {
+    const {
+      rulesByCustomPropertyName,
+      rulesByComponentClassSelector,
+      typographyRules,
+      customAtRules,
+      safelist,
+      containerSelector,
+    } = await readCachedFile(cacheFilePath)
 
-  data.forEach(({ collectionData, buildOptions: { prefix } }) => {
-    const collection = Collection.fromJSON(collectionData)
+    Object.assign(
+      JIT.rulesByComponentClassSelector,
+      rulesByComponentClassSelector
+    )
+    Object.assign(JIT.rulesByCustomPropertyName, rulesByCustomPropertyName)
 
-    const { tokens } = collection
-
-    const cssFormatter = new CssFormatter(collection, { prefix })
-
-    JIT.cssFormattersByPrefix.set(prefix, cssFormatter)
-    JIT.prefixesToMatch.push(prefix)
-
-    tokens.forEach((token) => {
-      const {
-        $category: category,
-        $extensions: { component },
-      } = token
-
-      if (category === `variant` || category === `condition`) {
-        JIT.collectedCustomAtRules.push(...cssFormatter.tokenToCssRules(token))
-        return
-      }
-
-      if (category === `typography` && !component) {
-        JIT.collectedRules.push(
-          ...cssFormatter.tokenToCssRules(token, { outputVariable })
-        )
-        return
-      }
-
-      if (component) {
-        const componentClassSelector = `.${prefix}${component}`
-
-        JIT.tokensByComponentClassSelector[componentClassSelector] =
-          JIT.tokensByComponentClassSelector[componentClassSelector] || []
-
-        JIT.tokensByComponentClassSelector[componentClassSelector]!.push(token)
-      } else {
-        const variableName = cssFormatter.tokenToCssVariableName(token)
-
-        JIT.tokensByVariableName[variableName] =
-          JIT.tokensByVariableName[variableName] || []
-
-        JIT.tokensByVariableName[variableName]!.push(token)
-      }
+    JIT.collectedRules.push(...typographyRules)
+    JIT.collectedCustomAtRules.push(...customAtRules)
+    JIT.containerSelector = containerSelector
+    safelist.forEach((value) => {
+      collectRulesFromDeclarationValue(value)
     })
   })
 
-  const prefixRegExp = JIT.prefixesToMatch.join(`|`)
-  const CUSTOM_PROPERTY_REG_EXP = `var\\(\\s*(--(${prefixRegExp})[\\w\\d-_]+)`
-  const SELECTOR_REG_EXP = `\\.(${prefixRegExp})[\\w\\d-_]+`
+  function collectRules(rules: any[]) {
+    rules.forEach((rule) => {
+      JIT.collectedRules.push(rule)
 
-  safelist.forEach((value) => {
-    collectRulesFromDeclarationValue(value)
-  })
-
-  function rulesFromTokens(tokens: Token[], prefix: string) {
-    tokens.forEach((token) => {
-      const rules = JIT.cssFormattersByPrefix
-        .get(prefix)!
-        .tokenToCssRules(token, { outputVariable })
-
-      JIT.collectedRules.push(...rules)
-
-      rules.forEach(({ rule: { declarations } }) => {
-        declarations.forEach(({ value }) => {
-          collectRulesFromDeclarationValue(value)
-        })
+      rule.rule.declarations.forEach(({ value }) => {
+        collectRulesFromDeclarationValue(value)
       })
     })
   }
 
   function collectRulesFromDeclarationValue(declarationValue: string) {
-    const regExp = new RegExp(CUSTOM_PROPERTY_REG_EXP, `g`)
-    const matches = [...declarationValue.matchAll(regExp)]
+    const customPropertyRe = new RegExp(CUSTOM_PROPERTY_RE, 'g')
+    const matches = [...declarationValue.matchAll(customPropertyRe)]
 
-    matches.forEach(([, variableName, prefix]) => {
-      if (JIT.processVariableNamesAndClassSelectors.has(variableName!)) return
-      JIT.processVariableNamesAndClassSelectors.add(variableName!)
+    matches.forEach(([, customPropertyName]) => {
+      if (
+        JIT.processedCustomPropertyNamesAndClassSelectors.has(
+          customPropertyName!
+        )
+      )
+        return
+      JIT.processedCustomPropertyNamesAndClassSelectors.add(customPropertyName!)
 
-      const tokens = JIT.tokensByVariableName[variableName!] || []
-      rulesFromTokens(tokens, prefix!)
+      const rules = JIT.rulesByCustomPropertyName[customPropertyName!] || []
+      collectRules(rules)
     })
   }
 
   function collectRulesFromSelector(selector: string) {
-    const regExp = new RegExp(SELECTOR_REG_EXP, `g`)
-    const matches = [...selector.matchAll(regExp)]
+    const selectorRe = new RegExp(SELECTOR_RE, 'g')
+    const matches = [...selector.matchAll(selectorRe)]
 
-    matches.forEach(([classSelector, prefix]) => {
-      if (JIT.processVariableNamesAndClassSelectors.has(classSelector)) return
-      JIT.processVariableNamesAndClassSelectors.add(classSelector)
+    matches.forEach(([classSelector]) => {
+      if (JIT.processedCustomPropertyNamesAndClassSelectors.has(classSelector))
+        return
+      JIT.processedCustomPropertyNamesAndClassSelectors.add(classSelector)
 
-      const tokens = JIT.tokensByComponentClassSelector[classSelector] || []
-      rulesFromTokens(tokens, prefix!)
+      const rules = JIT.rulesByComponentClassSelector[classSelector] || []
+      collectRules(rules)
     })
   }
 
   const insertRules = createCachedInsertRules()
 
   return {
-    cacheFilePath,
     collectRulesFromDeclarationValue,
     collectRulesFromSelector,
     insertCustomAtRules(directive: AtRule, postcss: Postcss) {
@@ -149,7 +110,9 @@ async function createJitEngine({
     },
     insertCollectedRules(directive: AtRule, postcss: Postcss) {
       insertRules(
-        JIT.collectedRules.sort(compareRuleSpecificity),
+        JIT.collectedRules.sort(
+          createCompareRuleSpecificity(JIT.containerSelector)
+        ),
         directive,
         postcss
       )
@@ -157,24 +120,17 @@ async function createJitEngine({
   }
 }
 
-const plugin: PluginCreator<PluginOptions> = (options = {}) => {
-  const DEFAULT_OPTIONS = { safelist: [], outputVariable: false }
-
+const plugin: PluginCreator<never> = () => {
   return {
     postcssPlugin: PLUGIN_NAME,
     prepare() {
-      const pluginOptions = {
-        ...DEFAULT_OPTIONS,
-        ...options,
-      }
-
       let directive: AtRule
 
       let jitEngine: ReturnType<typeof createJitEngine>
 
       function getJitEngine() {
         if (!jitEngine) {
-          jitEngine = createJitEngine(pluginOptions)
+          jitEngine = createJitEngine()
         }
         return jitEngine
       }
@@ -187,11 +143,11 @@ const plugin: PluginCreator<PluginOptions> = (options = {}) => {
 
           if (!directive) return
 
-          const { cacheFilePath, insertCustomAtRules } = await getJitEngine()
+          const { insertCustomAtRules } = await getJitEngine()
 
           result.messages.push({
-            type: `dependency`,
-            file: cacheFilePath,
+            type: 'dir-dependency',
+            dir: CACHE_DIRECTORY,
             plugin: PLUGIN_NAME,
             parent: result.opts.from,
           })
@@ -219,7 +175,7 @@ const plugin: PluginCreator<PluginOptions> = (options = {}) => {
             await getJitEngine()
 
           rule.nodes.forEach((node) => {
-            if (node.type === `decl`) {
+            if (node.type === 'decl') {
               collectRulesFromDeclarationValue(node.value)
             }
           })

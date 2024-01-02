@@ -1,56 +1,47 @@
-import nodePath from 'node:path'
-import { z } from 'zod'
-
 import { CssFormatter } from '~/lib/CssFormatter'
 import { cssNameFromKey } from '~/lib/cssUtils'
 import { generateTokenNameKeys, getCategorySpec } from '~/lib/token'
+import { cssOptions } from '~/plugins/cssOptions'
 import { type PluginCreator, type Token } from '~/types'
 import { deepSetObj } from '~/utils/misc'
 import * as promises from '~/utils/promises'
 
-const buildOptionsSchema = z.object({
-  outDir: z.string(),
-  prefix: z.string(),
-})
-
 export const tailwindPresetPlugin: PluginCreator<{
+  prefix?: string
+  containerSelector?: string
   files?: {
     path: string
     filter: (token: Token) => boolean
     format?: 'esm' | 'cjs'
-    outputVariable?: boolean
+    keepAliases?: boolean
   }[]
 }> = ({
+  prefix = cssOptions.prefix,
+  containerSelector = cssOptions.containerSelector,
   files = [
     {
-      path: `tailwindPreset.js`,
-      format: `esm` as const,
+      path: 'tailwindPreset.js',
+      format: 'esm' as const,
       filter: () => true,
-      outputVariable: false,
+      keepAliases: false,
     },
   ],
 } = {}) => {
   return {
-    name: `theminglayer/tailwind-preset`,
-    async build({ collection, buildOptions, addOutputFile }) {
-      const parsedBuildOptions = buildOptionsSchema.safeParse(buildOptions)
-
-      if (!parsedBuildOptions.success) {
-        // TODO throw
-        return
-      }
-
-      const { outDir, prefix } = parsedBuildOptions.data
-
-      const cssFormatter = new CssFormatter(collection, { prefix })
+    name: 'theminglayer/tailwind-preset',
+    async build({ collection, addOutputFile }) {
+      const cssFormatter = new CssFormatter(collection, {
+        prefix,
+        containerSelector,
+      })
 
       await promises.mapParallel(
         files,
         async ({
           path,
           filter = () => true,
-          format = `esm`,
-          outputVariable = false,
+          format = 'esm',
+          keepAliases = false,
         }) => {
           const theme = {}
           const variants: Record<string, string> = {}
@@ -66,20 +57,20 @@ export const tailwindPresetPlugin: PluginCreator<{
 
             if (component) return
             if (
-              type === `typography` ||
-              type === `text` ||
+              type === 'typography' ||
+              type === 'text' ||
               // future
-              type === `gradient` ||
-              type === `keyframes`
+              type === 'gradient' ||
+              type === 'keyframes'
             )
               return
 
-            if (category === `condition`) {
-              const value = cssFormatter.resolveReferencesToCss(token.$value)
+            if (category === 'condition') {
+              const value = cssFormatter.aliasesToCssValue(token.$value)
               const atRule = value.match(/@(\S*)/)?.[1]
 
               if (atRule) {
-                if (atRule !== `media`) return
+                if (atRule !== 'media') return
                 variants[cssFormatter.tokenToCssName(token)] = value
               } else {
                 variants[cssFormatter.tokenToCssName(token)] = `${value} &`
@@ -88,8 +79,8 @@ export const tailwindPresetPlugin: PluginCreator<{
               return
             }
 
-            if (category === `variant`) {
-              const value = cssFormatter.resolveReferencesToCss(token.$value)
+            if (category === 'variant') {
+              const value = cssFormatter.aliasesToCssValue(token.$value)
               variants[cssFormatter.tokenToCssName(token)] = `&${value}`
               return
             }
@@ -102,14 +93,14 @@ export const tailwindPresetPlugin: PluginCreator<{
             )
 
             if (
-              token.$extensions.keys.includes(`$set`) ||
+              token.$extensions.keys.includes('$set') ||
               token.$extensions.conditionTokens.length ||
               token.$extensions.variantTokens.length
             ) {
               deepSetObj(
                 theme,
                 [themeKey, themePath],
-                `var(${cssFormatter.tokenToCssVariableName(token)})`
+                `var(${cssFormatter.tokenToCssCustomPropertyName(token)})`
               )
             } else {
               deepSetObj(
@@ -117,7 +108,7 @@ export const tailwindPresetPlugin: PluginCreator<{
                 [themeKey, themePath],
                 cssFormatter.convertToCssValue(
                   { type: token.$type, value: token.$value },
-                  { outputVariable }
+                  { keepAliases }
                 )
               )
             }
@@ -126,10 +117,8 @@ export const tailwindPresetPlugin: PluginCreator<{
           const code = js({ prefix, theme, variants })
 
           addOutputFile({
-            filePath: nodePath.isAbsolute(path)
-              ? path
-              : nodePath.join(outDir, path),
-            content: format === `esm` ? esm({ code }) : cjs({ code }),
+            filePath: path,
+            content: format === 'esm' ? esm({ code }) : cjs({ code }),
           })
         }
       )
@@ -137,7 +126,7 @@ export const tailwindPresetPlugin: PluginCreator<{
   }
 }
 
-function js({ prefix = ``, theme = {}, variants = {} } = {}) {
+function js({ prefix = '', theme = {}, variants = {} } = {}) {
   return `{
   prefix: '${prefix}',
   theme: ${JSON.stringify(theme)},
@@ -154,13 +143,13 @@ function js({ prefix = ``, theme = {}, variants = {} } = {}) {
 `
 }
 
-function esm({ code = `{}` } = {}) {
+function esm({ code = '{}' } = {}) {
   return `import plugin from 'tailwindcss/plugin'
 
 export const preset = ${code}
 `
 }
-function cjs({ code = `{}` } = {}) {
+function cjs({ code = '{}' } = {}) {
   return `const plugin = require('tailwindcss/plugin')
 
 exports.preset = ${code}

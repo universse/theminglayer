@@ -7,7 +7,7 @@ let uid = 0
 let lastMS: number
 
 const filename =
-  typeof __filename === `undefined`
+  typeof __filename === 'undefined'
     ? URL.fileURLToPath(import.meta.url)
     : __filename
 
@@ -20,7 +20,7 @@ export function importMjs(src: string, ms: number) {
     uid = 0
     worker = new Worker(filename)
 
-    worker.on(`message`, ({ id, result, error }) => {
+    worker.on('message', ({ id, result, error }) => {
       if (error) {
         requests[id].reject(error)
       } else {
@@ -37,7 +37,7 @@ export function importMjs(src: string, ms: number) {
 }
 
 if (!isMainThread) {
-  parentPort!.on(`message`, async ({ id, src }) => {
+  parentPort!.on('message', async ({ id, src }) => {
     try {
       const module = await import(src)
       parentPort!.postMessage({ id, result: module.default })

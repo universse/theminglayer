@@ -5,53 +5,53 @@ import type { Config } from 'tailwindcss'
 type TailwindThemeKey = keyof Required<Config>['theme']
 
 export type TokenCategory =
-  | `screen`
-  | `breakpoint`
-  | `condition`
-  | `variant`
-  | `color`
-  | `background_color`
-  | `text_color`
-  | `box_shadow_color`
-  | `opacity`
-  | `font_family`
-  | `font_size`
-  | `font_weight`
-  | `font_style`
-  | `font_variant`
-  | `leading`
-  | `line_height`
-  | `tracking`
-  | `letter_spacing`
-  | `typography`
-  | `space`
-  | `spacing`
-  | `size`
-  | `stroke_style`
-  | `border_color`
-  | `border_width`
-  | `border_style`
-  | `border_radius`
-  | `border`
-  | `outline_color`
-  | `outline_width`
-  | `outline_style`
-  | `outline_offset`
-  | `outline`
-  | `box_shadow`
-  | `drop_shadow`
-  | `gradient`
-  | `transition_property`
-  | `duration`
-  | `timing_function`
-  | `cubic_bezier`
-  | `easing`
-  | `delay`
-  | `transition`
-  | `keyframes`
+  | 'screen'
+  | 'breakpoint'
+  | 'condition'
+  | 'variant'
+  | 'color'
+  | 'background_color'
+  | 'text_color'
+  | 'box_shadow_color'
+  | 'opacity'
+  | 'font_family'
+  | 'font_size'
+  | 'font_weight'
+  | 'font_style'
+  | 'font_variant'
+  | 'leading'
+  | 'line_height'
+  | 'tracking'
+  | 'letter_spacing'
+  | 'typography'
+  | 'space'
+  | 'spacing'
+  | 'size'
+  | 'stroke_style'
+  | 'border_color'
+  | 'border_width'
+  | 'border_style'
+  | 'border_radius'
+  | 'border'
+  | 'outline_color'
+  | 'outline_width'
+  | 'outline_style'
+  | 'outline_offset'
+  | 'outline'
+  | 'box_shadow'
+  | 'drop_shadow'
+  | 'gradient'
+  | 'transition_property'
+  | 'duration'
+  | 'timing_function'
+  | 'cubic_bezier'
+  | 'easing'
+  | 'delay'
+  | 'transition'
+  | 'keyframes'
   | 'animation'
-  | `layer`
-  | `z_index`
+  | 'layer'
+  | 'z_index'
 
 export type TokenType =
   // w3c simple
@@ -85,24 +85,24 @@ export type TokenType =
   | 'animation'
 
 export const FontWeightMap = {
-  thin: `100`,
-  hairline: `100`,
-  extralight: `200`,
-  ultralight: `200`,
-  light: `300`,
-  normal: `400`,
-  regular: `400`,
-  book: `400`,
-  medium: `500`,
-  semibold: `600`,
-  demibold: `600`,
-  bold: `700`,
-  extrabold: `800`,
-  ultrabold: `800`,
-  black: `900`,
-  heavy: `900`,
-  extrablack: `950`,
-  ultrablack: `950`,
+  thin: '100',
+  hairline: '100',
+  extralight: '200',
+  ultralight: '200',
+  light: '300',
+  normal: '400',
+  regular: '400',
+  book: '400',
+  medium: '500',
+  semibold: '600',
+  demibold: '600',
+  bold: '700',
+  extrabold: '800',
+  ultrabold: '800',
+  black: '900',
+  heavy: '900',
+  extrablack: '950',
+  ultrablack: '950',
 } as const
 
 // export const TokenTypeSchemas = {
@@ -150,150 +150,150 @@ export const TokenCategorySpec: Record<
   { type: TokenType; tailwind?: TailwindThemeKey }
 > = {
   screen: {
-    type: `dimension`,
-    tailwind: `screens`,
+    type: 'dimension',
+    tailwind: 'screens',
   },
   get breakpoint() {
     return this.screen
   },
   condition: {
-    type: `condition`,
+    type: 'condition',
   },
   variant: {
-    type: `variant`,
+    type: 'variant',
   },
 
   color: {
-    type: `color`,
-    tailwind: `colors`,
+    type: 'color',
+    tailwind: 'colors',
   },
   background_color: {
-    type: `color`,
-    tailwind: `backgroundColor`,
+    type: 'color',
+    tailwind: 'backgroundColor',
   },
   text_color: {
-    type: `color`,
-    tailwind: `textColor`,
+    type: 'color',
+    tailwind: 'textColor',
   },
   box_shadow_color: {
-    type: `color`,
-    tailwind: `boxShadowColor`,
+    type: 'color',
+    tailwind: 'boxShadowColor',
   },
   opacity: {
-    type: `number`,
-    tailwind: `opacity`,
+    type: 'number',
+    tailwind: 'opacity',
   },
 
   font_family: {
-    type: `font_family`,
-    tailwind: `fontFamily`,
+    type: 'font_family',
+    tailwind: 'fontFamily',
   },
   font_size: {
-    type: `dimension`,
-    tailwind: `fontSize`,
+    type: 'dimension',
+    tailwind: 'fontSize',
   },
   font_weight: {
-    type: `font_weight`,
-    tailwind: `fontWeight`,
+    type: 'font_weight',
+    tailwind: 'fontWeight',
   },
   font_style: {
-    type: `font_style`,
+    type: 'font_style',
   },
   font_variant: {
-    type: `font_variant`,
+    type: 'font_variant',
   },
   leading: {
-    type: `leading`,
-    tailwind: `lineHeight`,
+    type: 'leading',
+    tailwind: 'lineHeight',
   },
   get line_height() {
     return this.leading
   },
   tracking: {
-    type: `tracking`,
-    tailwind: `letterSpacing`,
+    type: 'tracking',
+    tailwind: 'letterSpacing',
   },
   get letter_spacing() {
     return this.tracking
   },
   typography: {
-    type: `typography`,
+    type: 'typography',
   },
 
   space: {
-    type: `dimension`,
-    tailwind: `spacing`,
+    type: 'dimension',
+    tailwind: 'spacing',
   },
   get spacing() {
     return this.space
   },
 
   size: {
-    type: `dimension`,
+    type: 'dimension',
   },
 
   stroke_style: {
-    type: `stroke_style`,
+    type: 'stroke_style',
   },
   border_color: {
-    type: `color`,
-    tailwind: `borderColor`,
+    type: 'color',
+    tailwind: 'borderColor',
   },
   border_width: {
-    type: `dimension`,
-    tailwind: `borderWidth`,
+    type: 'dimension',
+    tailwind: 'borderWidth',
   },
   get border_style() {
     return this.stroke_style
   },
   border_radius: {
-    type: `dimension`,
-    tailwind: `borderRadius`,
+    type: 'dimension',
+    tailwind: 'borderRadius',
   },
   border: {
-    type: `border`,
+    type: 'border',
   },
   outline_color: {
-    type: `color`,
-    tailwind: `outlineColor`,
+    type: 'color',
+    tailwind: 'outlineColor',
   },
   outline_width: {
-    type: `dimension`,
-    tailwind: `outlineWidth`,
+    type: 'dimension',
+    tailwind: 'outlineWidth',
   },
   get outline_style() {
     return this.stroke_style
   },
   outline_offset: {
-    type: `dimension`,
-    tailwind: `outlineOffset`,
+    type: 'dimension',
+    tailwind: 'outlineOffset',
   },
   outline: {
-    type: `outline`,
+    type: 'outline',
   },
 
   box_shadow: {
-    type: `shadow`,
-    tailwind: `boxShadow`,
+    type: 'shadow',
+    tailwind: 'boxShadow',
   },
   drop_shadow: {
-    type: `drop_shadow`,
+    type: 'drop_shadow',
   },
   gradient: {
-    type: `gradient`,
+    type: 'gradient',
   },
 
   transition_property: {
-    type: `transition_property`,
-    tailwind: `transitionProperty`,
+    type: 'transition_property',
+    tailwind: 'transitionProperty',
   },
   duration: {
-    type: `duration`,
-    tailwind: `transitionDuration`,
+    type: 'duration',
+    tailwind: 'transitionDuration',
   },
   timing_function: {
-    type: `cubic_bezier`,
-    tailwind: `transitionTimingFunction`,
+    type: 'cubic_bezier',
+    tailwind: 'transitionTimingFunction',
   },
   get cubic_bezier() {
     return this.timing_function
@@ -302,24 +302,24 @@ export const TokenCategorySpec: Record<
     return this.timing_function
   },
   delay: {
-    type: `duration`,
-    tailwind: `transitionDelay`,
+    type: 'duration',
+    tailwind: 'transitionDelay',
   },
   transition: {
-    type: `transition`,
+    type: 'transition',
   },
   keyframes: {
-    type: `keyframes`,
-    tailwind: `keyframes`,
+    type: 'keyframes',
+    tailwind: 'keyframes',
   },
   animation: {
-    type: `animation`,
-    tailwind: `animation`,
+    type: 'animation',
+    tailwind: 'animation',
   },
 
   layer: {
-    type: `number`,
-    tailwind: `zIndex`,
+    type: 'number',
+    tailwind: 'zIndex',
   },
   get z_index() {
     return this.layer

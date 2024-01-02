@@ -1,22 +1,22 @@
-export function parallel(...promises) {
+export function parallel(...promises: Promise<any>[]) {
   return Promise.all(promises)
 }
 
-export function serial(...promises) {
-  return promises.reduce((p, next) => p.then(() => next()), Promise.resolve())
+export function serial(...promises: Promise<any>[]) {
+  return promises.reduce((p, next) => p.then(() => next), Promise.resolve())
 }
 
-type Callback<T> = (item: T, i?: number) => Promise<any>
+type Callback<T, V> = (item: T, i?: number) => Promise<V>
 
-export function mapParallel<T>(items: T[], cb: Callback<T>) {
+export function mapParallel<T, V>(items: T[], cb: Callback<T, V>) {
   return Promise.all(items.map(cb))
 }
 
-export async function mapSerial<T>(items: T[], cb: Callback<T>) {
-  const results: ReturnType<Callback<T>>[] = []
+export async function mapSerial<T, V>(items: T[], cb: Callback<T, V>) {
+  const results: V[] = []
 
   for (let i = 0; i < items.length; i++) {
-    results.push(await cb(items[i], i))
+    results.push(await cb(items[i]!, i))
   }
 
   return results
@@ -29,11 +29,15 @@ export async function mapSerial<T>(items: T[], cb: Callback<T>) {
 //   )
 // }
 
-export function pool<T>(items: T[], cb: Callback<T>, concurrency: number) {
+export function pool<T, V>(
+  items: T[],
+  cb: Callback<T, V>,
+  concurrency: number
+) {
   return new Promise((resolve, reject) => {
     let running = 0
     let index = 0
-    const results: ReturnType<Callback<T>>[] = []
+    const results: V[] = []
 
     let done = false
 
@@ -50,7 +54,7 @@ export function pool<T>(items: T[], cb: Callback<T>, concurrency: number) {
       }
 
       running++
-      cb(items[index++])
+      cb(items[index++]!)
         .then((result) => {
           results.push(result)
           running--
@@ -66,10 +70,10 @@ export function pool<T>(items: T[], cb: Callback<T>, concurrency: number) {
   })
 }
 
-export function batch<T>(items: T[], cb: Callback<T>, size: number) {
+export function batch<T, V>(items: T[], cb: Callback<T, V>, size: number) {
   return new Promise((resolve, reject) => {
     let index = 0
-    const results: ReturnType<Callback<T>>[] = []
+    const results: V[] = []
 
     let done = false
 
@@ -99,6 +103,6 @@ export function batch<T>(items: T[], cb: Callback<T>, size: number) {
   })
 }
 
-export function delay(ms) {
+export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }

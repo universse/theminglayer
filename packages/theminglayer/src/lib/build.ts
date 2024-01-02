@@ -5,7 +5,7 @@ import glob from 'fast-glob'
 import globParent from 'glob-parent'
 
 import { Collection } from '~/lib/Collection'
-import { MessageHeaders, warningMessages } from '~/lib/Messages'
+import { warningMessages } from '~/lib/Messages'
 import { importTokens } from '~/lib/token'
 import { type BuildOptions, type PluginOutputFile } from '~/types'
 import { deepSet, toArray, writeFile } from '~/utils/misc'
@@ -13,19 +13,19 @@ import { cwd, require } from '~/utils/node'
 import * as promises from '~/utils/promises'
 
 function resolvePathFromPackage(path: string): string {
-  const parts = path.split(`/`)
-  let packageJsonPath = ``
-  let packageDir = ``
+  const parts = path.split('/')
+  let packageJsonPath = ''
+  let packageDir = ''
 
   while (!packageJsonPath) {
-    if (!parts.length) return ``
+    if (!parts.length) return ''
 
     packageDir = nodePath.join(packageDir, parts.shift()!)
 
     try {
       // TODO consider using resolve-cwd package instead
       packageJsonPath = require.resolve(
-        nodePath.join(packageDir, `package.json`),
+        nodePath.join(packageDir, 'package.json'),
         { paths: [cwd] }
       )
     } catch {}
@@ -40,7 +40,7 @@ function resolvePathFromPackage(path: string): string {
 function isRemote(str: string): boolean {
   try {
     const url = new URL(str)
-    return url.protocol === `https:`
+    return url.protocol === 'https:'
   } catch {
     return false
   }
@@ -53,13 +53,13 @@ type ResolvedSource =
     }
   | { type: 'not_found'; source: null }
 
-const GLOB_PATTERN = `**/!(___*).{js,mjs,cjs,json,json5,yml,yaml}`
+const GLOB_PATTERN = '**/!(___*).{js,mjs,cjs,json,json5,yml,yaml}'
 
 async function resolveSource(source: string): Promise<ResolvedSource> {
-  if (typeof source === `object`) {
-    return { type: `object`, source }
+  if (typeof source === 'object') {
+    return { type: 'object', source }
   } else if (isRemote(source)) {
-    return { type: `url`, source }
+    return { type: 'url', source }
   } else if (fs.existsSync(source)) {
     const path = nodePath.resolve(source)
     const stat = await fsp.stat(path)
@@ -67,10 +67,10 @@ async function resolveSource(source: string): Promise<ResolvedSource> {
 
     return isDirectory
       ? {
-          type: `glob`,
+          type: 'glob',
           source: `${glob.convertPathToPattern(path)}/${GLOB_PATTERN}`,
         }
-      : { type: `file`, source: glob.convertPathToPattern(path) }
+      : { type: 'file', source: glob.convertPathToPattern(path) }
   } else if (glob.isDynamicPattern(source)) {
     const parent = globParent(source)
 
@@ -81,21 +81,21 @@ async function resolveSource(source: string): Promise<ResolvedSource> {
     } else {
       parentPath = resolvePathFromPackage(parent)
       if (!fs.existsSync(parentPath)) {
-        return { type: `not_found`, source: null }
+        return { type: 'not_found', source: null }
       }
     }
 
-    const pattern = source.replace(`${parent}/`, ``)
+    const pattern = source.replace(`${parent}/`, '')
 
     return {
-      type: `glob`,
+      type: 'glob',
       source: `${glob.convertPathToPattern(parentPath)}/${pattern}`,
     }
   } else {
     const path = resolvePathFromPackage(source)
 
     if (!fs.existsSync(path)) {
-      return { type: `not_found`, source: null }
+      return { type: 'not_found', source: null }
     }
 
     const stat = await fsp.stat(path)
@@ -103,10 +103,10 @@ async function resolveSource(source: string): Promise<ResolvedSource> {
 
     return isDirectory
       ? {
-          type: `glob`,
+          type: 'glob',
           source: `${glob.convertPathToPattern(path)}/${GLOB_PATTERN}`,
         }
-      : { type: `file`, source: glob.convertPathToPattern(path) }
+      : { type: 'file', source: glob.convertPathToPattern(path) }
   }
 }
 
@@ -115,12 +115,12 @@ async function parseSource({
   source,
 }: ResolvedSource): Promise<{ sourceUnit: string; rawTokenObject: object }[]> {
   switch (type) {
-    case `file`: {
+    case 'file': {
       return [
         { sourceUnit: source, rawTokenObject: await importTokens(source) },
       ]
     }
-    case `glob`: {
+    case 'glob': {
       const filePaths = await glob(source)
       return promises.mapParallel(filePaths, async (filePath) => {
         return {
@@ -129,12 +129,12 @@ async function parseSource({
         }
       })
     }
-    case `url`:
-    case `object`: {
+    case 'url':
+    case 'object': {
       return []
     }
 
-    case `not_found`: {
+    case 'not_found': {
       // TODO log not found
       return []
     }
@@ -156,9 +156,7 @@ export async function build({
     resolveSource
   )
 
-  const tokenSources = await promises.mapParallel(resolvedSources, (source) =>
-    parseSource(source)
-  )
+  const tokenSources = await promises.mapParallel(resolvedSources, parseSource)
 
   const collection = new Collection({ tokenSources })
 
@@ -181,7 +179,6 @@ export async function build({
   await promises.mapSerial(plugins, async (plugin) => {
     await plugin.build({
       collection,
-      buildOptions,
       addOutputFile,
       getPluginData,
       setPluginData(key: string, value: string): void {
@@ -193,10 +190,13 @@ export async function build({
   warningMessages.flush()
 
   await promises.mapParallel(outputFiles, async ({ filePath, content }) => {
-    writeFile(filePath, content)
+    writeFile(
+      nodePath.isAbsolute(filePath)
+        ? filePath
+        : nodePath.join(buildOptions.outDir, filePath),
+      content
+    )
   })
-
-  console.log(`Built tokens.`)
 
   return {
     collection,
