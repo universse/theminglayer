@@ -83,7 +83,7 @@ export function generateKeyString(keys: string[]): string {
   return keys.join('.')
 }
 
-export function toKebabCase(str) {
+export function toKebabCase(str: string): string {
   return (
     str
       // TODO improve camelCase to kebab-case conversion to handle uppercase word

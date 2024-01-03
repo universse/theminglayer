@@ -8,8 +8,8 @@ import micromatch from 'micromatch'
 import { name as packageName, version } from '~/../package.json'
 import { build } from '~/lib/build'
 import { clearCache } from '~/lib/cache'
-import { type Collection } from '~/lib/Collection'
 import { findConfigFilePath, loadConfigFile } from '~/lib/config'
+import { messageLogger } from '~/lib/messageLogger'
 import { watchMode } from '~/lib/watchMode'
 import * as promises from '~/utils/promises'
 
@@ -102,14 +102,18 @@ export default defineConfig({
         const { config, dependencies: configDependencies } =
           await loadConfigFile(configFilePath)
 
-        const buildResults = (await promises.mapParallel(config, async (c) => {
+        const buildResults = await promises.mapSerial(config, async (c, i) => {
+          messageLogger.log(
+            `Building token collection ${i! + 1}/${config.length}`
+          )
+
           const {
-            collection,
             _internal: { resolvedSources },
           } = await build(c)
 
+          messageLogger.log(`Built token collection ${i! + 1}/${config.length}`)
+
           return {
-            collection,
             resolvedSources: resolvedSources.reduce((acc, { type, source }) => {
               if (
                 (type === 'glob' || type === 'file') &&
@@ -120,12 +124,12 @@ export default defineConfig({
               return acc
             }, [] as string[]),
           }
-        })) as { collection: Collection; resolvedSources: string[] }[]
+        })
 
         if (!watchMode.active) return process.exit(0)
 
         async function changeHandler(changedTokenFilePath: string) {
-          await promises.mapParallel(
+          await promises.mapSerial(
             buildResults,
             async ({ resolvedSources }, i) => {
               // check if changedTokenFilePath is in at least 1 of the collection's resolved sources
@@ -134,7 +138,13 @@ export default defineConfig({
                   micromatch.isMatch(changedTokenFilePath, resolvedSource)
                 )
               ) {
+                messageLogger.log(
+                  `Rebuilding token collection ${i! + 1}/${config.length}`
+                )
                 await build(config[i!]!)
+                messageLogger.log(
+                  `Rebuilt token collection ${i! + 1}/${config.length}`
+                )
               }
             }
           )
@@ -152,7 +162,7 @@ export default defineConfig({
         const configWatcher = chokidar.watch(configDependencies, watcherOptions)
 
         async function closeWatchers() {
-          await Promise.all([tokenWatcher.close(), configWatcher.close()])
+          await promises.parallel(tokenWatcher.close(), configWatcher.close())
         }
 
         process.once('SIGINT', closeWatchers)
@@ -160,6 +170,8 @@ export default defineConfig({
         configWatcher.on('change', async () => {
           process.off('SIGINT', closeWatchers)
           await closeWatchers()
+
+          messageLogger.log(['', 'Config change detected'])
           await buildAndOptionallyWatch()
         })
       }

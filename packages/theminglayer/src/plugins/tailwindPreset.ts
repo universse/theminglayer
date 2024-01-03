@@ -1,5 +1,5 @@
 import { CssFormatter } from '~/lib/CssFormatter'
-import { cssNameFromKey } from '~/lib/cssUtils'
+import { cssNameFromKeys } from '~/lib/cssUtils'
 import { generateTokenNameKeys, getCategorySpec } from '~/lib/token'
 import { cssOptions } from '~/plugins/cssOptions'
 import { type PluginCreator, type Token } from '~/types'
@@ -88,7 +88,7 @@ export const tailwindPresetPlugin: PluginCreator<{
             const themeKey = getCategorySpec(category!)?.tailwind
             if (!themeKey) return
 
-            const themePath = cssNameFromKey(
+            const themePath = cssNameFromKeys(
               generateTokenNameKeys(token.$extensions.keys).slice(1)
             )
 

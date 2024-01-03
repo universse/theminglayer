@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { klona } from 'klona/json'
 
-import { MessageHeaders, warningMessages } from '~/lib/Messages'
+import { MessageHeaders, messageLogger } from '~/lib/messageLogger'
 import {
   generateTokenNameKeys,
   getCategorySpec,
@@ -47,7 +47,7 @@ export class Collection {
                 }
               )!
 
-              warningMessages.add([
+              messageLogger.add([
                 MessageHeaders.TOKEN_COLLISION,
                 `- Key: ${chalk.yellowBright(keyString)}`,
                 '- Sources:',
@@ -203,7 +203,7 @@ export class Collection {
         this.tokens.push(obj)
       } else {
         // TODO warn
-        warningMessages.add([
+        messageLogger.add([
           MessageHeaders.UNKNOWN_TOKEN_TYPE,
           `- Key: ${chalk.yellowBright(generateKeyString(keys))}`,
           // `- Source: ${chalk.yellowBright(source)}`,
@@ -262,7 +262,7 @@ export class Collection {
       if (
         Object.values(obj.$variant).filter((value) => value === '*').length > 1
       ) {
-        warningMessages.add([
+        messageLogger.add([
           MessageHeaders.MULTIPLE_WILDCARD_VARIANT,
           `- Key: ${chalk.yellowBright(generateKeyString(keys))}`,
           // `- Source: ${chalk.yellowBright(source)}`,
@@ -339,7 +339,7 @@ export class Collection {
 
       // TODO warn missing references
       if (typeof referenced === 'undefined') {
-        warningMessages.add([
+        messageLogger.add([
           MessageHeaders.MISSING_ALIAS,
           `- Alias: ${chalk.yellowBright(ref)}`,
           // `- Key: ${chalk.yellowBright(generateKeyString(keys))}`,

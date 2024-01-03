@@ -28,7 +28,23 @@ export const postcssIntegrationPlugin: PluginCreator<{
         rulesByCustomPropertyName: {},
         rulesByComponentClassSelector: {},
         typographyRules: [],
-        customAtRules: [],
+        customAtRules: [
+          {
+            rule: {
+              atRules: [
+                {
+                  name: 'custom-selector',
+                  params: `:--tl-container ${
+                    containerSelector.startsWith(':is(') &&
+                    containerSelector.endsWith(')')
+                      ? containerSelector.slice(4, -1)
+                      : containerSelector
+                  }`,
+                },
+              ],
+            },
+          },
+        ],
         safelist,
         containerSelector,
       }

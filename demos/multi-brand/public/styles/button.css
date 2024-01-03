@@ -8,20 +8,20 @@ Take a look at dist-tokens/theme.css for the full CSS output generated.
 .tl-button {
   align-items: center;
   appearance: none;
-  background-color: var(--tl-background-color);
+  background-color: var(--tl-button-background-color);
   block-size: 44px;
-  border: 2px solid var(--tl-border-color);
+  border: 2px solid var(--tl-button-border-color);
   border-radius: 4px;
-  color: var(--tl-foreground-color);
+  color: var(--tl-button-foreground-color);
   cursor: pointer;
   display: inline-flex;
-  font-family: var(--tl-font-family);
-  font-size: var(--tl-font-size);
-  font-weight: var(--tl-font-weight);
+  font-family: var(--tl-button-font-family);
+  font-size: var(--tl-button-font-size);
+  font-weight: var(--tl-button-font-weight);
   gap: 4px;
   justify-content: center;
-  letter-spacing: var(--tl-letter-spacing);
-  line-height: var(--tl-line-height);
+  letter-spacing: var(--tl-button-letter-spacing);
+  line-height: var(--tl-button-line-height);
   margin: 0;
   padding: 0 24px;
   position: relative;

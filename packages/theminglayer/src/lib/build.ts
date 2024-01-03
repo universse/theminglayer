@@ -5,7 +5,7 @@ import glob from 'fast-glob'
 import globParent from 'glob-parent'
 
 import { Collection } from '~/lib/Collection'
-import { warningMessages } from '~/lib/Messages'
+import { messageLogger } from '~/lib/messageLogger'
 import { importTokens } from '~/lib/token'
 import { type BuildOptions, type PluginOutputFile } from '~/types'
 import { deepSet, toArray, writeFile } from '~/utils/misc'
@@ -160,7 +160,7 @@ export async function build({
 
   const collection = new Collection({ tokenSources })
 
-  warningMessages.flush()
+  messageLogger.flush()
 
   // ThemingLayer plugins
 
@@ -187,7 +187,7 @@ export async function build({
     })
   })
 
-  warningMessages.flush()
+  messageLogger.flush()
 
   await promises.mapParallel(outputFiles, async ({ filePath, content }) => {
     writeFile(

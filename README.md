@@ -258,7 +258,7 @@ With `keepAliases: false`, the plugin resolves any reference into CSS value if t
 }
 
 .tl-button {
-  --tl-color: var(--tl-text-color-primary);
+  --tl-button-color: var(--tl-text-color-primary);
 }
 ```
 
@@ -282,7 +282,7 @@ With `keepAliases: true`, the plugin converts any reference into a CSS custom pr
 }
 
 .tl-button {
-  --tl-color: var(--tl-text-color-primary);
+  --tl-button-color: var(--tl-text-color-primary);
 }
 ```
 
@@ -373,11 +373,11 @@ h1 {
   color: var(--tl-text-color-primary);
 }
 
-:--tl-color-scheme-light h1 {
+:--tl-container:--tl-condition-color-scheme-light h1 {
   /* ... */
 }
 
-@media (--tl-contrast-pref-forced) {
+@media (--tl-condition-contrast-pref-forced) {
   h1 {
     /* ... */
   }
@@ -408,7 +408,7 @@ h1 {
 }
 
 /* custom selector */
-[data-color-scheme='light'] h1 {
+:root[data-color-scheme='light'] h1 {
   /* ... */
 }
 

@@ -2,8 +2,7 @@ import { klona } from 'klona/json'
 import groupBy from 'lodash.groupby'
 
 import { type Collection } from '~/lib/Collection'
-import { cssNameFromKey } from '~/lib/cssUtils'
-import { MessageHeaders, warningMessages } from '~/lib/Messages'
+import { cssNameFromKeys } from '~/lib/cssUtils'
 import { FontWeightMap, type TokenType } from '~/lib/spec'
 import {
   generateTokenNameKeys,
@@ -566,7 +565,7 @@ export class CssFormatter {
       }
     } catch {
       console.log('error', type, value)
-      // TODO add a generic error message with warningMessages
+      // TODO add a generic error message with messageLogger
       return ''
     }
   }
@@ -600,7 +599,9 @@ export class CssFormatter {
               `var(${this.tokenToCssCustomPropertyName(referenced)})`
             )
           } else if (typeof referenced === 'undefined') {
-            const cssCustomProperty = `var(--${cssNameFromKey(ref.split('.'))})`
+            const cssCustomProperty = `var(--${cssNameFromKeys(
+              ref.split('.')
+            )})`
             obj[key] = obj[key].replace(refString, cssCustomProperty)
           } else if (isPrimitive(referenced)) {
             obj[key] = obj[key].replace(refString, referenced)
@@ -639,24 +640,17 @@ export class CssFormatter {
 
     const nameKeys = generateTokenNameKeys(keys)
 
-    if (nameKeys[0] === 'variant' || nameKeys[0] === 'condition') {
-      nameKeys.splice(0, 1)
-    }
-
     if (component) {
       // remove 'component' from keys
       nameKeys.splice(0, 1)
 
       if (nameKeys[1] === '$variant') {
-        // remove '$variant' from keys
-        nameKeys.splice(1, 1)
-      } else {
-        // remove component name from keys
-        nameKeys.splice(0, 1)
+        // remove 'true' from keys
+        nameKeys[nameKeys.length - 1] === 'true' && nameKeys.splice(-1, 1)
       }
     }
 
-    return cssNameFromKey(nameKeys)
+    return cssNameFromKeys(nameKeys)
   }
 
   #parseConditions(token: Token): {
@@ -730,7 +724,7 @@ export class CssFormatter {
         )})`
         value = value.replace(`{${ref}}`, cssCustomProperty)
       } else {
-        const cssCustomProperty = `var(--${cssNameFromKey(ref.split('.'))})`
+        const cssCustomProperty = `var(--${cssNameFromKeys(ref.split('.'))})`
         value = value.replace(`{${ref}}`, cssCustomProperty)
       }
     })

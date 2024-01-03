@@ -34,7 +34,8 @@ export function createCompareRuleSpecificity(containerSelector: string) {
         compare(
           getSpecificity(ruleA.rule.selector),
           getSpecificity(ruleB.rule.selector)
-        ) || ruleA.rule.atRules.length - ruleB.rule.atRules.length
+        ) +
+        1000 * (ruleA.rule.atRules.length - ruleB.rule.atRules.length)
       )
     }
     if (ruleA.component === null) return -1
@@ -43,12 +44,8 @@ export function createCompareRuleSpecificity(containerSelector: string) {
   }
 }
 
-export function cssNameFromKey(keys: string[]): string {
-  return cssName(keys.join('-'))
-}
-
-function cssName(name: string) {
-  return toKebabCase(name.replace(/\$/g, ''))
+export function cssNameFromKeys(keys: string[]): string {
+  return toKebabCase(keys.join('-').replace(/\$/g, ''))
 }
 
 function generateNodeCacheKey(
