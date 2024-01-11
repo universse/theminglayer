@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 
 import { watchMode } from '~/lib/watchMode'
-import { postcssIntegrationPlugin } from '~/plugins'
+import { cssPlugin } from '~/plugins'
 import { type BuildOptions } from '~/types'
 import { importJs } from '~/utils/importJs'
 import { toArray } from '~/utils/misc'
@@ -18,7 +18,7 @@ export function findConfigFilePath() {
 
 const DEFAULT_BUILD_CONFIG = {
   sources: 'design-tokens.json',
-  plugins: [postcssIntegrationPlugin()],
+  plugins: [cssPlugin()],
   outDir: 'dist-tokens',
 }
 

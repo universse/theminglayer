@@ -2,7 +2,7 @@
   font_family: {
     sans: {
       $value: [
-        '"Mona Sans"',
+        '"Inter Variable"',
         'ui-sans-serif',
         'system-ui',
         '-apple-system',

@@ -29,7 +29,7 @@ export const tailwindPresetPlugin: PluginCreator<{
 } = {}) => {
   return {
     name: 'theminglayer/tailwind-preset',
-    async build({ collection, addOutputFile }) {
+    async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,
         containerSelector,
@@ -50,23 +50,17 @@ export const tailwindPresetPlugin: PluginCreator<{
             if (!filter(token)) return
 
             const {
-              $type: type,
-              $category: category,
-              $extensions: { component },
+              $value,
+              $type,
+              $category,
+              $extensions: { keys, component },
             } = token
 
             if (component) return
-            if (
-              type === 'typography' ||
-              type === 'text' ||
-              // future
-              type === 'gradient' ||
-              type === 'keyframes'
-            )
-              return
+            if ($type === 'typography' || $type === 'text') return
 
-            if (category === 'condition') {
-              const value = cssFormatter.aliasesToCssValue(token.$value)
+            if ($type === 'condition') {
+              const value = cssFormatter.aliasesToCssValue($value)
               const atRule = value.match(/@(\S*)/)?.[1]
 
               if (atRule) {
@@ -79,13 +73,13 @@ export const tailwindPresetPlugin: PluginCreator<{
               return
             }
 
-            if (category === 'variant') {
-              const value = cssFormatter.aliasesToCssValue(token.$value)
+            if ($type === 'variant') {
+              const value = cssFormatter.aliasesToCssValue($value)
               variants[cssFormatter.tokenToCssName(token)] = `&${value}`
               return
             }
 
-            const themeKey = getCategorySpec(category!)?.tailwind
+            const themeKey = getCategorySpec($category!)?.tailwind
             if (!themeKey) return
 
             const themePath = cssNameFromKeys(
@@ -103,14 +97,18 @@ export const tailwindPresetPlugin: PluginCreator<{
                 `var(${cssFormatter.tokenToCssCustomPropertyName(token)})`
               )
             } else {
-              deepSetObj(
-                theme,
-                [themeKey, themePath],
-                cssFormatter.convertToCssValue(
-                  { type: token.$type, value: token.$value },
-                  { keepAliases }
+              try {
+                deepSetObj(
+                  theme,
+                  [themeKey, themePath],
+                  cssFormatter.convertToCssValue(
+                    { type: $type, value: $value },
+                    { keepAliases }
+                  )
                 )
-              )
+              } catch {
+                logger.warnings.invalidCssValue(keys)
+              }
             }
           })
 

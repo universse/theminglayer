@@ -9,7 +9,7 @@ import { name as packageName, version } from '~/../package.json'
 import { build } from '~/lib/build'
 import { clearCache } from '~/lib/cache'
 import { findConfigFilePath, loadConfigFile } from '~/lib/config'
-import { messageLogger } from '~/lib/messageLogger'
+import { appLogger } from '~/lib/logger'
 import { watchMode } from '~/lib/watchMode'
 import * as promises from '~/utils/promises'
 
@@ -33,9 +33,9 @@ export default defineConfig({
 
         if (!fs.existsSync(configFilePath) || force) {
           await fsp.writeFile(configFilePath, configFileContent)
-          console.log(`Created config file at ${chalk.blue(configFilePath)}.`)
+          appLogger.log(`Created config file at ${chalk.blue(configFilePath)}.`)
         } else {
-          console.log(
+          appLogger.log(
             `${chalk.blue(
               configFilePath
             )} already exists. Please remove the file or re-run the command with the ${chalk.blue(
@@ -54,9 +54,9 @@ export default defineConfig({
             presetPath,
             { recursive: true }
           )
-          console.log(`Created preset at ${chalk.blue(presetPath)}.`)
+          appLogger.log(`Created preset at ${chalk.blue(presetPath)}.`)
         } else {
-          console.log(
+          appLogger.log(
             `${chalk.blue(
               presetPath
             )} already exists. Please remove the file or re-run the command with the ${chalk.blue(
@@ -103,15 +103,15 @@ export default defineConfig({
           await loadConfigFile(configFilePath)
 
         const buildResults = await promises.mapSerial(config, async (c, i) => {
-          messageLogger.log(
-            `Building token collection ${i! + 1}/${config.length}`
+          appLogger.log(
+            `Building token collection ${i! + 1}/${config.length}...`
           )
 
           const {
             _internal: { resolvedSources },
           } = await build(c)
 
-          messageLogger.log(`Built token collection ${i! + 1}/${config.length}`)
+          appLogger.log(`Built token collection ${i! + 1}/${config.length}`)
 
           return {
             resolvedSources: resolvedSources.reduce((acc, { type, source }) => {
@@ -138,11 +138,11 @@ export default defineConfig({
                   micromatch.isMatch(changedTokenFilePath, resolvedSource)
                 )
               ) {
-                messageLogger.log(
+                appLogger.log(
                   `Rebuilding token collection ${i! + 1}/${config.length}`
                 )
                 await build(config[i!]!)
-                messageLogger.log(
+                appLogger.log(
                   `Rebuilt token collection ${i! + 1}/${config.length}`
                 )
               }
@@ -171,7 +171,7 @@ export default defineConfig({
           process.off('SIGINT', closeWatchers)
           await closeWatchers()
 
-          messageLogger.log(['', 'Config change detected'])
+          appLogger.log('Config change detected')
           await buildAndOptionallyWatch()
         })
       }

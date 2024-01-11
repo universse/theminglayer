@@ -16,9 +16,11 @@ export const postcssIntegrationPlugin: PluginCreator<{
   keepAliases = false,
   safelist = [],
 } = {}) => {
+  const filePath = `${Date.now()}`
+
   return {
     name: 'theminglayer/postcss-integration',
-    async build({ collection, addOutputFile }) {
+    async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,
         containerSelector,
@@ -51,47 +53,53 @@ export const postcssIntegrationPlugin: PluginCreator<{
 
       collection.tokens.forEach((token) => {
         const {
-          $category: category,
-          $extensions: { component },
+          $type,
+          $extensions: { keys, component },
         } = token
 
-        if (category === 'variant' || category === 'condition') {
-          data.customAtRules.push(...cssFormatter.tokenToCssRules(token))
-          return
-        }
+        try {
+          if ($type === 'variant' || $type === 'condition') {
+            data.customAtRules.push(...cssFormatter.tokenToCssRules(token))
+            return
+          }
 
-        if (category === 'typography' && !component) {
-          data.typographyRules.push(
-            ...cssFormatter.tokenToCssRules(token, { keepAliases })
-          )
-          return
-        }
+          if ($type === 'typography' && !component) {
+            data.typographyRules.push(
+              ...cssFormatter.tokenToCssRules(token, { keepAliases })
+            )
+            return
+          }
 
-        if (component) {
-          const componentClassSelector =
-            cssFormatter.tokenToComponentClassSelector(token)
+          if (component) {
+            const rules = cssFormatter.tokenToCssRules(token, { keepAliases })
 
-          data.rulesByComponentClassSelector[componentClassSelector] =
-            data.rulesByComponentClassSelector[componentClassSelector] || []
+            const componentClassSelector =
+              cssFormatter.tokenToComponentClassSelector(token)
 
-          data.rulesByComponentClassSelector[componentClassSelector]!.push(
-            ...cssFormatter.tokenToCssRules(token, { keepAliases })
-          )
-        } else {
-          const customPropertyName =
-            cssFormatter.tokenToCssCustomPropertyName(token)
+            data.rulesByComponentClassSelector[componentClassSelector] =
+              data.rulesByComponentClassSelector[componentClassSelector] || []
 
-          data.rulesByCustomPropertyName[customPropertyName] =
-            data.rulesByCustomPropertyName[customPropertyName] || []
+            data.rulesByComponentClassSelector[componentClassSelector]!.push(
+              ...rules
+            )
+          } else {
+            const rules = cssFormatter.tokenToCssRules(token, { keepAliases })
 
-          data.rulesByCustomPropertyName[customPropertyName]!.push(
-            ...cssFormatter.tokenToCssRules(token, { keepAliases })
-          )
+            const customPropertyName =
+              cssFormatter.tokenToCssCustomPropertyName(token)
+
+            data.rulesByCustomPropertyName[customPropertyName] =
+              data.rulesByCustomPropertyName[customPropertyName] || []
+
+            data.rulesByCustomPropertyName[customPropertyName]!.push(...rules)
+          }
+        } catch {
+          logger.warnings.invalidCssValue(keys)
         }
       })
 
       addOutputFile({
-        filePath: nodePath.join(CACHE_DIRECTORY, `${Date.now()}`),
+        filePath: nodePath.join(CACHE_DIRECTORY, filePath),
         content: JSON.stringify(data),
       })
     },

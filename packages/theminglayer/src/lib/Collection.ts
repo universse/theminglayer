@@ -1,7 +1,6 @@
-import chalk from 'chalk'
 import { klona } from 'klona/json'
 
-import { MessageHeaders, messageLogger } from '~/lib/messageLogger'
+import { appLogger } from '~/lib/logger'
 import {
   generateTokenNameKeys,
   getCategorySpec,
@@ -14,7 +13,6 @@ import { type Token, type TokenSet } from '~/types'
 import {
   deepSet,
   deepSetObj,
-  generateKeyString,
   getObjValue,
   isPrimitive,
   toArray,
@@ -39,7 +37,6 @@ export class Collection {
           {
             onCollision(keys) {
               const nameKeys = generateTokenNameKeys(keys)
-              const keyString = generateKeyString(nameKeys)
 
               const { sourceUnit: existingSourceUnit } = tokenSource.find(
                 ({ rawTokenObject }) => {
@@ -47,12 +44,9 @@ export class Collection {
                 }
               )!
 
-              messageLogger.add([
-                MessageHeaders.TOKEN_COLLISION,
-                `- Key: ${chalk.yellowBright(keyString)}`,
-                '- Sources:',
-                chalk.yellowBright(existingSourceUnit),
-                chalk.yellowBright(sourceUnit),
+              appLogger.warnings.tokenCollision(nameKeys, [
+                existingSourceUnit,
+                sourceUnit,
               ])
             },
           }
@@ -202,12 +196,7 @@ export class Collection {
       if (obj.$type) {
         this.tokens.push(obj)
       } else {
-        // TODO warn
-        messageLogger.add([
-          MessageHeaders.UNKNOWN_TOKEN_TYPE,
-          `- Key: ${chalk.yellowBright(generateKeyString(keys))}`,
-          // `- Source: ${chalk.yellowBright(source)}`,
-        ])
+        appLogger.warnings.missingTokenType(keys)
       }
       throw 'break'
     })
@@ -231,11 +220,7 @@ export class Collection {
             onCollision(keys)
           }
         }
-        if (
-          !objInTarget &&
-          !isNaN(+keys[keys.length - 1]) &&
-          !Array.isArray(obj)
-        ) {
+        if (!objInTarget && !isNaN(+keys.at(-1)!) && !Array.isArray(obj)) {
           deepSetObj(target, keys, obj)
         } else {
           deepSet(target, keys, obj)
@@ -262,11 +247,7 @@ export class Collection {
       if (
         Object.values(obj.$variant).filter((value) => value === '*').length > 1
       ) {
-        messageLogger.add([
-          MessageHeaders.MULTIPLE_WILDCARD_VARIANT,
-          `- Key: ${chalk.yellowBright(generateKeyString(keys))}`,
-          // `- Source: ${chalk.yellowBright(source)}`,
-        ])
+        appLogger.warnings.multipleWildcardVariants(keys)
       }
 
       const component = keys[1]
@@ -298,7 +279,7 @@ export class Collection {
       if (isTokenSet) {
         const tokenSet = getObjValue(tokenObject, keys.slice(0, -1))
         tokenSet.push({
-          $index: keys[keys.length - 1],
+          $index: keys.at(-1),
           $tokens: expandedTokens,
         })
         tokenSetsWithWildcardVariant.push(tokenSet)
@@ -337,13 +318,8 @@ export class Collection {
       const referenced = getObjValue(this.tokenObject, ref.split('.'))
       const refString = `{${ref}}`
 
-      // TODO warn missing references
       if (typeof referenced === 'undefined') {
-        messageLogger.add([
-          MessageHeaders.MISSING_ALIAS,
-          `- Alias: ${chalk.yellowBright(ref)}`,
-          // `- Key: ${chalk.yellowBright(generateKeyString(keys))}`,
-        ])
+        appLogger.warnings.missingAlias(ref)
       } else if (isPrimitive(referenced)) {
         if (refs.length === 1) {
           resolvedValue = referenced

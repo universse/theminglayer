@@ -1,4 +1,5 @@
 import { type Collection } from '~/lib/Collection'
+import { type appLogger } from '~/lib/logger'
 import { type TokenType } from '~/lib/spec'
 
 type UserTokenOptionaLAttributes = {
@@ -69,6 +70,7 @@ export type Plugin = {
     addOutputFile: (args: PluginOutputFile) => void
     getPluginData: (pluginName: string, key: string) => string | undefined
     setPluginData: (key: string, value: string) => void
+    logger: typeof appLogger
   }) => Promise<unknown> | void
 }
 

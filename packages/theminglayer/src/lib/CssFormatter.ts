@@ -307,6 +307,226 @@ export class CssFormatter {
     return rules
   }
 
+  transform(
+    { type, value }: { type: TokenType; value: unknown },
+    { keepAliases = false } = {}
+  ) {
+    switch (toSnakeCase(type) as TokenType) {
+      case 'color': {
+        return value
+      }
+      case 'cubic_bezier': {
+        if (typeof value === 'string') return value
+        return `cubic-bezier(${value.join(', ')})`
+      }
+      case 'dimension': {
+        return String(value)
+      }
+      case 'duration': {
+        return String(value)
+      }
+      case 'font_family': {
+        if (typeof value === 'string') return value
+        return value.join(', ')
+      }
+      case 'font_style': {
+        return value
+      }
+      case 'font_weight': {
+        const normalizedValue = value.toLowerCase().replace(/[\s-_]/g, '')
+
+        if (FontWeightMap[normalizedValue]) {
+          return FontWeightMap[normalizedValue]
+        }
+
+        return value
+      }
+      case 'number': {
+        return String(value)
+      }
+
+      case 'border': {
+        // TODO warn missing border style
+        if (typeof value === 'string') return value
+
+        const border = []
+
+        const parts: { type: TokenType; value: any }[] = [
+          { type: 'dimension', value: value.width || 'medium' },
+          { type: 'stroke_style', value: value.style || 'none' },
+          { type: 'color', value: value.color || 'currentcolor' },
+        ]
+
+        parts.forEach((part) => {
+          !isNullish(part.value) &&
+            border.push(this.convertToCssValue(part, { keepAliases }))
+        })
+
+        return border.join(' ')
+      }
+      case 'gradient': {
+        if (typeof value === `string`) return value
+        return value
+      }
+      case 'shadow': {
+        if (typeof value === 'string') return value
+
+        if (Array.isArray(value)) {
+          return value
+            .map((shadow) => {
+              return this.convertToCssValue(
+                { type: 'shadow', value: shadow },
+                { keepAliases }
+              )
+            })
+            .join(', ')
+        }
+
+        const shadow = value.inset ? ['inset'] : []
+
+        const parts: { type: TokenType; value: any }[] = [
+          {
+            type: 'dimension',
+            value: value.offset_x || value.offsetX || value.x || 0,
+          },
+          {
+            type: 'dimension',
+            value: value.offset_y || value.offsetY || value.y || 0,
+          },
+          { type: 'dimension', value: value.blur || 0 },
+          { type: 'dimension', value: value.spread || 0 },
+          { type: 'color', value: value.color || '#000000' },
+        ]
+
+        parts.forEach((part) => {
+          shadow.push(this.convertToCssValue(part, { keepAliases }))
+        })
+
+        return shadow.join(' ')
+      }
+      case 'stroke_style': {
+        if (typeof value === 'string') return value
+        return 'dashed'
+      }
+      case 'transition': {
+        if (typeof value === 'string') return value
+
+        const transition = []
+
+        const parts: { type: TokenType; value: any }[] = [
+          {
+            type: 'transition_property',
+            value:
+              value.transition_property || value.transitionProperty || 'all',
+          },
+          {
+            type: 'duration',
+            value: value.duration || 0,
+          },
+          {
+            type: 'cubic_bezier',
+            value:
+              value.timing_function ||
+              value.timingFunction ||
+              value.cubic_bezier ||
+              value.cubicBezier ||
+              value.easing ||
+              'ease',
+          },
+          { type: 'duration', value: value.delay || 0 },
+        ]
+
+        parts.forEach((part) => {
+          transition.push(this.convertToCssValue(part, { keepAliases }))
+        })
+
+        return transition.join(' ')
+      }
+
+      case 'font_variant': {
+        return value
+      }
+      case 'leading': {
+        return value
+      }
+      case 'tracking': {
+        if (typeof value === 'number') {
+          return `${value}em`
+        }
+        if (value.endsWith('%')) {
+          return `${Number(value.slice(0, -1)) / 100}em`
+        }
+
+        return value
+      }
+      case 'transition_property': {
+        return value
+      }
+
+      case 'outline': {
+        // TODO warn missing outline style
+        if (typeof value === 'string') return value
+
+        const outline = []
+
+        const parts: { type: TokenType; value: any }[] = [
+          { type: 'dimension', value: value.width || 'medium' },
+          { type: 'stroke_style', value: value.style || 'none' },
+          { type: 'color', value: value.color || 'currentcolor' },
+        ]
+
+        parts.forEach((part) => {
+          !isNullish(part.value) &&
+            outline.push(this.convertToCssValue(part, { keepAliases }))
+        })
+
+        return outline.join(' ')
+      }
+      case 'drop_shadow': {
+        if (typeof value === 'string') return value
+
+        if (Array.isArray(value)) {
+          return value
+            .map((shadow) => {
+              return this.convertToCssValue(
+                { type: 'drop_shadow', value: shadow },
+                { keepAliases }
+              )
+            })
+            .join(' ')
+        }
+
+        const shadow = []
+
+        const parts: { type: TokenType; value: any }[] = [
+          {
+            type: 'dimension',
+            value: value.offset_x || value.offsetX || value.x || 0,
+          },
+          {
+            type: 'dimension',
+            value: value.offset_y || value.offsetY || value.y || 0,
+          },
+          { type: 'dimension', value: value.blur || 0 },
+          { type: 'color', value: value.color || '#000000' },
+        ]
+
+        parts.forEach((part) => {
+          shadow.push(this.convertToCssValue(part, { keepAliases }))
+        })
+
+        return `drop-shadow(${shadow.join(' ')})`
+      }
+      // case `keyframes`: {
+      //   return value
+      // }
+
+      default: {
+        return value
+      }
+    }
+  }
+
   convertToCssValue(
     { type, value }: { type: TokenType; value: unknown },
     { keepAliases = false } = {}
@@ -319,255 +539,20 @@ export class CssFormatter {
       keepAliases,
     })
 
-    // if (!type) return resolvedValue
-
-    try {
-      if (isNullish(resolvedValue) || !type) {
-        throw new Error('This should not happen.')
-      }
-
-      switch (toSnakeCase(type) as TokenType) {
-        case 'color': {
-          return resolvedValue
-        }
-        case 'cubic_bezier': {
-          if (typeof resolvedValue === 'string') return resolvedValue
-          return `cubic-bezier(${resolvedValue.join(', ')})`
-        }
-        case 'dimension': {
-          return String(resolvedValue)
-        }
-        case 'duration': {
-          return String(resolvedValue)
-        }
-        case 'font_family': {
-          if (typeof resolvedValue === 'string') return resolvedValue
-          return resolvedValue.join(', ')
-        }
-        case 'font_style': {
-          return resolvedValue
-        }
-        case 'font_weight': {
-          const value = resolvedValue.toLowerCase().replace(/[\s-_]/g, '')
-
-          if (FontWeightMap[value]) {
-            return FontWeightMap[value]
-          }
-
-          return resolvedValue
-        }
-        case 'number': {
-          return String(resolvedValue)
-        }
-
-        case 'border': {
-          // TODO warn missing border style
-          if (typeof resolvedValue === 'string') return resolvedValue
-
-          const border = []
-
-          const parts: { type: TokenType; value: any }[] = [
-            { type: 'dimension', value: resolvedValue.width || 'medium' },
-            { type: 'stroke_style', value: resolvedValue.style || 'none' },
-            { type: 'color', value: resolvedValue.color || 'currentcolor' },
-          ]
-
-          parts.forEach((part) => {
-            !isNullish(part.value) &&
-              border.push(this.convertToCssValue(part, { keepAliases }))
-          })
-
-          return border.join(' ')
-        }
-        // case `gradient`: {
-        //   if (typeof resolvedValue === `string`) return resolvedValue
-        //   return resolvedValue
-        // }
-        case 'shadow': {
-          if (typeof resolvedValue === 'string') return resolvedValue
-
-          if (Array.isArray(resolvedValue)) {
-            return resolvedValue
-              .map((shadow) => {
-                return this.convertToCssValue(
-                  { type: 'shadow', value: shadow },
-                  { keepAliases }
-                )
-              })
-              .join(', ')
-          }
-          const shadow = resolvedValue.inset ? ['inset'] : []
-
-          const parts: { type: TokenType; value: any }[] = [
-            {
-              type: 'dimension',
-              value:
-                resolvedValue.offset_x ||
-                resolvedValue.offsetX ||
-                resolvedValue.x ||
-                0,
-            },
-            {
-              type: 'dimension',
-              value:
-                resolvedValue.offset_y ||
-                resolvedValue.offsetY ||
-                resolvedValue.y ||
-                0,
-            },
-            { type: 'dimension', value: resolvedValue.blur || 0 },
-            { type: 'dimension', value: resolvedValue.spread || 0 },
-            { type: 'color', value: resolvedValue.color || '#000000' },
-          ]
-
-          parts.forEach((part) => {
-            shadow.push(this.convertToCssValue(part, { keepAliases }))
-          })
-
-          return shadow.join(' ')
-        }
-        case 'stroke_style': {
-          if (typeof resolvedValue === 'string') return resolvedValue
-          return 'dashed'
-        }
-        case 'transition': {
-          if (typeof resolvedValue === 'string') return resolvedValue
-
-          const transition = []
-
-          const parts: { type: TokenType; value: any }[] = [
-            {
-              type: 'transition_property',
-              value:
-                resolvedValue.transition_property ||
-                resolvedValue.transitionProperty ||
-                'all',
-            },
-            {
-              type: 'duration',
-              value: resolvedValue.duration || 0,
-            },
-            {
-              type: 'cubic_bezier',
-              value:
-                resolvedValue.timing_function ||
-                resolvedValue.timingFunction ||
-                resolvedValue.cubic_bezier ||
-                resolvedValue.cubicBezier ||
-                resolvedValue.easing ||
-                'ease',
-            },
-            { type: 'duration', value: resolvedValue.delay || 0 },
-          ]
-
-          parts.forEach((part) => {
-            transition.push(this.convertToCssValue(part, { keepAliases }))
-          })
-
-          return transition.join(' ')
-        }
-
-        case 'font_variant': {
-          return resolvedValue
-        }
-        case 'leading': {
-          return resolvedValue
-        }
-        case 'tracking': {
-          if (typeof resolvedValue === 'number') {
-            return `${resolvedValue}em`
-          }
-          if (resolvedValue.endsWith('%')) {
-            return `${Number(resolvedValue.slice(0, -1)) / 100}em`
-          }
-
-          return resolvedValue
-        }
-        case 'transition_property': {
-          return resolvedValue
-        }
-
-        case 'outline': {
-          // TODO warn missing outline style
-          if (typeof resolvedValue === 'string') return resolvedValue
-
-          const outline = []
-
-          const parts: { type: TokenType; value: any }[] = [
-            { type: 'dimension', value: resolvedValue.width || 'medium' },
-            { type: 'stroke_style', value: resolvedValue.style || 'none' },
-            { type: 'color', value: resolvedValue.color || 'currentcolor' },
-          ]
-
-          parts.forEach((part) => {
-            !isNullish(part.value) &&
-              outline.push(this.convertToCssValue(part, { keepAliases }))
-          })
-
-          return outline.join(' ')
-        }
-        case 'drop_shadow': {
-          // TODO
-          if (typeof resolvedValue === 'string') return resolvedValue
-
-          if (Array.isArray(resolvedValue)) {
-            return resolvedValue
-              .map((shadow) => {
-                return this.convertToCssValue(
-                  { type: 'drop_shadow', value: shadow },
-                  { keepAliases }
-                )
-              })
-              .join(' ')
-          }
-          const shadow = []
-
-          const parts: { type: TokenType; value: any }[] = [
-            {
-              type: 'dimension',
-              value:
-                resolvedValue.offset_x ||
-                resolvedValue.offsetX ||
-                resolvedValue.x ||
-                0,
-            },
-            {
-              type: 'dimension',
-              value:
-                resolvedValue.offset_y ||
-                resolvedValue.offsetY ||
-                resolvedValue.y ||
-                0,
-            },
-            { type: 'dimension', value: resolvedValue.blur || 0 },
-            { type: 'color', value: resolvedValue.color || '#000000' },
-          ]
-
-          parts.forEach((part) => {
-            shadow.push(this.convertToCssValue(part, { keepAliases }))
-          })
-
-          return `drop-shadow(${shadow.join(' ')})`
-        }
-        // case `keyframes`: {
-        //   return resolvedValue
-        // }
-
-        default: {
-          if (
-            typeof resolvedValue !== 'string' &&
-            typeof resolvedValue !== 'number'
-          ) {
-            throw new Error('This should not happen.')
-          }
-          return String(resolvedValue)
-        }
-      }
-    } catch {
-      console.log('error', type, value)
-      // TODO add a generic error message with messageLogger
-      return ''
+    if (isNullish(resolvedValue) || !type) {
+      throw new Error('This should not happen. Please fix code.')
     }
+
+    const cssValue = this.transform(
+      { type, value: resolvedValue },
+      { keepAliases }
+    )
+
+    if (typeof cssValue !== 'string') {
+      throw new Error()
+    }
+
+    return cssValue
   }
 
   // TODO return value type is string or any valid token schema
@@ -646,7 +631,7 @@ export class CssFormatter {
 
       if (nameKeys[1] === '$variant') {
         // remove 'true' from keys
-        nameKeys[nameKeys.length - 1] === 'true' && nameKeys.splice(-1, 1)
+        nameKeys.at(-1) === 'true' && nameKeys.splice(-1, 1)
       }
     }
 

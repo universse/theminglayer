@@ -52,7 +52,7 @@ export const cssPlugin: PluginCreator<{
 
   return {
     name: 'theminglayer/css',
-    async build({ collection, addOutputFile }) {
+    async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,
         containerSelector,
@@ -64,21 +64,27 @@ export const cssPlugin: PluginCreator<{
           const rules = []
 
           collection.tokens.forEach((token) => {
-            const { $type: type } = token
+            const {
+              $type,
+              $extensions: { keys },
+            } = token
 
             if (
-              type === 'condition' ||
-              type === 'variant' ||
-              type === 'text' ||
-              // TODO future
-              type === 'gradient' ||
-              type === 'keyframes'
+              $type === 'condition' ||
+              $type === 'variant' ||
+              $type === 'text'
             )
               return
 
             if (!filter(token)) return
 
-            rules.push(...cssFormatter.tokenToCssRules(token, { keepAliases }))
+            try {
+              rules.push(
+                ...cssFormatter.tokenToCssRules(token, { keepAliases })
+              )
+            } catch {
+              logger.warnings.invalidCssValue(keys)
+            }
           })
 
           // TODO add postcss preset env?

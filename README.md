@@ -373,10 +373,12 @@ h1 {
   color: var(--tl-text-color-primary);
 }
 
+/* custom selector */
 :--tl-container:--tl-condition-color-scheme-light h1 {
   /* ... */
 }
 
+/* custom media */
 @media (--tl-condition-contrast-pref-forced) {
   h1 {
     /* ... */
@@ -572,6 +574,7 @@ export const plugin: PluginCreator<PluginOptions> = (options = {}) => {
       | 'font_weight'
       | 'number'
       | 'border'
+      | 'gradient'
       | 'shadow'
       | 'stroke_style'
       | 'transition'

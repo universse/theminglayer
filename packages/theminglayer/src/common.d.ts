@@ -1,3 +1,16 @@
+declare const appLogger: {
+  withLineHeader(name: string): void
+  log(message: string): void
+  warnings: {
+    tokenCollision(keys: string[], sources: [string, string]): void
+    multipleWildcardVariants(keys: string[]): void
+    missingAlias(key: string): void
+    missingTokenType(keys: string[]): void
+    invalidCssValue(keys: string[]): void
+    generateMessage(): string | undefined
+  }
+}
+
 type TokenType =
   | 'color'
   | 'cubic_bezier'
@@ -66,6 +79,7 @@ type Plugin = {
     addOutputFile: (args: PluginOutputFile) => void
     getPluginData: (pluginName: string, key: string) => string | undefined
     setPluginData: (key: string, value: string) => void
+    logger: typeof appLogger
   }) => Promise<unknown> | void
 }
 type PluginCreator<PluginOptions> = (options?: PluginOptions) => Plugin

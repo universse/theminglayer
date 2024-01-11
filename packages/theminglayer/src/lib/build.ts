@@ -4,8 +4,9 @@ import nodePath from 'node:path'
 import glob from 'fast-glob'
 import globParent from 'glob-parent'
 
+import { name as packageName } from '~/../package.json'
 import { Collection } from '~/lib/Collection'
-import { messageLogger } from '~/lib/messageLogger'
+import { appLogger } from '~/lib/logger'
 import { importTokens } from '~/lib/token'
 import { type BuildOptions, type PluginOutputFile } from '~/types'
 import { deepSet, toArray, writeFile } from '~/utils/misc'
@@ -160,8 +161,6 @@ export async function build({
 
   const collection = new Collection({ tokenSources })
 
-  messageLogger.flush()
-
   // ThemingLayer plugins
 
   const pluginData: Record<string, Record<string, string>> = {}
@@ -177,6 +176,7 @@ export async function build({
   }
 
   await promises.mapSerial(plugins, async (plugin) => {
+    appLogger.withLineHeader(plugin.name)
     await plugin.build({
       collection,
       addOutputFile,
@@ -184,19 +184,22 @@ export async function build({
       setPluginData(key: string, value: string): void {
         deepSet(pluginData, [plugin.name, key], value)
       },
+      logger: appLogger,
     })
+    appLogger.withLineHeader(packageName)
   })
 
-  messageLogger.flush()
+  const warningMessage = appLogger.warnings.generateMessage()
+  warningMessage && appLogger.log(warningMessage)
 
-  await promises.mapParallel(outputFiles, async ({ filePath, content }) => {
+  await promises.mapParallel(outputFiles, async ({ filePath, content }) =>
     writeFile(
       nodePath.isAbsolute(filePath)
         ? filePath
         : nodePath.join(buildOptions.outDir, filePath),
       content
     )
-  })
+  )
 
   return {
     collection,

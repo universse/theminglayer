@@ -2,6 +2,7 @@ import fsp from 'node:fs/promises'
 import nodePath from 'node:path'
 
 import { type PostcssCachedData } from '~/types'
+import { deleteFileAndDirectory } from '~/utils/misc'
 import { cwd } from '~/utils/node'
 
 export const CACHE_DIRECTORY = nodePath.join(cwd, '.tl')
@@ -15,5 +16,5 @@ export async function readCachedFile(
 }
 
 export function clearCache() {
-  return fsp.rm(CACHE_DIRECTORY, { force: true, recursive: true })
+  return deleteFileAndDirectory(CACHE_DIRECTORY)
 }

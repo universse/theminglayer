@@ -19,6 +19,14 @@
     "prefer-const": "error"
   },
   "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "eslint-import-resolver-typescript": {
+        "alwaysTryTypes": true
+      }
+    },
     "react": {
       "version": "detect"
     }

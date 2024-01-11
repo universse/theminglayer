@@ -71,14 +71,6 @@ export function isNullish(val: unknown): boolean {
   return typeof val === 'undefined' || val === null
 }
 
-// export function fileNameFromPath(filePath) {
-//   return nodePath.basename(filePath, nodePath.extname(filePath))
-// }
-
-// export function dirNameFromPath(filePath) {
-//   return nodePath.basename(nodePath.dirname(filePath))
-// }
-
 export function generateKeyString(keys: string[]): string {
   return keys.join('.')
 }
@@ -100,15 +92,11 @@ export function toSnakeCase(str: string): string {
     .toLowerCase()
 }
 
-// function hashFileContent() {
-//   const fileBuffer = fs.readFileSync(`myfile.js`)
-//   const hashSum = crypto.createHash(`sha256`)
-//   hashSum.update(fileBuffer)
-
-//   const hex = hashSum.digest(`hex`)
-// }
-
 export async function writeFile(filePath: string, data: string) {
   await fsp.mkdir(nodePath.dirname(filePath), { recursive: true })
   await fsp.writeFile(filePath, data, 'utf8')
+}
+
+export async function deleteFileAndDirectory(filePath: string) {
+  await fsp.rm(filePath, { force: true, recursive: true })
 }

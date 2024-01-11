@@ -19,7 +19,7 @@ yarn-error.log*
 .pnpm-debug.log
 
 # Builds
-dist
+dist*
 build
 .next
 out
@@ -54,7 +54,6 @@ ideas.md
 
 # ThemingLayer
 .tl
-dist-tokens
 
 # Tooling
 .vscode

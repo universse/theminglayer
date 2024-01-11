@@ -1,7 +1,5 @@
 import type { Config } from 'tailwindcss'
 
-// import { z } from 'zod'
-
 type TailwindThemeKey = keyof Required<Config>['theme']
 
 export type TokenCategory =
@@ -104,46 +102,6 @@ export const FontWeightMap = {
   extrablack: '950',
   ultrablack: '950',
 } as const
-
-// export const TokenTypeSchemas = {
-//   // w3c simple
-//   color: {},
-//   cubic_bezier: {},
-//   dimension: {},
-//   duration: {},
-//   font_family: {},
-//   font_style: {},
-//   font_weight: {},
-//   number: {},
-
-//   // w3c composite
-//   border: {},
-//   gradient: {},
-//   shadow: z.object({
-//     inset: z.optional(z.boolean()),
-//     color: z.string(),
-//     offset_x: z.string(),
-//     offset_y: z.string(),
-//     blur: z.string(),
-//     spread: z.string(),
-//   }),
-//   stroke_style: {},
-//   transition: {},
-//   typography: {},
-
-//   // tl simple
-//   condition: {},
-//   font_variant: {},
-//   leading: {}, // `dimension` or `number` or `percentage
-//   tracking: {}, // `dimension` or `number` or `percentage
-//   transition_property: {},
-//   variant: {},
-//   text: {},
-
-//   // tl composite
-//   drop_shadow: {},
-//   keyframes: {},
-// } as const
 
 export const TokenCategorySpec: Record<
   TokenCategory,
