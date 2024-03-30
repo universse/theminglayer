@@ -1,7 +1,7 @@
 {
   duration: {
     instant: {
-      $value: '0',
+      $value: '0ms',
     },
     fast: {
       $value: '150ms',

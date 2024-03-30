@@ -1,23 +1,23 @@
 {
   text_color: {
-    informative: {
+    caution: {
       primary: {
         $set: [
           {
             $condition: { color_scheme: 'light', contrast: 'standard' },
-            $value: '{color.blue.11}',
+            $value: '{color.amber.11}',
           },
           {
             $condition: { color_scheme: 'dark', contrast: 'standard' },
-            $value: '{color.blue_dark.11}',
+            $value: '{color.amber_dark.11}',
           },
           {
             $condition: { color_scheme: 'light', contrast: 'high' },
-            $value: '{color.blue.12}',
+            $value: '{color.amber.12}',
           },
           {
             $condition: { color_scheme: 'dark', contrast: 'high' },
-            $value: '{color.blue_dark.12}',
+            $value: '{color.amber_dark.12}',
           },
         ],
       },
@@ -25,19 +25,19 @@
         $set: [
           {
             $condition: { color_scheme: 'light', contrast: 'standard' },
-            $value: '{color.blue.9}',
+            $value: '{color.amber.9}',
           },
           {
             $condition: { color_scheme: 'dark', contrast: 'standard' },
-            $value: '{color.blue_dark.9}',
+            $value: '{color.amber_dark.9}',
           },
           {
             $condition: { color_scheme: 'light', contrast: 'high' },
-            $value: '{color.blue.10}',
+            $value: '{color.amber.10}',
           },
           {
             $condition: { color_scheme: 'dark', contrast: 'high' },
-            $value: '{color.blue_dark.10}',
+            $value: '{color.amber_dark.10}',
           },
         ],
       },
@@ -45,44 +45,44 @@
         $set: [
           {
             $condition: { color_scheme: 'light', contrast: 'standard' },
-            $value: '{color.blue.7}',
+            $value: '{color.amber.7}',
           },
           {
             $condition: { color_scheme: 'dark', contrast: 'standard' },
-            $value: '{color.blue_dark.7}',
+            $value: '{color.amber_dark.7}',
           },
           {
             $condition: { color_scheme: 'light', contrast: 'high' },
-            $value: '{color.blue.8}',
+            $value: '{color.amber.8}',
           },
           {
             $condition: { color_scheme: 'dark', contrast: 'high' },
-            $value: '{color.blue_dark.8}',
+            $value: '{color.amber_dark.8}',
           },
         ],
       },
       on_bold_bg: {
         primary: {
-          $value: '{color.white_alpha.12}',
+          $value: '{color.black_alpha.12}',
         },
         secondary: {
-          $value: '{color.white_alpha.10}',
+          $value: '{color.black_alpha.10}',
         },
       },
     },
   },
   background_color: {
-    informative: {
+    caution: {
       surface: {
         primary: {
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.1}',
+              $value: '{color.amber.1}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.1}',
+              $value: '{color.amber_dark.1}',
             },
           ],
         },
@@ -90,11 +90,11 @@
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.2}',
+              $value: '{color.amber.2}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.2}',
+              $value: '{color.amber_dark.2}',
             },
           ],
         },
@@ -102,11 +102,11 @@
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.3}',
+              $value: '{color.amber.3}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.3}',
+              $value: '{color.amber_dark.3}',
             },
           ],
         },
@@ -116,11 +116,11 @@
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.3}',
+              $value: '{color.amber.3}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.3}',
+              $value: '{color.amber_dark.3}',
             },
           ],
         },
@@ -128,11 +128,11 @@
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.4}',
+              $value: '{color.amber.4}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.4}',
+              $value: '{color.amber_dark.4}',
             },
           ],
         },
@@ -140,11 +140,11 @@
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.5}',
+              $value: '{color.amber.5}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.5}',
+              $value: '{color.amber_dark.5}',
             },
           ],
         },
@@ -154,11 +154,11 @@
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.9}',
+              $value: '{color.amber.9}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.9}',
+              $value: '{color.amber_dark.9}',
             },
           ],
         },
@@ -166,11 +166,11 @@
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.10}',
+              $value: '{color.amber.10}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.10}',
+              $value: '{color.amber_dark.10}',
             },
           ],
         },
@@ -178,11 +178,11 @@
           $set: [
             {
               $condition: { color_scheme: 'light' },
-              $value: '{color.blue.11}',
+              $value: '{color.amber.11}',
             },
             {
               $condition: { color_scheme: 'dark' },
-              $value: '{color.blue_dark.11}',
+              $value: '{color.amber_dark.11}',
             },
           ],
         },
@@ -190,16 +190,16 @@
     },
   },
   border_color: {
-    informative: {
+    caution: {
       faint: {
         $set: [
           {
             $condition: { color_scheme: 'light' },
-            $value: '{color.blue.6}',
+            $value: '{color.amber.6}',
           },
           {
             $condition: { color_scheme: 'dark' },
-            $value: '{color.blue_dark.6}',
+            $value: '{color.amber_dark.6}',
           },
         ],
       },
@@ -207,11 +207,11 @@
         $set: [
           {
             $condition: { color_scheme: 'light' },
-            $value: '{color.blue.7}',
+            $value: '{color.amber.7}',
           },
           {
             $condition: { color_scheme: 'dark' },
-            $value: '{color.blue_dark.7}',
+            $value: '{color.amber_dark.7}',
           },
         ],
       },
@@ -219,11 +219,11 @@
         $set: [
           {
             $condition: { color_scheme: 'light' },
-            $value: '{color.blue.8}',
+            $value: '{color.amber.8}',
           },
           {
             $condition: { color_scheme: 'dark' },
-            $value: '{color.blue_dark.8}',
+            $value: '{color.amber_dark.8}',
           },
         ],
       },
@@ -231,27 +231,27 @@
         $set: [
           {
             $condition: { color_scheme: 'light' },
-            $value: '{color.blue.9}',
+            $value: '{color.amber.9}',
           },
           {
             $condition: { color_scheme: 'dark' },
-            $value: '{color.blue_dark.9}',
+            $value: '{color.amber_dark.9}',
           },
         ],
       },
     },
   },
   icon_color: {
-    informative: {
+    caution: {
       primary: {
         $set: [
           {
             $condition: { color_scheme: 'light' },
-            $value: '{color.blue.9}',
+            $value: '{color.amber.9}',
           },
           {
             $condition: { color_scheme: 'dark' },
-            $value: '{color.blue_dark.9}',
+            $value: '{color.amber_dark.9}',
           },
         ],
       },
@@ -259,11 +259,11 @@
         $set: [
           {
             $condition: { color_scheme: 'light' },
-            $value: '{color.blue.7}',
+            $value: '{color.amber.7}',
           },
           {
             $condition: { color_scheme: 'dark' },
-            $value: '{color.blue_dark.7}',
+            $value: '{color.amber_dark.7}',
           },
         ],
       },
@@ -271,20 +271,20 @@
         $set: [
           {
             $condition: { color_scheme: 'light' },
-            $value: '{color.blue.5}',
+            $value: '{color.amber.5}',
           },
           {
             $condition: { color_scheme: 'dark' },
-            $value: '{color.blue_dark.5}',
+            $value: '{color.amber_dark.5}',
           },
         ],
       },
       on_bold_bg: {
         primary: {
-          $value: '{color.white_alpha.12}',
+          $value: '{color.black_alpha.12}',
         },
         secondary: {
-          $value: '{color.white_alpha.10}',
+          $value: '{color.black_alpha.10}',
         },
       },
     },

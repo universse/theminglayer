@@ -100,3 +100,20 @@ export async function writeFile(filePath: string, data: string) {
 export async function deleteFileAndDirectory(filePath: string) {
   await fsp.rm(filePath, { force: true, recursive: true })
 }
+
+export function cartesian<T>(arrays: T[][]): T[][] {
+  if (!arrays.length) return []
+  const result: T[][] = []
+  const max = arrays.length - 1
+
+  function helper(array: T[], i: number) {
+    for (let j = 0, l = arrays[i]!.length; j < l; j++) {
+      const clone = [...array]
+      clone.push(arrays[i]![j]!)
+      if (i == max) result.push(clone)
+      else helper(clone, i + 1)
+    }
+  }
+  helper([], 0)
+  return result
+}

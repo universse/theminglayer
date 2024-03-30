@@ -1,6 +1,6 @@
 {
   space: {
-    '0': { $value: '0' },
+    '0': { $value: '0px' },
     '4': { $value: '4px' },
     '8': { $value: '8px' },
     '12': { $value: '12px' },

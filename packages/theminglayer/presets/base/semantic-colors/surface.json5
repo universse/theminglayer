@@ -56,12 +56,10 @@
           {
             $condition: { color_scheme: 'light' },
             $value: '{color.black_alpha.7}',
-            $backdrop: true,
           },
           {
             $condition: { color_scheme: 'dark' },
             $value: '{color.black_alpha.9}',
-            $backdrop: true,
           },
         ],
       },

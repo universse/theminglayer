@@ -5,7 +5,7 @@ import JSON5 from 'json5'
 
 import { TokenCategorySpec } from '~/lib/spec'
 import { watchMode } from '~/lib/watchMode'
-import { type Token, type TokenSet } from '~/types'
+import type { Token, TokenSet } from '~/types'
 import { importJs } from '~/utils/importJs'
 import { toSnakeCase } from '~/utils/misc'
 

@@ -114,15 +114,18 @@ export default defineConfig({
           appLogger.log(`Built token collection ${i! + 1}/${config.length}`)
 
           return {
-            resolvedSources: resolvedSources.reduce((acc, { type, source }) => {
-              if (
-                (type === 'glob' || type === 'file') &&
-                !source.includes('node_modules')
-              ) {
-                acc.push(source)
-              }
-              return acc
-            }, [] as string[]),
+            resolvedSources: resolvedSources.reduce<string[]>(
+              (acc, { type, source }) => {
+                if (
+                  (type === 'glob' || type === 'file') &&
+                  !source.includes('node_modules')
+                ) {
+                  acc.push(source)
+                }
+                return acc
+              },
+              []
+            ),
           }
         })
 

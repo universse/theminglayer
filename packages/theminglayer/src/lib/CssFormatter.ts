@@ -1,8 +1,9 @@
+import { clsx } from 'clsx/lite'
 import { klona } from 'klona/json'
 import groupBy from 'lodash.groupby'
 
-import { type Collection } from '~/lib/Collection'
-import { cssNameFromKeys } from '~/lib/cssUtils'
+import type { Collection } from '~/lib/Collection'
+import { cssNameFromKeys, isSimpleIsSelector } from '~/lib/cssUtils'
 import { FontWeightMap, type TokenType } from '~/lib/spec'
 import {
   generateTokenNameKeys,
@@ -11,11 +12,12 @@ import {
   isToken,
   isTokenSet,
 } from '~/lib/token'
-import { type Token, type TokenSet } from '~/types'
+import type { Token, TokenSet } from '~/types'
 import {
   getObjValue,
   isNullish,
   isPrimitive,
+  toKebabCase,
   toSnakeCase,
   traverseObj,
 } from '~/utils/misc'
@@ -42,6 +44,15 @@ const SystemColors = new Set([
   'AccentColorText',
 ])
 
+export const typographyKeys = [
+  'font-family',
+  'font-size',
+  'font-style',
+  'font-weight',
+  'letter-spacing',
+  'line-height',
+]
+
 export class CssFormatter {
   constructor(
     public collection: Collection,
@@ -55,11 +66,11 @@ export class CssFormatter {
     } = token
 
     if (type === 'condition') {
-      const resolvedValue = this.aliasesToCssValue(token.$value)
+      const resolvedValue = this.aliasToCssValue(token.$value)
       const atRule = resolvedValue.match(/@(\S*)/)?.[1]
 
       if (atRule) {
-        // TODO container, supports
+        // TODO container, supports when spec allows
         if (atRule !== 'media') return []
 
         return [
@@ -68,7 +79,7 @@ export class CssFormatter {
               atRules: [
                 {
                   name: `custom-${atRule}`,
-                  params: `${this.tokenToCssCustomPropertyName(
+                  params: `${this.tokenToCustomPropertyName(
                     token
                   )} ${resolvedValue.replace(`@${atRule}`, '').trim()}`,
                 },
@@ -77,9 +88,9 @@ export class CssFormatter {
           },
         ]
       } else {
-        let resolvedValue = this.aliasesToCssValue(token.$value).trim()
+        let resolvedValue = this.aliasToCssValue(token.$value).trim()
 
-        if (resolvedValue.startsWith(':is(') && resolvedValue.endsWith(')')) {
+        if (isSimpleIsSelector(resolvedValue)) {
           resolvedValue = resolvedValue.slice(4, -1)
         }
 
@@ -89,7 +100,7 @@ export class CssFormatter {
               atRules: [
                 {
                   name: 'custom-selector',
-                  params: `:${this.tokenToCssCustomPropertyName(
+                  params: `:${this.tokenToCustomPropertyName(
                     token
                   )} ${resolvedValue}`,
                 },
@@ -101,9 +112,9 @@ export class CssFormatter {
     }
 
     if (type === 'variant') {
-      let resolvedValue = this.aliasesToCssValue(token.$value).trim()
+      let resolvedValue = this.aliasToCssValue(token.$value).trim()
 
-      if (resolvedValue.startsWith(':is(') && resolvedValue.endsWith(')')) {
+      if (isSimpleIsSelector(resolvedValue)) {
         resolvedValue = resolvedValue.slice(4, -1)
       }
 
@@ -113,7 +124,7 @@ export class CssFormatter {
             atRules: [
               {
                 name: 'custom-selector',
-                params: `:${this.tokenToCssCustomPropertyName(
+                params: `:${this.tokenToCustomPropertyName(
                   token
                 )} ${resolvedValue}`,
               },
@@ -123,37 +134,34 @@ export class CssFormatter {
       ]
     }
 
-    if (type === 'typography') {
-      return this.typographyTokenToCssRules(
-        { token, originalToken: token },
-        { keepAliases }
-      )
-    }
+    const atRules = []
 
-    const { selector: conditionSelector = '', atRules } =
+    const { selector: conditionSelector, atRules: conditionAtRules } =
       this.#parseConditions(token)
 
-    const { selector: variantSelector = '' } = this.#parseVariants(token)
+    let selector = `${this.options.containerSelector.trim()}${conditionSelector}`
 
-    const componentSelector = this.tokenToComponentClassSelector(token)
+    atRules.push(...conditionAtRules)
 
-    let selector: string
-    const containerSelector = this.options.containerSelector.trim()
+    if (component) {
+      const {
+        variantSelector,
+        parentVariantSelector,
+        atRules: variantAtRules,
+      } = this.#parseVariants(token)
 
-    if (componentSelector) {
-      const parentSelector = conditionSelector
-        ? `${containerSelector}${conditionSelector}`
-        : ''
+      selector = clsx(
+        conditionSelector && selector,
+        parentVariantSelector,
+        variantSelector
+      )
 
-      selector =
-        `${parentSelector} ${componentSelector}${variantSelector}`.trim()
-    } else {
-      selector = `${containerSelector}${conditionSelector}`
+      atRules.push(...variantAtRules)
     }
 
     const declarations = [
       {
-        prop: this.tokenToCssCustomPropertyName(token),
+        prop: this.tokenToCustomPropertyName(token),
         value: this.convertToCssValue(
           {
             type: token.$type,
@@ -171,7 +179,7 @@ export class CssFormatter {
         component,
         rule: {
           atRules,
-          selector: `${selector} ::backdrop`,
+          selector: clsx(selector, '::backdrop'),
           declarations,
         },
       })
@@ -180,131 +188,234 @@ export class CssFormatter {
     return rules
   }
 
-  typographyTokenToCssRules(
-    {
-      token,
-      originalToken,
-      rules = [],
-    }: {
-      token: Token
-      originalToken: Token
-      rules?: []
-    },
+  convertToCssTypographyValues(
+    { value }: { value: unknown },
     { keepAliases = false } = {}
   ) {
-    const { tokenObject } = this.collection
-    const { prefix } = this.options
-
-    let resolvedValue = token.$value
-
-    while (isAlias(resolvedValue)) {
-      const ref = getReferences(resolvedValue)[0]
-      resolvedValue = getObjValue(tokenObject, ref.split('.')).$value
-    }
-
-    if (isTokenSet(resolvedValue)) {
-      resolvedValue.$set.forEach((tokenInSet) => {
-        this.typographyTokenToCssRules(
-          {
-            token: tokenInSet,
-            originalToken,
-            rules,
-          },
-          { keepAliases }
-        )
-      })
-      return rules
-    }
-
-    const { component } = originalToken.$extensions
-
-    const { selector: conditionSelector = '', atRules } =
-      this.#parseConditions(token)
-
-    const { selector: variantSelector = '' } = this.#parseVariants(token)
-
-    const componentSelector = this.tokenToComponentClassSelector(originalToken)
-
-    const selector = componentSelector
-      ? `${conditionSelector} ${componentSelector}${variantSelector}`.trim()
-      : `${conditionSelector} ${this.typographyTokenToClassSelector(
-          originalToken
-        )}`.trim()
-
     const properties: { type: TokenType; prop: string; value: any }[] = [
       {
         type: 'font_family',
         prop: 'font-family',
-        value:
-          resolvedValue.family ||
-          resolvedValue.font_family ||
-          resolvedValue.fontFamily,
+        value: value.family || value.font_family || value.fontFamily,
       },
       {
         type: 'dimension',
         prop: 'font-size',
-        value:
-          resolvedValue.size ||
-          resolvedValue.font_size ||
-          resolvedValue.fontSize,
+        value: value.size || value.font_size || value.fontSize,
       },
       {
         type: 'font_style',
         prop: 'font-style',
-        value:
-          resolvedValue.style ||
-          resolvedValue.font_style ||
-          resolvedValue.fontStyle,
+        value: value.style || value.font_style || value.fontStyle,
       },
-      {
-        type: 'font_variant',
-        prop: 'font-variant',
-        value:
-          resolvedValue.variant ||
-          resolvedValue.font_variant ||
-          resolvedValue.fontVariant,
-      },
+      // {
+      //   type: 'font_stretch',
+      //   prop: 'font-stretch',
+      //   value:
+      //     value.stretch ||
+      //     value.font_stretch ||
+      //     value.fontStretch,
+      // },
+      // {
+      //   type: 'font_variant',
+      //   prop: 'font-variant',
+      //   value:
+      //     value.variant ||
+      //     value.font_variant ||
+      //     value.fontVariant,
+      // },
       {
         type: 'font_weight',
         prop: 'font-weight',
-        value:
-          resolvedValue.weight ||
-          resolvedValue.font_weight ||
-          resolvedValue.fontWeight,
+        value: value.weight || value.font_weight || value.fontWeight,
       },
       {
         type: 'tracking',
         prop: 'letter-spacing',
-        value:
-          resolvedValue.tracking ||
-          resolvedValue.letter_spacing ||
-          resolvedValue.letterSpacing,
+        value: value.tracking || value.letter_spacing || value.letterSpacing,
       },
       {
         type: 'leading',
         prop: 'line-height',
-        value:
-          resolvedValue.leading ||
-          resolvedValue.line_height ||
-          resolvedValue.lineHeight,
+        value: value.leading || value.line_height || value.lineHeight,
       },
     ]
 
-    // TODO extract to function?
-    const propPrefix = component ? `--${prefix}` : ''
-    const declarations = []
+    const result = []
 
     properties.forEach(({ type, prop, value }) => {
-      !isNullish(value) &&
-        declarations.push({
-          prop: `${propPrefix}${prop}`,
-          value: this.convertToCssValue({ type, value }, { keepAliases }),
-        })
+      if (isNullish(value)) return
+      result.push({
+        prop,
+        value: this.convertToCssValue({ type, value }, { keepAliases }),
+      })
     })
 
-    rules.push({ component, rule: { declarations, selector, atRules } })
+    return result
+  }
 
-    return rules
+  aliasTokenToCssTypographyValue(tokenOrSet) {
+    const customPropertyName = this.tokenToCustomPropertyName(tokenOrSet)
+
+    return [
+      {
+        prop: 'font-family',
+        value: `var(${customPropertyName}-font-family)`,
+      },
+      {
+        prop: 'font-size',
+        value: `var(${customPropertyName}-font-size)`,
+      },
+      {
+        prop: 'font-style',
+        value: `var(${customPropertyName}-font-style)`,
+      },
+      {
+        prop: 'font-weight',
+        value: `var(${customPropertyName}-font-weight)`,
+      },
+      {
+        prop: 'letter-spacing',
+        value: `var(${customPropertyName}-letter-spacing)`,
+      },
+      {
+        prop: 'line-height',
+        value: `var(${customPropertyName}-line-height)`,
+      },
+    ]
+  }
+
+  typographyTokenToCssRules(
+    token: Token,
+    { keepAliases = false } = {}
+  ): { customPropertyRules: []; classSelectorRules: [] } {
+    const { tokenObject } = this.collection
+    const { prefix } = this.options
+
+    const result = { customPropertyRules: [], classSelectorRules: [] }
+
+    let typographyValue = []
+
+    if (keepAliases && isAlias(token.$value)) {
+      typographyValue = this.aliasTokenToCssTypographyValue(token)
+    } else {
+      let resolvedTokenOrSet = token
+
+      while (isAlias(resolvedTokenOrSet.$value)) {
+        const ref = getReferences(resolvedTokenOrSet.$value)[0]
+        resolvedTokenOrSet = getObjValue(tokenObject, ref.split('.'))
+      }
+
+      // TODO here
+      if (isToken(resolvedTokenOrSet)) {
+        if (token === resolvedTokenOrSet) {
+          typographyValue = this.convertToCssTypographyValues(
+            { value: resolvedTokenOrSet.$value },
+            { keepAliases }
+          )
+        } else {
+          if (
+            '$condition' in resolvedTokenOrSet ||
+            '$variant' in resolvedTokenOrSet
+          ) {
+            typographyValue =
+              this.aliasTokenToCssTypographyValue(resolvedTokenOrSet)
+          } else {
+            typographyValue = this.convertToCssTypographyValues(
+              { value: resolvedTokenOrSet.$value },
+              { keepAliases }
+            )
+          }
+        }
+      } else if (isTokenSet(resolvedTokenOrSet)) {
+        typographyValue =
+          this.aliasTokenToCssTypographyValue(resolvedTokenOrSet)
+      } else if (typeof resolvedTokenOrSet === 'undefined') {
+        // TODO warn
+        return result
+      } else {
+        // TODO warn
+        return result
+      }
+    }
+
+    const { keys, component } = token.$extensions
+
+    const customPropertyDeclarations = []
+    const classSelectorDeclarations = []
+
+    typographyValue.forEach(({ prop, value }) => {
+      const nameKeys = generateTokenNameKeys(keys)
+      nameKeys.push(prop)
+
+      if (component) nameKeys.splice(0, 1)
+
+      customPropertyDeclarations.push({
+        prop: `--${prefix}${cssNameFromKeys(nameKeys)}`,
+        value,
+      })
+
+      if (!component) {
+        classSelectorDeclarations.push({
+          prop: `--${prefix}${prop}`,
+          value,
+        })
+      }
+    })
+
+    const atRules = []
+
+    const { selector: conditionSelector, atRules: conditionAtRules } =
+      this.#parseConditions(token)
+
+    let selector = `${this.options.containerSelector.trim()}${conditionSelector}`
+
+    atRules.push(...conditionAtRules)
+
+    if (component) {
+      const {
+        variantSelector,
+        parentVariantSelector,
+        atRules: variantAtRules,
+      } = this.#parseVariants(token)
+
+      selector = clsx(
+        conditionSelector && selector,
+        parentVariantSelector,
+        variantSelector
+      )
+
+      atRules.push(...variantAtRules)
+    }
+
+    if (customPropertyDeclarations.length) {
+      result.customPropertyRules.push({
+        component,
+        rule: {
+          declarations: customPropertyDeclarations,
+          selector,
+          atRules,
+        },
+      })
+    }
+
+    // if (classSelectorDeclarations.length) {
+    //   selector = clsx(
+    //     conditionSelector && selector,
+    //     this.typographyTokenToClassSelector(token)
+    //   )
+
+    //   result.classSelectorRules.push({
+    //     component,
+    //     rule: {
+    //       declarations: classSelectorDeclarations,
+    //       selector,
+    //       atRules,
+    //     },
+    //   })
+    // }
+
+    return result
   }
 
   transform(
@@ -532,10 +643,10 @@ export class CssFormatter {
     { keepAliases = false } = {}
   ): string {
     if (keepAliases && isAlias(value)) {
-      return this.#aliasesToCustomProperty(value)
+      return this.#aliasToCustomProperty(value)
     }
 
-    const resolvedValue = this.aliasesToCssValue(value, {
+    const resolvedValue = this.aliasToCssValue(value, {
       keepAliases,
     })
 
@@ -552,11 +663,15 @@ export class CssFormatter {
       throw new Error()
     }
 
+    // if (/[+\-*/]/.test(cssValue)) {
+    //   cssValue = `calc(${cssValue})`
+    // }
+
     return cssValue
   }
 
   // TODO return value type is string or any valid token schema
-  aliasesToCssValue(value: unknown, { keepAliases = false } = {}): unknown {
+  aliasToCssValue(value: unknown, { keepAliases = false } = {}): unknown {
     const clone = klona({ value })
 
     traverseObj(clone, (obj, key) => {
@@ -571,26 +686,32 @@ export class CssFormatter {
           const refString = `{${ref}}`
 
           if (isToken(referenced)) {
-            obj[key] = obj[key].replace(
-              refString,
-              this.convertToCssValue(
-                { type: referenced.$type, value: referenced.$value },
-                { keepAliases }
+            if ('$condition' in referenced || '$variant' in referenced) {
+              obj[key] = obj[key].replace(
+                refString,
+                `var(${this.tokenToCustomPropertyName(referenced)})`
               )
-            )
+            } else {
+              obj[key] = obj[key].replace(
+                refString,
+                this.convertToCssValue(
+                  { type: referenced.$type, value: referenced.$value },
+                  { keepAliases }
+                )
+              )
+            }
           } else if (isTokenSet(referenced)) {
             obj[key] = obj[key].replace(
               refString,
-              `var(${this.tokenToCssCustomPropertyName(referenced)})`
+              `var(${this.tokenToCustomPropertyName(referenced)})`
             )
           } else if (typeof referenced === 'undefined') {
-            const cssCustomProperty = `var(--${cssNameFromKeys(
-              ref.split('.')
-            )})`
-            obj[key] = obj[key].replace(refString, cssCustomProperty)
+            const customProperty = `var(--${cssNameFromKeys(ref.split('.'))})`
+            obj[key] = obj[key].replace(refString, customProperty)
           } else if (isPrimitive(referenced)) {
             obj[key] = obj[key].replace(refString, referenced)
           } else {
+            // * refs are object or array
             if (refs.length !== 1) {
               // TODO warn
             }
@@ -603,14 +724,16 @@ export class CssFormatter {
     return clone.value as string
   }
 
-  tokenToCssCustomPropertyName(tokenOrSet: Token | TokenSet): string {
+  tokenToCustomPropertyName(tokenOrSet: Token | TokenSet): string {
     const name = this.tokenToCssName(tokenOrSet)
 
     return `--${this.options.prefix}${name}`
   }
 
   tokenToComponentClassSelector({ $extensions: { component } }: Token): string {
-    return component ? `.${this.options.prefix}${component}`.trim() : ''
+    return component
+      ? `.${this.options.prefix}${toKebabCase(component)}`.trim()
+      : ''
   }
 
   typographyTokenToClassSelector(token: Token) {
@@ -658,10 +781,8 @@ export class CssFormatter {
       const params = media
         .map((token) => {
           // TODO alternatively, output the custom property name
-          // return `(${this.tokenToCssCustomPropertyName(token)})`
-          return this.aliasesToCssValue(token.$value)
-            .replace('@media', '')
-            .trim()
+          // return `(${this.tokenToCustomPropertyName(token)})`
+          return this.aliasToCssValue(token.$value).replace('@media', '').trim()
         })
         .sort()
         .join(' and ')
@@ -669,14 +790,27 @@ export class CssFormatter {
       atRules.push({ name: 'media', params })
     }
 
-    // TODO container, supports
+    if (supports.length) {
+      const params = supports
+        .map((token) => {
+          return this.aliasToCssValue(token.$value)
+            .replace('@supports', '')
+            .trim()
+        })
+        .sort()
+        .join(' and ')
+
+      atRules.push({ name: 'supports', params })
+    }
+
+    // TODO container
 
     return {
       selector: selector
         // TODO alternatively, output the custom property name
         .map((token) => {
-          // return `:${this.tokenToCssCustomPropertyName(token)}`
-          return this.aliasesToCssValue(token.$value).trim()
+          // return `:${this.tokenToCustomPropertyName(token)}`
+          return this.aliasToCssValue(token.$value).trim()
         })
         .sort()
         .join(''),
@@ -684,33 +818,81 @@ export class CssFormatter {
     }
   }
 
-  #parseVariants(token: Token): { selector: string } {
-    return {
-      selector: token.$extensions.variantTokens
+  #parseVariants(token: Token): {
+    variantSelector: string
+    parentVariantSelector: string
+    atRules: { name: string; params: string }[]
+  } {
+    // TODO validate only 1 parent component is allowed e.g. tabs.visual and tabs.color, not tabs.visual and tab_list.orientation
+
+    const { selector = [], container = [] } = groupBy(
+      token.$extensions.variantTokens,
+      (variantToken) => {
+        const atRule = /@container/.test(variantToken.$value!)
+
+        return atRule ? 'container' : 'selector'
+      }
+    )
+
+    const atRules = []
+
+    if (container.length) {
+      container
         .map((token) => {
-          // TODO alternatively, output the custom property name
-          // return `:${this.tokenToCssCustomPropertyName(token)}`
-          return this.aliasesToCssValue(token.$value).trim()
+          return this.aliasToCssValue(token.$value)
+            .replace('@container', '')
+            .trim()
         })
         .sort()
-        .join(''),
+        .forEach((params) => {
+          atRules.push({ name: 'container', params })
+        })
+    }
+
+    const { self = [], parent = [] } = groupBy(selector, (variantToken) =>
+      token.$extensions.component === variantToken.$extensions.component
+        ? 'self'
+        : 'parent'
+    )
+
+    return {
+      variantSelector:
+        this.tokenToComponentClassSelector(token) +
+        self
+          .map((token) => {
+            // TODO alternatively, output the custom property name
+            // return `:${this.tokenToCustomPropertyName(token)}`
+            return this.aliasToCssValue(token.$value).trim()
+          })
+          .sort()
+          .join(''),
+      parentVariantSelector: parent.length
+        ? this.tokenToComponentClassSelector(parent[0]) +
+          parent
+            .map((token) => {
+              // TODO alternatively, output the custom property name
+              // return `:${this.tokenToCustomPropertyName(token)}`
+              return this.aliasToCssValue(token.$value).trim()
+            })
+            .sort()
+            .join('')
+        : '',
+      atRules,
     }
   }
 
-  #aliasesToCustomProperty(value) {
+  #aliasToCustomProperty(value) {
     const refs = getReferences(value)
 
     refs.forEach((ref) => {
       const obj = getObjValue(this.collection.tokenObject, ref.split('.'))
 
       if (isToken(obj) || isTokenSet(obj)) {
-        const cssCustomProperty = `var(${this.tokenToCssCustomPropertyName(
-          obj
-        )})`
-        value = value.replace(`{${ref}}`, cssCustomProperty)
+        const customProperty = `var(${this.tokenToCustomPropertyName(obj)})`
+        value = value.replace(`{${ref}}`, customProperty)
       } else {
-        const cssCustomProperty = `var(--${cssNameFromKeys(ref.split('.'))})`
-        value = value.replace(`{${ref}}`, cssCustomProperty)
+        const customProperty = `var(--${cssNameFromKeys(ref.split('.'))})`
+        value = value.replace(`{${ref}}`, customProperty)
       }
     })
 

@@ -1,69 +1,6 @@
 {
   background_color: {
     surface: {
-      highlight: {
-        $value: '{background_color.accent.element.static}',
-        // $set: [
-        //   {
-        //     $condition: { color_scheme: 'light' },
-        //     $value: '{background_color.accent.element.static}',
-        //   },
-        //   {
-        //     $condition: { color_scheme: 'dark' },
-        //     $value: '{background_color.accent.element.static}',
-        //   },
-        // ],
-      },
-      main: {
-        $set: [
-          {
-            $condition: { color_scheme: 'light' },
-            $value: '{color.white}',
-          },
-          {
-            $condition: { color_scheme: 'dark' },
-            $value: '{color.gray_dark.2}',
-          },
-        ],
-      },
-      alternate: {
-        $set: [
-          {
-            $condition: { color_scheme: 'light' },
-            $value: '{color.gray.2}',
-          },
-          {
-            $condition: { color_scheme: 'dark' },
-            $value: '{color.gray_dark.1}',
-          },
-        ],
-        $description: 'App backdrop, table stripe, code block, readonly/disabled state',
-      },
-      raised: {
-        $set: [
-          {
-            $condition: { color_scheme: 'light' },
-            $value: '{color.white}',
-          },
-          {
-            $condition: { color_scheme: 'dark' },
-            $value: '{color.gray_dark.3}',
-          },
-        ],
-        $description: 'Card, header, sidebar',
-      },
-      inverted: {
-        $set: [
-          {
-            // $condition: { color_scheme: 'light' },
-            // $value: '{color.white}',
-          },
-          {
-            // $condition: { color_scheme: 'dark' },
-            // $value: '{color.gray_dark.3}',
-          },
-        ],
-      },
       overlay: {
         $set: [
           {
@@ -81,12 +18,10 @@
           {
             $condition: { color_scheme: 'light' },
             $value: '{color.black_alpha.9}',
-            $backdrop: true,
           },
           {
             $condition: { color_scheme: 'dark' },
             $value: '{color.black_alpha.11}',
-            $backdrop: true,
           },
         ],
       },

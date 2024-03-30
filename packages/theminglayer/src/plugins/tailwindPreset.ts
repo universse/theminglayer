@@ -2,8 +2,8 @@ import { CssFormatter } from '~/lib/CssFormatter'
 import { cssNameFromKeys } from '~/lib/cssUtils'
 import { generateTokenNameKeys, getCategorySpec } from '~/lib/token'
 import { cssOptions } from '~/plugins/cssOptions'
-import { type PluginCreator, type Token } from '~/types'
-import { deepSetObj } from '~/utils/misc'
+import type { PluginCreator, Token } from '~/types'
+import { deepSetObj, toArray } from '~/utils/misc'
 import * as promises from '~/utils/promises'
 
 export const tailwindPresetPlugin: PluginCreator<{
@@ -60,11 +60,13 @@ export const tailwindPresetPlugin: PluginCreator<{
             if ($type === 'typography' || $type === 'text') return
 
             if ($type === 'condition') {
-              const value = cssFormatter.aliasesToCssValue($value)
+              const value = cssFormatter.aliasToCssValue($value)
+              // @ts-expect-error todo
               const atRule = value.match(/@(\S*)/)?.[1]
 
               if (atRule) {
                 if (atRule !== 'media') return
+                // @ts-expect-error todo
                 variants[cssFormatter.tokenToCssName(token)] = value
               } else {
                 variants[cssFormatter.tokenToCssName(token)] = `${value} &`
@@ -74,7 +76,7 @@ export const tailwindPresetPlugin: PluginCreator<{
             }
 
             if ($type === 'variant') {
-              const value = cssFormatter.aliasesToCssValue($value)
+              const value = cssFormatter.aliasToCssValue($value)
               variants[cssFormatter.tokenToCssName(token)] = `&${value}`
               return
             }
@@ -86,30 +88,34 @@ export const tailwindPresetPlugin: PluginCreator<{
               generateTokenNameKeys(token.$extensions.keys).slice(1)
             )
 
-            if (
-              token.$extensions.keys.includes('$set') ||
-              token.$extensions.conditionTokens.length ||
-              token.$extensions.variantTokens.length
-            ) {
-              deepSetObj(
-                theme,
-                [themeKey, themePath],
-                `var(${cssFormatter.tokenToCssCustomPropertyName(token)})`
-              )
-            } else {
-              try {
+            const themeKeys = toArray(themeKey)
+
+            themeKeys.forEach((themeKey) => {
+              if (
+                token.$extensions.keys.includes('$set') ||
+                token.$extensions.conditionTokens.length ||
+                token.$extensions.variantTokens.length
+              ) {
                 deepSetObj(
                   theme,
                   [themeKey, themePath],
-                  cssFormatter.convertToCssValue(
-                    { type: $type, value: $value },
-                    { keepAliases }
-                  )
+                  `var(${cssFormatter.tokenToCustomPropertyName(token)})`
                 )
-              } catch {
-                logger.warnings.invalidCssValue(keys)
+              } else {
+                try {
+                  deepSetObj(
+                    theme,
+                    [themeKey, themePath],
+                    cssFormatter.convertToCssValue(
+                      { type: $type, value: $value },
+                      { keepAliases }
+                    )
+                  )
+                } catch {
+                  logger.warnings.invalidCssValue(keys)
+                }
               }
-            }
+            })
           })
 
           const code = js({ prefix, theme, variants })

@@ -4,6 +4,7 @@
   "plugins": ["stylelint-order", "stylelint-use-logical"],
   "rules": {
     "at-rule-no-unknown": [true, { "ignoreAtRules": ["config", "tailwind"] }],
+    "csstools/use-logical": "always",
     "function-no-unknown": [true, { "ignoreFunctions": ["theme"] }],
     "order/order": ["custom-properties", "declarations"],
     "order/properties-alphabetical-order": true

@@ -1,20 +1,41 @@
 {
   border_radius: {
-    '4': { $value: '4px' },
-    '8': { $value: '8px' },
-    '16': { $value: '16px' },
+    sm: { $value: '4px' },
+    md: { $value: '8px' },
+    lg: { $value: '16px' },
     rounded: { $value: '9999px' },
-
-    element: { $value: '{border_radius.4}' },
-    surface: { $value: '{border_radius.8}' },
   },
   border_style: {
     solid: { $value: 'solid' },
   },
   border_width: {
-    '0': { $value: '0' },
+    '0': { $value: '0px' },
     '1': { $value: '1px' },
     '2': { $value: '2px' },
     '4': { $value: '4px' },
+  },
+  outline_width: {
+    '0': { $value: '0px' },
+    '1': { $value: '1px' },
+    '2': { $value: '2px' },
+    '4': { $value: '4px' },
+  },
+  outline_style: {
+    solid: { $value: 'solid' },
+  },
+  outline_offset: {
+    '0': { $value: '0px' },
+    '1': { $value: '1px' },
+    '2': { $value: '2px' },
+    '4': { $value: '4px' },
+  },
+  outline: {
+    focus_ring: {
+      $value: {
+        color: '{color.blue.9}',
+        width: '{outline_width.2}',
+        style: '{outline_style.solid}',
+      },
+    },
   },
 }

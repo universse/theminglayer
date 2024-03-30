@@ -1,7 +1,3 @@
-import type { Config } from 'tailwindcss'
-
-type TailwindThemeKey = keyof Required<Config>['theme']
-
 export type TokenCategory =
   | 'screen'
   | 'breakpoint'
@@ -10,6 +6,7 @@ export type TokenCategory =
   | 'color'
   | 'background_color'
   | 'text_color'
+  | 'icon_color'
   | 'box_shadow_color'
   | 'opacity'
   | 'font_family'
@@ -103,9 +100,39 @@ export const FontWeightMap = {
   ultrablack: '950',
 } as const
 
+type TailwindThemeKey =
+  | 'screens'
+  | 'colors'
+  | 'backgroundColor'
+  | 'textColor'
+  | 'fill'
+  | 'stroke'
+  | 'boxShadowColor'
+  | 'opacity'
+  | 'fontFamily'
+  | 'fontSize'
+  | 'fontWeight'
+  | 'lineHeight'
+  | 'letterSpacing'
+  | 'spacing'
+  | 'borderColor'
+  | 'borderWidth'
+  | 'borderRadius'
+  | 'outlineColor'
+  | 'outlineWidth'
+  | 'outlineOffset'
+  | 'boxShadow'
+  | 'transitionProperty'
+  | 'transitionDuration'
+  | 'transitionTimingFunction'
+  | 'transitionDelay'
+  | 'keyframes'
+  | 'animation'
+  | 'zIndex'
+
 export const TokenCategorySpec: Record<
   TokenCategory,
-  { type: TokenType; tailwind?: TailwindThemeKey }
+  { type: TokenType; tailwind?: TailwindThemeKey | TailwindThemeKey[] }
 > = {
   screen: {
     type: 'dimension',
@@ -132,6 +159,10 @@ export const TokenCategorySpec: Record<
   text_color: {
     type: 'color',
     tailwind: 'textColor',
+  },
+  icon_color: {
+    type: 'color',
+    tailwind: ['fill', 'stroke'],
   },
   box_shadow_color: {
     type: 'color',

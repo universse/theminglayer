@@ -34,6 +34,7 @@ ideas.md
 .mf
 .wrangler
 .dev.vars
+**/functions/\[\[path\]\].js*
 
 # Supabase
 **/supabase/.branches
@@ -41,16 +42,15 @@ ideas.md
 
 # Remix
 .cache
-**/functions/\[\[path\]\].js*
 
 # Turborepo
 .turbo
 
-# Vercel
-.vercel
+# # Vercel
+# .vercel
 
-# Contentlayer
-.contentlayer
+# # Contentlayer
+# .contentlayer
 
 # ThemingLayer
 .tl

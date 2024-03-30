@@ -10,7 +10,7 @@
         transition_property: '{transition_property.colors}',
         duration: '{duration.standard}',
         timing_function: '{timing_function.linear}',
-        delay: '0',
+        delay: '0ms',
       },
     },
   },

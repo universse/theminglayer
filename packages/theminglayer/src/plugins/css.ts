@@ -10,7 +10,7 @@ import {
   createCompareRuleSpecificity,
 } from '~/lib/cssUtils'
 import { cssOptions } from '~/plugins/cssOptions'
-import { type PluginCreator, type Token } from '~/types'
+import type { PluginCreator, Token } from '~/types'
 import * as promises from '~/utils/promises'
 
 export const cssPlugin: PluginCreator<{
@@ -61,6 +61,7 @@ export const cssPlugin: PluginCreator<{
       await promises.mapParallel(
         files,
         async ({ path, filter = () => true, keepAliases = false }) => {
+          // @ts-expect-error todo
           const rules = []
 
           collection.tokens.forEach((token) => {
@@ -79,15 +80,30 @@ export const cssPlugin: PluginCreator<{
             if (!filter(token)) return
 
             try {
-              rules.push(
-                ...cssFormatter.tokenToCssRules(token, { keepAliases })
-              )
-            } catch {
+              if ($type === 'typography') {
+                const {
+                  customPropertyRules,
+                  // classSelectorRules
+                } = cssFormatter.typographyTokenToCssRules(token, {
+                  keepAliases,
+                })
+
+                rules.push(
+                  ...customPropertyRules
+                  // ,...classSelectorRules
+                )
+              } else {
+                rules.push(
+                  ...cssFormatter.tokenToCssRules(token, { keepAliases })
+                )
+              }
+            } catch (e) {
               logger.warnings.invalidCssValue(keys)
             }
           })
 
           // TODO add postcss preset env?
+          // @ts-expect-error todo
           const result = await postcss([postcssPlugin({ rules })]).process(
             '@theminglayer',
             { from: undefined! }

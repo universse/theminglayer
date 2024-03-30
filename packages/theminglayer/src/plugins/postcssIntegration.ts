@@ -2,8 +2,9 @@ import nodePath from 'node:path'
 
 import { CACHE_DIRECTORY } from '~/lib/cache'
 import { CssFormatter } from '~/lib/CssFormatter'
+import { isSimpleIsSelector } from '~/lib/cssUtils'
 import { cssOptions } from '~/plugins/cssOptions'
-import { type PluginCreator, type PostcssCachedData } from '~/types'
+import type { PluginCreator, PostcssCachedData } from '~/types'
 
 export const postcssIntegrationPlugin: PluginCreator<{
   prefix?: string
@@ -28,8 +29,7 @@ export const postcssIntegrationPlugin: PluginCreator<{
 
       const data: PostcssCachedData = {
         rulesByCustomPropertyName: {},
-        rulesByComponentClassSelector: {},
-        typographyRules: [],
+        rulesByClassSelector: {},
         customAtRules: [
           {
             rule: {
@@ -37,8 +37,7 @@ export const postcssIntegrationPlugin: PluginCreator<{
                 {
                   name: 'custom-selector',
                   params: `:--tl-container ${
-                    containerSelector.startsWith(':is(') &&
-                    containerSelector.endsWith(')')
+                    isSimpleIsSelector(containerSelector)
                       ? containerSelector.slice(4, -1)
                       : containerSelector
                   }`,
@@ -63,37 +62,77 @@ export const postcssIntegrationPlugin: PluginCreator<{
             return
           }
 
-          if ($type === 'typography' && !component) {
-            data.typographyRules.push(
-              ...cssFormatter.tokenToCssRules(token, { keepAliases })
-            )
+          if ($type === 'typography') {
+            const {
+              customPropertyRules,
+              // classSelectorRules
+            } = cssFormatter.typographyTokenToCssRules(token, { keepAliases })
+
+            if (component) {
+              const componentClassSelector =
+                cssFormatter.tokenToComponentClassSelector(token)
+
+              data.rulesByClassSelector[componentClassSelector] =
+                data.rulesByClassSelector[componentClassSelector] || []
+
+              data.rulesByClassSelector[componentClassSelector]!.push(
+                ...customPropertyRules
+              )
+            } else {
+              // const typographyClassSelector =
+              //   cssFormatter.typographyTokenToClassSelector(token)
+
+              // data.rulesByClassSelector[typographyClassSelector] =
+              //   data.rulesByClassSelector[typographyClassSelector] || []
+
+              // data.rulesByClassSelector[typographyClassSelector]!.push(
+              //   ...classSelectorRules
+              // )
+
+              // const customPropertyName =
+              //   cssFormatter.tokenToCustomPropertyName(token)
+
+              customPropertyRules.forEach((rule) => {
+                // @ts-expect-error todo
+                rule.rule.declarations.forEach((declaration) => {
+                  data.rulesByCustomPropertyName[declaration.prop] =
+                    data.rulesByCustomPropertyName[declaration.prop] || []
+
+                  data.rulesByCustomPropertyName[declaration.prop]!.push({
+                    // @ts-expect-error todo
+                    ...rule,
+                    rule: {
+                      // @ts-expect-error todo
+                      ...rule.rule,
+                      declarations: [declaration],
+                    },
+                  })
+                })
+              })
+            }
             return
           }
 
-          if (component) {
-            const rules = cssFormatter.tokenToCssRules(token, { keepAliases })
+          const rules = cssFormatter.tokenToCssRules(token, { keepAliases })
 
+          if (component) {
             const componentClassSelector =
               cssFormatter.tokenToComponentClassSelector(token)
 
-            data.rulesByComponentClassSelector[componentClassSelector] =
-              data.rulesByComponentClassSelector[componentClassSelector] || []
+            data.rulesByClassSelector[componentClassSelector] =
+              data.rulesByClassSelector[componentClassSelector] || []
 
-            data.rulesByComponentClassSelector[componentClassSelector]!.push(
-              ...rules
-            )
+            data.rulesByClassSelector[componentClassSelector]!.push(...rules)
           } else {
-            const rules = cssFormatter.tokenToCssRules(token, { keepAliases })
-
             const customPropertyName =
-              cssFormatter.tokenToCssCustomPropertyName(token)
+              cssFormatter.tokenToCustomPropertyName(token)
 
             data.rulesByCustomPropertyName[customPropertyName] =
               data.rulesByCustomPropertyName[customPropertyName] || []
 
             data.rulesByCustomPropertyName[customPropertyName]!.push(...rules)
           }
-        } catch {
+        } catch (e) {
           logger.warnings.invalidCssValue(keys)
         }
       })

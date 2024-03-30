@@ -68,7 +68,7 @@
             },
           ],
         },
-        inverted: {
+        faded: {
           hover: {
             $set: [
               {

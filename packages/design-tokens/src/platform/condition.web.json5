@@ -2,10 +2,10 @@
   condition: {
     color_scheme: {
       light: {
-        $value: '[data-color-scheme="light"]',
+        $value: ':is(:has([name="color-scheme"][value="light"]:checked), [data-color-scheme="light"])',
       },
       dark: {
-        $value: '[data-color-scheme="dark"]',
+        $value: ':is(:has([name="color-scheme"][value="dark"]:checked), [data-color-scheme="dark"])',
       },
     },
 
@@ -26,13 +26,10 @@
 
     contrast: {
       standard: {
-        $value: '[data-contrast="standard"]',
+        $value: ':is(:has([name="contrast"][value="standard"]:checked), [data-contrast="standard"])',
       },
-      less: {
-        $value: '[data-contrast="less"]',
-      },
-      more: {
-        $value: '[data-contrast="more"]',
+      high: {
+        $value: ':is(:has([name="contrast"][value="high"]:checked), [data-contrast="high"])',
       },
     },
 
@@ -191,6 +188,140 @@
       },
       landscape: {
         $value: '@media (orientation: landscape)',
+      },
+    },
+
+    writing_direction: {
+      rtl: {
+        $value: '[dir="rtl"]',
+      },
+    },
+
+    language: {
+      en: {
+        $value: '[lang="en"]',
+      },
+    },
+
+    hover: {
+      none: {
+        $value: '@media (any-hover: none)',
+      },
+      capable: {
+        $value: '@media (any-hover: hover)',
+      },
+      primary: {
+        $value: '@media (hover: hover)',
+      },
+    },
+
+    pointer: {
+      none: {
+        $value: '@media (any-pointer: none)',
+      },
+      capable: {
+        $value: '@media not (any-pointer: none)',
+      },
+    },
+
+    fine_pointer: {
+      none: {
+        $value: '@media not (any-pointer: fine)',
+      },
+      capable: {
+        $value: '@media (any-pointer: fine)',
+      },
+      primary: {
+        $value: '@media (pointer: fine)',
+      },
+    },
+
+    touch: {
+      none: {
+        $value: '@media not (any-pointer: coarse)',
+      },
+      capable: {
+        $value: '@media (any-pointer: coarse)',
+      },
+      primary: {
+        $value: '@media (pointer: coarse)',
+      },
+    },
+
+    resolution: {},
+
+    color_gamut: {
+      p3: {
+        $value: '@media (color-gamut: p3)',
+      },
+      rec2020: {
+        $value: '@media (color-gamut: rec2020)',
+      },
+    },
+
+    video_color_gamut: {
+      p3: {
+        $value: '@media (video-color-gamut: p3)',
+      },
+      rec2020: {
+        $value: '@media (video-color-gamut: rec2020)',
+      },
+    },
+
+    hdr: {
+      standard: {
+        $value: '@media (dynamic-range: standard)',
+      },
+      high: {
+        $value: '@media (dynamic-range: high)',
+      },
+    },
+
+    video_hdr: {
+      standard: {
+        $value: '@media (video-dynamic-range: standard)',
+      },
+      high: {
+        $value: '@media (video-dynamic-range: high)',
+      },
+    },
+
+    supports_p3: {
+      true: {
+        $value: '@supports (color: color(display-p3 0 0 0))',
+      },
+    },
+
+    transparency_pref: {
+      none: {
+        $value: '@media (prefers-reduced-transparency: no-preference)',
+      },
+      reduced: {
+        $value: '@media (prefers-reduced-transparency: reduce)',
+      },
+    },
+
+    nav_controls: {
+      none: {
+        $value: '@media (nav_controls: none)',
+      },
+    },
+
+    data_pref: {
+      reduced: {
+        $value: '@media (prefers-reduced-data: no-preference)',
+      },
+    },
+
+    scripting: {
+      none: {
+        $value: '@media (scripting: no-preference)',
+      },
+      initial_only: {
+        $value: '@media (scripting: no-preference)',
+      },
+      enabled: {
+        $value: '@media (scripting: no-preference)',
       },
     },
   },

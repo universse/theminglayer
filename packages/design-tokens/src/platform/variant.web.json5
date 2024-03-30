@@ -1,37 +1,62 @@
 {
   variant: {
     hover: {
-      $value: ':is(:hover, [data-hovered])',
+      $value: ':is(:hover, [data-hovered="true"])',
     },
-    active: {
-      $value: ':is(:active, [data-pressed])',
+    pressed: {
+      $value: ':is(:active, [data-pressed="true"])',
     },
     focus: {
-      $value: ':focus',
+      $value: ':is(:focus, [data-focused="true"])',
     },
     focus_within: {
       $value: ':focus-within',
     },
     focus_visible: {
-      $value: ':is(:focus-visible, [data-focus-visible])',
+      $value: ':is(:focus-visible:not([data-focused="true"]), [data-focus-visible="true"])',
+    },
+    selected: {
+      $value: ':is([data-selected="true"], [aria-selected="true"])',
     },
     enabled: {
       $value: ':enabled',
     },
     disabled: {
-      $value: ':is(:disabled, [disabled], [aria-disabled="true"])',
+      $value: ':is(:disabled, [disabled], [data-disabled="true"])',
+    },
+    pending: {
+      $value: '[data-pending="true"]',
+    },
+    interactive: {
+      $value: ':not(:disabled, [disabled], [data-disabled="true"])',
+    },
+    non_interactive: {
+      $value: ':is(:disabled, [disabled], [data-disabled="true"], [data-pending="true"])',
+    },
+
+    valid: {
+      $value: ':valid',
     },
     invalid: {
       $value: ':invalid',
     },
+    input_valid: {
+      $value: ':user-valid',
+    },
     input_invalid: {
       $value: ':user-invalid',
     },
-    pending: {
-      $value: ':is([data-pending="true"], [aria-busy="true"])',
+    read_only: {
+      $value: ':is(:read-only, [readonly], [aria-readonly="true"])',
     },
-    readonly: {
-      $value: ':is(:read-only, [aria-readonly="true"])',
+
+    horizontal: {
+      $value: '[data-orientation="horizontal"]',
     },
+    vertical: {
+      $value: '[data-orientation="vertical"]',
+    },
+
+    // :lang, :dir
   },
 }

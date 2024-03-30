@@ -1,370 +1,3307 @@
 {
   color: {
     white: { $value: '#ffffff' },
+    black: { $value: '#000000' },
     transparent: { $value: '#00000000' },
     amber: {
-      '1': { $value: '#fefdfb' },
-      '2': { $value: '#fefbe9' },
-      '3': { $value: '#fff7c2' },
-      '4': { $value: '#ffee9c' },
-      '5': { $value: '#fbe577' },
-      '6': { $value: '#f3d673' },
-      '7': { $value: '#e9c162' },
-      '8': { $value: '#e2a336' },
-      '9': { $value: '#ffc53d' },
-      '10': { $value: '#ffba18' },
-      '11': { $value: '#ab6400' },
-      '12': { $value: '#4f3422' },
+      '1': {
+        $set: [
+          { $value: '#fefdfb' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.995 0.992 0.985)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#fefbe9' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.994 0.986 0.921)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#fff7c2' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.994 0.969 0.782)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#ffee9c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.989 0.937 0.65)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#fbe577' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.97 0.902 0.527)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#f3d673' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.936 0.844 0.506)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#e9c162' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.89 0.762 0.443)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#e2a336' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.85 0.65 0.3)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#ffc53d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.77 0.26)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ffba18' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.959 0.741 0.274)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#ab6400' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.64 0.4 0)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#4f3422' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.294 0.208 0.145)',
+          },
+        ],
+      },
     },
     amber_alpha: {
-      '1': { $value: '#c0800004' },
-      '2': { $value: '#f4d10016' },
-      '3': { $value: '#ffde003d' },
-      '4': { $value: '#ffd40063' },
-      '5': { $value: '#f8cf0088' },
-      '6': { $value: '#eab5008c' },
-      '7': { $value: '#dc9b009d' },
-      '8': { $value: '#da8a00c9' },
-      '9': { $value: '#ffb300c2' },
-      '10': { $value: '#ffb300e7' },
-      '11': { $value: '#ab6400' },
-      '12': { $value: '#341500dd' },
+      '1': {
+        $set: [
+          { $value: '#c0800004' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.757 0.514 0.024 / 0.016)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#f4d10016' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.902 0.804 0.008 / 0.079)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#ffde003d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.965 0.859 0.004 / 0.22)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#ffd40063' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.969 0.82 0.004 / 0.35)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#f8cf0088' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.933 0.796 0.004 / 0.475)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#eab5008c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.875 0.682 0.004 / 0.495)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#dc9b009d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.804 0.573 0 / 0.557)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#da8a00c9' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.788 0.502 0 / 0.699)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#ffb300c2' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.686 0 / 0.742)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ffb300e7' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.945 0.643 0 / 0.726)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#ab6400' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.64 0.4 0)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#341500dd' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.294 0.208 0.145)',
+          },
+        ],
+      },
     },
     amber_dark: {
-      '1': { $value: '#16120c' },
-      '2': { $value: '#1d180f' },
-      '3': { $value: '#302008' },
-      '4': { $value: '#3f2700' },
-      '5': { $value: '#4d3000' },
-      '6': { $value: '#5c3d05' },
-      '7': { $value: '#714f19' },
-      '8': { $value: '#8f6424' },
-      '9': { $value: '#ffc53d' },
-      '10': { $value: '#ffd60a' },
-      '11': { $value: '#ffca16' },
-      '12': { $value: '#ffe7b3' },
+      '1': {
+        $set: [
+          { $value: '#16120c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.082 0.07 0.05)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#1d180f' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.111 0.094 0.064)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#302008' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.178 0.128 0.049)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#3f2700' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.239 0.156 0)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#4d3000' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.29 0.193 0)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#5c3d05' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.344 0.245 0.076)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#714f19' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.422 0.314 0.141)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#8f6424' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.535 0.399 0.189)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#ffc53d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.77 0.26)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ffd60a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.87 0.15)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#ffca16' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.8 0.29)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#ffe7b3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.984 0.909 0.726)',
+          },
+        ],
+      },
     },
     amber_dark_alpha: {
-      '1': { $value: '#e63c0006' },
-      '2': { $value: '#fd9b000d' },
-      '3': { $value: '#fa820022' },
-      '4': { $value: '#fc820032' },
-      '5': { $value: '#fd8b0041' },
-      '6': { $value: '#fd9b0051' },
-      '7': { $value: '#ffab2567' },
-      '8': { $value: '#ffae3587' },
-      '9': { $value: '#ffc53d' },
-      '10': { $value: '#ffd60a' },
-      '11': { $value: '#ffca16' },
-      '12': { $value: '#ffe7b3' },
+      '1': {
+        $set: [
+          { $value: '#e63c0006' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.992 0.298 0 / 0.017)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#fd9b000d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.988 0.651 0 / 0.047)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#fa820022' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.6 0 / 0.118)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#fc820032' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.557 0 / 0.185)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#fd8b0041' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.592 0 / 0.24)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#fd9b0051' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.659 0.094 / 0.299)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#ffab2567' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.714 0.263 / 0.383)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#ffae3587' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.996 0.729 0.306 / 0.5)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#ffc53d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.769 0.259)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ffd60a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.871 0.149)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#ffca16' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.8 0.29)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#ffe7b3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.984 0.909 0.726)',
+          },
+        ],
+      },
     },
     black_alpha: {
-      '1': { $value: 'rgb(0 0 0 / 5%)' },
-      '2': { $value: 'rgb(0 0 0 / 10%)' },
-      '3': { $value: 'rgb(0 0 0 / 15%)' },
-      '4': { $value: 'rgb(0 0 0 / 20%)' },
-      '5': { $value: 'rgb(0 0 0 / 30%)' },
-      '6': { $value: 'rgb(0 0 0 / 40%)' },
-      '7': { $value: 'rgb(0 0 0 / 50%)' },
-      '8': { $value: 'rgb(0 0 0 / 60%)' },
-      '9': { $value: 'rgb(0 0 0 / 70%)' },
-      '10': { $value: 'rgb(0 0 0 / 80%)' },
-      '11': { $value: 'rgb(0 0 0 / 90%)' },
-      '12': { $value: 'rgb(0 0 0 / 95%)' },
+      '1': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.05)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.05)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.1)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.1)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.15)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.15)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.2)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.2)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.3)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.3)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.4)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.4)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.5)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.5)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.6)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.6)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.7)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.7)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.8)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.8)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.9)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.9)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: 'rgba(0, 0, 0, 0.95)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.95)',
+          },
+        ],
+      },
     },
     blue: {
-      '1': { $value: '#fbfdff' },
-      '2': { $value: '#f4faff' },
-      '3': { $value: '#e6f4fe' },
-      '4': { $value: '#d5efff' },
-      '5': { $value: '#c2e5ff' },
-      '6': { $value: '#acd8fc' },
-      '7': { $value: '#8ec8f6' },
-      '8': { $value: '#5eb1ef' },
-      '9': { $value: '#0090ff' },
-      '10': { $value: '#0588f0' },
-      '11': { $value: '#0d74ce' },
-      '12': { $value: '#113264' },
+      '1': {
+        $set: [
+          { $value: '#fbfdff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.986 0.992 0.999)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#f4faff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.96 0.979 0.998)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#e6f4fe' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.912 0.956 0.991)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#d5efff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.853 0.932 1)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#c2e5ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.788 0.894 0.998)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#acd8fc' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.709 0.843 0.976)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#8ec8f6' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.606 0.777 0.947)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#5eb1ef' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.451 0.688 0.917)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#0090ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.247 0.556 0.969)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#0588f0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.234 0.523 0.912)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#0d74ce' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.15 0.44 0.84)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#113264' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.102 0.193 0.379)',
+          },
+        ],
+      },
     },
     blue_alpha: {
-      '1': { $value: '#0080ff04' },
-      '2': { $value: '#008cff0b' },
-      '3': { $value: '#008ff519' },
-      '4': { $value: '#009eff2a' },
-      '5': { $value: '#0093ff3d' },
-      '6': { $value: '#0088f653' },
-      '7': { $value: '#0083eb71' },
-      '8': { $value: '#0084e6a1' },
-      '9': { $value: '#0090ff' },
-      '10': { $value: '#0086f0fa' },
-      '11': { $value: '#006dcbf2' },
-      '12': { $value: '#002359ee' },
+      '1': {
+        $set: [
+          { $value: '#0080ff04' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.024 0.514 1 / 0.016)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#008cff0b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.024 0.514 0.906 / 0.04)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#008ff519' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.012 0.506 0.914 / 0.087)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#009eff2a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.008 0.545 1 / 0.146)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#0093ff3d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.004 0.502 0.984 / 0.212)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#0088f653' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.004 0.463 0.922 / 0.291)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#0083eb71' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.004 0.431 0.863 / 0.393)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#0084e6a1' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.427 0.851 / 0.55)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#0090ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.412 0.961 / 0.753)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#0086f0fa' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.376 0.886 / 0.765)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#006dcbf2' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.15 0.44 0.84)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#002359ee' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.102 0.193 0.379)',
+          },
+        ],
+      },
     },
     blue_dark: {
-      '1': { $value: '#0d1520' },
-      '2': { $value: '#111927' },
-      '3': { $value: '#0d2847' },
-      '4': { $value: '#003362' },
-      '5': { $value: '#004074' },
-      '6': { $value: '#104d87' },
-      '7': { $value: '#205d9e' },
-      '8': { $value: '#2870bd' },
-      '9': { $value: '#0090ff' },
-      '10': { $value: '#3b9eff' },
-      '11': { $value: '#70b8ff' },
-      '12': { $value: '#c2e6ff' },
+      '1': {
+        $set: [
+          { $value: '#0d1520' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.057 0.081 0.122)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#111927' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.072 0.098 0.147)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#0d2847' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.078 0.154 0.27)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#003362' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.033 0.197 0.37)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#004074' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.08 0.245 0.441)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#104d87' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.14 0.298 0.511)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#205d9e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.195 0.361 0.6)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#2870bd' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.239 0.434 0.72)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#0090ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.247 0.556 0.969)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#3b9eff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.344 0.612 0.973)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#70b8ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.49 0.72 1)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#c2e6ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.788 0.898 0.99)',
+          },
+        ],
+      },
     },
     blue_dark_alpha: {
-      '1': { $value: '#004df211' },
-      '2': { $value: '#1166fb18' },
-      '3': { $value: '#0077ff3a' },
-      '4': { $value: '#0075ff57' },
-      '5': { $value: '#0081fd6b' },
-      '6': { $value: '#0f89fd7f' },
-      '7': { $value: '#2a91fe98' },
-      '8': { $value: '#3094feb9' },
-      '9': { $value: '#0090ff' },
-      '10': { $value: '#3b9eff' },
-      '11': { $value: '#70b8ff' },
-      '12': { $value: '#c2e6ff' },
-    },
-    crimson: {
-      '1': { $value: '#fffcfd' },
-      '2': { $value: '#fef7f9' },
-      '3': { $value: '#ffe9f0' },
-      '4': { $value: '#fedce7' },
-      '5': { $value: '#facedd' },
-      '6': { $value: '#f3bed1' },
-      '7': { $value: '#eaacc3' },
-      '8': { $value: '#e093b2' },
-      '9': { $value: '#e93d82' },
-      '10': { $value: '#df3478' },
-      '11': { $value: '#cb1d63' },
-      '12': { $value: '#621639' },
-    },
-    crimson_alpha: {
-      '1': { $value: '#ff005503' },
-      '2': { $value: '#e0004008' },
-      '3': { $value: '#ff005216' },
-      '4': { $value: '#f8005123' },
-      '5': { $value: '#e5004f31' },
-      '6': { $value: '#d0004b41' },
-      '7': { $value: '#bf004753' },
-      '8': { $value: '#b6004a6c' },
-      '9': { $value: '#e2005bc2' },
-      '10': { $value: '#d70056cb' },
-      '11': { $value: '#c4004fe2' },
-      '12': { $value: '#530026e9' },
-    },
-    crimson_dark: {
-      '1': { $value: '#191114' },
-      '2': { $value: '#201318' },
-      '3': { $value: '#381525' },
-      '4': { $value: '#4d122f' },
-      '5': { $value: '#5c1839' },
-      '6': { $value: '#6d2545' },
-      '7': { $value: '#873356' },
-      '8': { $value: '#b0436e' },
-      '9': { $value: '#e93d82' },
-      '10': { $value: '#ee518a' },
-      '11': { $value: '#ff92ad' },
-      '12': { $value: '#fdd3e8' },
-    },
-    crimson_dark_alpha: {
-      '1': { $value: '#f4126709' },
-      '2': { $value: '#f22f7a11' },
-      '3': { $value: '#fe2a8b2a' },
-      '4': { $value: '#fd158741' },
-      '5': { $value: '#fd278f51' },
-      '6': { $value: '#fe459763' },
-      '7': { $value: '#fd559b7f' },
-      '8': { $value: '#fe5b9bab' },
-      '9': { $value: '#fe418de8' },
-      '10': { $value: '#ff5693ed' },
-      '11': { $value: '#ff92ad' },
-      '12': { $value: '#ffd5eafd' },
+      '1': {
+        $set: [
+          { $value: '#004df211' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.333 1 / 0.059)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#1166fb18' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.114 0.435 0.988 / 0.085)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#0077ff3a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.122 0.463 1 / 0.219)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#0075ff57' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.467 1 / 0.324)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#0081fd6b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.098 0.51 1 / 0.4)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#0f89fd7f' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.224 0.557 1 / 0.475)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#2a91fe98' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.294 0.584 1 / 0.572)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#3094feb9' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.314 0.592 1 / 0.702)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#0090ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.251 0.573 0.996 / 0.967)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#3b9eff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.357 0.631 1 / 0.971)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#70b8ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.49 0.72 1)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#c2e6ff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.788 0.898 0.99)',
+          },
+        ],
+      },
     },
     gray: {
-      '1': { $value: '#fcfcfc' },
-      '2': { $value: '#f9f9f9' },
-      '3': { $value: '#f0f0f0' },
-      '4': { $value: '#e8e8e8' },
-      '5': { $value: '#e0e0e0' },
-      '6': { $value: '#d9d9d9' },
-      '7': { $value: '#cecece' },
-      '8': { $value: '#bbbbbb' },
-      '9': { $value: '#8d8d8d' },
-      '10': { $value: '#838383' },
-      '11': { $value: '#646464' },
-      '12': { $value: '#202020' },
+      '1': {
+        $set: [
+          { $value: '#fcfcfc' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.988 0.988 0.988)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#f9f9f9' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.975 0.975 0.975)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#f0f0f0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.939 0.939 0.939)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#e8e8e8' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.908 0.908 0.908)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#e0e0e0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.88 0.88 0.88)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#d9d9d9' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.849 0.849 0.849)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#cecece' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.807 0.807 0.807)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#bbbbbb' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.732 0.732 0.732)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#8d8d8d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.553 0.553 0.553)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#838383' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.512 0.512 0.512)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#646464' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.392 0.392 0.392)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#202020' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.125 0.125 0.125)',
+          },
+        ],
+      },
     },
     gray_alpha: {
-      '1': { $value: '#00000003' },
-      '2': { $value: '#00000006' },
-      '3': { $value: '#0000000f' },
-      '4': { $value: '#00000017' },
-      '5': { $value: '#0000001f' },
-      '6': { $value: '#00000026' },
-      '7': { $value: '#00000031' },
-      '8': { $value: '#00000044' },
-      '9': { $value: '#00000072' },
-      '10': { $value: '#0000007c' },
-      '11': { $value: '#0000009b' },
-      '12': { $value: '#000000df' },
+      '1': {
+        $set: [
+          { $value: '#00000003' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.012)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#00000006' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.024)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#0000000f' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.063)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#00000017' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.09)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#0000001f' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.122)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#00000026' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.153)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#00000031' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.192)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#00000044' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.267)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#00000072' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.447)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#0000007c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.486)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#0000009b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.608)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#000000df' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0.875)',
+          },
+        ],
+      },
     },
     gray_dark: {
-      '1': { $value: '#111111' },
-      '2': { $value: '#191919' },
-      '3': { $value: '#222222' },
-      '4': { $value: '#2a2a2a' },
-      '5': { $value: '#313131' },
-      '6': { $value: '#3a3a3a' },
-      '7': { $value: '#484848' },
-      '8': { $value: '#606060' },
-      '9': { $value: '#6e6e6e' },
-      '10': { $value: '#7b7b7b' },
-      '11': { $value: '#b4b4b4' },
-      '12': { $value: '#eeeeee' },
+      '1': {
+        $set: [
+          { $value: '#111111' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.067 0.067 0.067)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#191919' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.098 0.098 0.098)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#222222' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.135 0.135 0.135)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#2a2a2a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.163 0.163 0.163)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#313131' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.192 0.192 0.192)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#3a3a3a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.228 0.228 0.228)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#484848' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.283 0.283 0.283)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#606060' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.375 0.375 0.375)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#6e6e6e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.431 0.431 0.431)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#7b7b7b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.484 0.484 0.484)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#b4b4b4' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.706 0.706 0.706)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#eeeeee' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.933 0.933 0.933)',
+          },
+        ],
+      },
     },
     gray_dark_alpha: {
-      '1': { $value: '#00000000' },
-      '2': { $value: '#ffffff09' },
-      '3': { $value: '#ffffff12' },
-      '4': { $value: '#ffffff1b' },
-      '5': { $value: '#ffffff22' },
-      '6': { $value: '#ffffff2c' },
-      '7': { $value: '#ffffff3b' },
-      '8': { $value: '#ffffff55' },
-      '9': { $value: '#ffffff64' },
-      '10': { $value: '#ffffff72' },
-      '11': { $value: '#ffffffaf' },
-      '12': { $value: '#ffffffed' },
+      '1': {
+        $set: [
+          { $value: '#00000000' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#ffffff09' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.034)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#ffffff12' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.071)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#ffffff1b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.105)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#ffffff22' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.134)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#ffffff2c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.172)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#ffffff3b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.231)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#ffffff55' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.332)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#ffffff64' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.391)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ffffff72' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.445)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#ffffffaf' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.685)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#ffffffed' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.929)',
+          },
+        ],
+      },
+    },
+    green: {
+      '1': {
+        $set: [
+          { $value: '#fbfefc' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.986 0.996 0.989)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#f4fbf6' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.963 0.983 0.967)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#e6f6eb' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.913 0.964 0.925)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#d6f1df' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.859 0.94 0.879)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#c4e8d1' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.796 0.907 0.826)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#adddc0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.718 0.863 0.761)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#8eceaa' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.61 0.801 0.675)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#5bb98b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.451 0.715 0.559)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#30a46c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.332 0.634 0.442)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#2b9a66' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.308 0.595 0.417)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#218358' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.19 0.5 0.32)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#193b2d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.132 0.228 0.18)',
+          },
+        ],
+      },
+    },
+    green_alpha: {
+      '1': {
+        $set: [
+          { $value: '#00c04004' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.024 0.757 0.267 / 0.016)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#00a32f0b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.024 0.565 0.129 / 0.036)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#00a43319' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.012 0.596 0.145 / 0.087)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#00a83829' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.008 0.588 0.145 / 0.142)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#019c393b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.004 0.541 0.157 / 0.204)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#00963c52' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.004 0.518 0.157 / 0.283)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#00914071' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.004 0.486 0.165 / 0.389)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#00924ba4' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.478 0.2 / 0.55)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#008f4acf' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.455 0.165 / 0.667)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#008647d4' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.416 0.153 / 0.691)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#00713fde' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.19 0.5 0.32)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#002616e6' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.132 0.228 0.18)',
+          },
+        ],
+      },
+    },
+    green_dark: {
+      '1': {
+        $set: [
+          { $value: '#0e1512' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.062 0.083 0.071)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#121b17' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.079 0.106 0.09)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#132d21' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.1 0.173 0.133)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#113b29' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.115 0.229 0.166)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#174933' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.147 0.282 0.206)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#20573e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.185 0.338 0.25)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#28684a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.227 0.403 0.298)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#2f7c57' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.27 0.479 0.351)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#30a46c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.332 0.634 0.442)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#33b074' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.357 0.682 0.474)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#3dd68c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.434 0.828 0.573)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#b1f1cb' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.747 0.938 0.807)',
+          },
+        ],
+      },
+    },
+    green_dark_alpha: {
+      '1': {
+        $set: [
+          { $value: '#00de4505' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0.992 0.298 / 0.017)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#29f99d0b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.341 0.98 0.616 / 0.043)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#22ff991e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.376 0.996 0.655 / 0.114)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#11ff992d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.341 0.996 0.635 / 0.173)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#2bffa23c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.408 1 0.678 / 0.232)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#44ffaa4b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.475 1 0.706 / 0.29)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#50fdac5e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.514 1 0.706 / 0.362)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#54ffad73' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.529 1 0.718 / 0.442)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#44ffa49e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.502 0.996 0.682 / 0.61)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#43fea4ab' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.506 1 0.682 / 0.66)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#46fea5d4' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.434 0.828 0.573)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#bbffd7f0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.747 0.938 0.807)',
+          },
+        ],
+      },
+    },
+    mauve: {
+      '1': {
+        $set: [
+          { $value: '#fdfcfd' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.991 0.988 0.992)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#faf9fb' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.98 0.976 0.984)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#f2eff3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.946 0.938 0.952)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#eae7ec' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.915 0.906 0.925)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#e3dfe6' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.886 0.876 0.901)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#dbd8e0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.856 0.846 0.875)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#d0cdd7' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.814 0.804 0.84)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#bcbac7' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.735 0.728 0.777)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#8e8c99' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.555 0.549 0.596)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#84828e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.514 0.508 0.552)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#65636d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.395 0.388 0.424)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#211f26' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.128 0.122 0.147)',
+          },
+        ],
+      },
+    },
+    mauve_alpha: {
+      '1': {
+        $set: [
+          { $value: '#55005503' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.349 0.024 0.349 / 0.012)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#2b005506' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.184 0.024 0.349 / 0.024)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#30004010' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.129 0.008 0.255 / 0.063)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#20003618' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.094 0.012 0.216 / 0.095)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#20003820' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.098 0.008 0.224 / 0.126)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#14003527' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.055 0.004 0.18 / 0.153)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#10003332' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.067 0.008 0.184 / 0.197)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#08003145' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.02 0.004 0.176 / 0.271)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#05001d73' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.02 0.004 0.106 / 0.451)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#0500197d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.012 0.004 0.09 / 0.491)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#0400119c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.016 0 0.059 / 0.612)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#020008e0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.008 0 0.027 / 0.879)',
+          },
+        ],
+      },
+    },
+    mauve_dark: {
+      '1': {
+        $set: [
+          { $value: '#121113' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.07 0.067 0.074)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#1a191b' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.101 0.098 0.105)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#232225' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.138 0.134 0.144)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#2b292d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.167 0.161 0.175)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#323035' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.196 0.189 0.206)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#3c393f' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.232 0.225 0.245)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#49474e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.286 0.277 0.302)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#625f69' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.383 0.373 0.408)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#6f6d78' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.434 0.428 0.467)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#7c7a85' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.487 0.48 0.519)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#b5b2bc' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.707 0.7 0.735)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#eeeef0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.933 0.933 0.94)',
+          },
+        ],
+      },
+    },
+    mauve_dark_alpha: {
+      '1': {
+        $set: [
+          { $value: '#00000000' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0 0 0 / 0)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#f5f4f609' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.996 0.992 1 / 0.034)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#ebeaf814' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.937 0.933 0.992 / 0.077)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#eee5f81d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.957 0.918 0.996 / 0.111)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#efe6fe25' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.937 0.906 0.996 / 0.145)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#f1e6fd30' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.953 0.925 0.996 / 0.183)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#eee9ff40' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.945 0.929 1 / 0.246)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#eee7ff5d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.937 0.918 1 / 0.361)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#eae6fd6e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.933 0.918 1 / 0.424)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ece9fd7c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.941 0.925 1 / 0.479)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#f5f1ffb7' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.965 0.961 1 / 0.712)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#fdfdffef' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.992 0.992 1 / 0.937)',
+          },
+        ],
+      },
     },
     plum: {
-      '1': { $value: '#fefcff' },
-      '2': { $value: '#fdf7fd' },
-      '3': { $value: '#fbebfb' },
-      '4': { $value: '#f7def8' },
-      '5': { $value: '#f2d1f3' },
-      '6': { $value: '#e9c2ec' },
-      '7': { $value: '#deade3' },
-      '8': { $value: '#cf91d8' },
-      '9': { $value: '#ab4aba' },
-      '10': { $value: '#a144af' },
-      '11': { $value: '#953ea3' },
-      '12': { $value: '#53195d' },
+      '1': {
+        $set: [
+          { $value: '#fefcff' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.995 0.988 0.999)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#fdf7fd' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.988 0.971 0.99)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#fbebfb' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.973 0.923 0.98)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#f7def8' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.953 0.875 0.966)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#f2d1f3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.926 0.825 0.945)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#e9c2ec' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.89 0.765 0.916)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#deade3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.84 0.686 0.877)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#cf91d8' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.775 0.58 0.832)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#ab4aba' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.624 0.313 0.708)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#a144af' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.587 0.29 0.667)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#953ea3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.543 0.263 0.619)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#53195d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.299 0.114 0.352)',
+          },
+        ],
+      },
     },
     plum_alpha: {
-      '1': { $value: '#aa00ff03' },
-      '2': { $value: '#c000c008' },
-      '3': { $value: '#cc00cc14' },
-      '4': { $value: '#c200c921' },
-      '5': { $value: '#b700bd2e' },
-      '6': { $value: '#a400b03d' },
-      '7': { $value: '#9900a852' },
-      '8': { $value: '#9000a56e' },
-      '9': { $value: '#89009eb5' },
-      '10': { $value: '#7f0092bb' },
-      '11': { $value: '#730086c1' },
-      '12': { $value: '#40004be6' },
+      '1': {
+        $set: [
+          { $value: '#aa00ff03' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.675 0.024 1 / 0.012)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#c000c008' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.58 0.024 0.58 / 0.028)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#cc00cc14' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.655 0.008 0.753 / 0.079)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#c200c921' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.627 0.008 0.722 / 0.126)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#b700bd2e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.58 0.004 0.69 / 0.177)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#a400b03d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.537 0.004 0.655 / 0.236)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#9900a852' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.49 0.004 0.616 / 0.314)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#9000a56e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.471 0.004 0.6 / 0.42)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#89009eb5' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.451 0 0.576 / 0.687)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#7f0092bb' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.42 0 0.529 / 0.71)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#730086c1' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.543 0.263 0.619)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#40004be6' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.299 0.114 0.352)',
+          },
+        ],
+      },
     },
     plum_dark: {
-      '1': { $value: '#181118' },
-      '2': { $value: '#201320' },
-      '3': { $value: '#351a35' },
-      '4': { $value: '#451d47' },
-      '5': { $value: '#512454' },
-      '6': { $value: '#5e3061' },
-      '7': { $value: '#734079' },
-      '8': { $value: '#92549c' },
-      '9': { $value: '#ab4aba' },
-      '10': { $value: '#b658c4' },
-      '11': { $value: '#e796f3' },
-      '12': { $value: '#f4d4f4' },
+      '1': {
+        $set: [
+          { $value: '#181118' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.09 0.068 0.092)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#201320' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.118 0.077 0.121)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#351a35' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.192 0.105 0.202)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#451d47' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.25 0.121 0.271)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#512454' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.293 0.152 0.319)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#5e3061' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.343 0.198 0.372)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#734079' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.424 0.262 0.461)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#92549c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.54 0.341 0.595)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#ab4aba' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.624 0.313 0.708)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#b658c4' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.666 0.365 0.748)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#e796f3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.86 0.602 0.933)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#f4d4f4' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.936 0.836 0.949)',
+          },
+        ],
+      },
     },
     plum_dark_alpha: {
-      '1': { $value: '#f112f108' },
-      '2': { $value: '#f22ff211' },
-      '3': { $value: '#fd4cfd27' },
-      '4': { $value: '#f646ff3a' },
-      '5': { $value: '#f455ff48' },
-      '6': { $value: '#f66dff56' },
-      '7': { $value: '#f07cfd70' },
-      '8': { $value: '#ee84ff95' },
-      '9': { $value: '#e961feb6' },
-      '10': { $value: '#ed70ffc0' },
-      '11': { $value: '#f19cfef3' },
-      '12': { $value: '#feddfef4' },
+      '1': {
+        $set: [
+          { $value: '#f112f108' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.973 0.071 0.973 / 0.026)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#f22ff211' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.933 0.267 1 / 0.059)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#fd4cfd27' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.918 0.333 0.996 / 0.148)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#f646ff3a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.91 0.318 1 / 0.219)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#f455ff48' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.914 0.388 1 / 0.269)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#f66dff56' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.906 0.463 1 / 0.328)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#f07cfd70' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.906 0.529 1 / 0.425)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#ee84ff95' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.906 0.553 1 / 0.568)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#e961feb6' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.875 0.427 1 / 0.69)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ed70ffc0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.886 0.471 0.996 / 0.732)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#f19cfef3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.86 0.602 0.933)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#feddfef4' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.936 0.836 0.949)',
+          },
+        ],
+      },
     },
-    teal: {
-      '1': { $value: '#fafefd' },
-      '2': { $value: '#f3fbf9' },
-      '3': { $value: '#e0f8f3' },
-      '4': { $value: '#ccf3ea' },
-      '5': { $value: '#b8eae0' },
-      '6': { $value: '#a1ded2' },
-      '7': { $value: '#83cdc1' },
-      '8': { $value: '#53b9ab' },
-      '9': { $value: '#12a594' },
-      '10': { $value: '#0d9b8a' },
-      '11': { $value: '#008573' },
-      '12': { $value: '#0d3d38' },
+    red: {
+      '1': {
+        $set: [
+          { $value: '#fffcfc' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.998 0.989 0.988)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#fff7f7' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.995 0.971 0.971)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#feebec' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.985 0.925 0.925)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#ffdbdc' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.999 0.866 0.866)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#ffcdce' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.984 0.812 0.811)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#fdbdbe' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.955 0.751 0.749)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#f4a9aa' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.915 0.675 0.672)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#eb8e90' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.872 0.575 0.572)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#e5484d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.83 0.329 0.324)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#dc3e42' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.798 0.294 0.285)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#ce2c31' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.744 0.234 0.222)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#641723' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.36 0.115 0.143)',
+          },
+        ],
+      },
     },
-    teal_alpha: {
-      '1': { $value: '#00cc9905' },
-      '2': { $value: '#00aa800c' },
-      '3': { $value: '#00c69d1f' },
-      '4': { $value: '#00c39633' },
-      '5': { $value: '#00b49047' },
-      '6': { $value: '#00a6855e' },
-      '7': { $value: '#0099807c' },
-      '8': { $value: '#009783ac' },
-      '9': { $value: '#009e8ced' },
-      '10': { $value: '#009684f2' },
-      '11': { $value: '#008573' },
-      '12': { $value: '#00332df2' },
+    red_alpha: {
+      '1': {
+        $set: [
+          { $value: '#ff000003' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.675 0.024 0.024 / 0.012)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#ff000008' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.863 0.024 0.024 / 0.028)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#f3000d14' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.792 0.008 0.008 / 0.075)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#ff000824' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.008 0.008 / 0.134)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#ff000632' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.918 0.008 0.008 / 0.189)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#f8000442' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.831 0.02 0.004 / 0.251)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#df000356' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.741 0.016 0.004 / 0.33)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#d2000571' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.698 0.012 0.004 / 0.428)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#db0007b7' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.749 0.008 0 / 0.675)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#d10005c1' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.714 0.012 0 / 0.714)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#c40006d3' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.744 0.234 0.222)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#55000de8' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.36 0.115 0.143)',
+          },
+        ],
+      },
     },
-    teal_dark: {
-      '1': { $value: '#0d1514' },
-      '2': { $value: '#111c1b' },
-      '3': { $value: '#0d2d2a' },
-      '4': { $value: '#023b37' },
-      '5': { $value: '#084843' },
-      '6': { $value: '#145750' },
-      '7': { $value: '#1c6961' },
-      '8': { $value: '#207e73' },
-      '9': { $value: '#12a594' },
-      '10': { $value: '#0eb39e' },
-      '11': { $value: '#0bd8b6' },
-      '12': { $value: '#adf0dd' },
+    red_dark: {
+      '1': {
+        $set: [
+          { $value: '#191111' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.093 0.068 0.067)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#201314' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.118 0.077 0.079)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#3b1219' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.211 0.081 0.099)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#500f1c' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.287 0.079 0.113)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#611623' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.348 0.11 0.142)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#72232d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.414 0.16 0.183)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#8c333a' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.508 0.224 0.236)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#b54548' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.659 0.298 0.297)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#e5484d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.83 0.329 0.324)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ec5d5e' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.861 0.403 0.387)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#ff9592' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.57 0.55)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#ffd1d9' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.971 0.826 0.852)',
+          },
+        ],
+      },
     },
-    teal_dark_alpha: {
-      '1': { $value: '#00deab05' },
-      '2': { $value: '#12fbe60c' },
-      '3': { $value: '#00ffe61e' },
-      '4': { $value: '#00ffe92d' },
-      '5': { $value: '#00ffea3b' },
-      '6': { $value: '#1cffe84b' },
-      '7': { $value: '#2efde85f' },
-      '8': { $value: '#32ffe775' },
-      '9': { $value: '#13ffe49f' },
-      '10': { $value: '#0dffe0ae' },
-      '11': { $value: '#0afed5d6' },
-      '12': { $value: '#b8ffebef' },
+    red_dark_alpha: {
+      '1': {
+        $set: [
+          { $value: '#f4121209' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.984 0.071 0.071 / 0.03)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: '#f22f3e11' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.996 0.282 0.282 / 0.055)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: '#ff173f2d' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.169 0.271 / 0.156)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: '#fe0a3b44' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.118 0.267 / 0.236)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: '#ff204756' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.212 0.314 / 0.303)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: '#ff3e5668' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.318 0.38 / 0.374)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: '#ff536184' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.4 0.424 / 0.475)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: '#ff5d61b0' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.431 0.431 / 0.635)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: '#fe4e54e4' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.388 0.384 / 0.82)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: '#ff6465eb' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.463 0.447 / 0.853)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: '#ff9592' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 0.57 0.55)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: '#ffd1d9' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 0.971 0.826 0.852)',
+          },
+        ],
+      },
     },
     white_alpha: {
-      '1': { $value: 'rgb(255 255 255 / 5%)' },
-      '2': { $value: 'rgb(255 255 255 / 10%)' },
-      '3': { $value: 'rgb(255 255 255 / 15%)' },
-      '4': { $value: 'rgb(255 255 255 / 20%)' },
-      '5': { $value: 'rgb(255 255 255 / 30%)' },
-      '6': { $value: 'rgb(255 255 255 / 40%)' },
-      '7': { $value: 'rgb(255 255 255 / 50%)' },
-      '8': { $value: 'rgb(255 255 255 / 60%)' },
-      '9': { $value: 'rgb(255 255 255 / 70%)' },
-      '10': { $value: 'rgb(255 255 255 / 80%)' },
-      '11': { $value: 'rgb(255 255 255 / 90%)' },
-      '12': { $value: 'rgb(255 255 255 / 95%)' },
+      '1': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.05)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.05)',
+          },
+        ],
+      },
+      '2': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.1)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.1)',
+          },
+        ],
+      },
+      '3': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.15)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.15)',
+          },
+        ],
+      },
+      '4': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.2)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.2)',
+          },
+        ],
+      },
+      '5': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.3)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.3)',
+          },
+        ],
+      },
+      '6': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.4)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.4)',
+          },
+        ],
+      },
+      '7': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.5)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.5)',
+          },
+        ],
+      },
+      '8': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.6)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.6)',
+          },
+        ],
+      },
+      '9': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.7)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.7)',
+          },
+        ],
+      },
+      '10': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.8)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.8)',
+          },
+        ],
+      },
+      '11': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.9)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.9)',
+          },
+        ],
+      },
+      '12': {
+        $set: [
+          { $value: 'rgba(255, 255, 255, 0.95)' },
+          {
+            $condition: { color_gamut: 'p3', supports_p3: true },
+            $value: 'color(display-p3 1 1 1 / 0.95)',
+          },
+        ],
+      },
     },
   },
 }

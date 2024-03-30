@@ -3,7 +3,7 @@ import {
   selectorSpecificity,
   type Specificity,
 } from '@csstools/selector-specificity'
-import { type AtRule, type Postcss } from 'postcss'
+import type { Node, Postcss } from 'postcss'
 import parser from 'postcss-selector-parser'
 
 import { toKebabCase } from '~/utils/misc'
@@ -65,7 +65,7 @@ function generateNodeCacheKey(
 export function createCachedInsertRules() {
   const nodeCache = new Map()
 
-  return function (rules, directive: AtRule, postcss: Postcss) {
+  return function (rules, where: Node, postcss: Postcss) {
     rules.forEach(({ component = '', rule }) => {
       const { atRules = [], selector = '', declarations = [] } = rule
 
@@ -83,33 +83,41 @@ export function createCachedInsertRules() {
           let atRuleNode = nodeCache.get(atRuleCacheKey)
 
           if (!atRuleNode) {
-            atRuleNode = new postcss.AtRule({
-              ...atRule,
-              source: directive.source,
-            })
+            atRuleNode = new postcss.AtRule(atRule)
             nodeCache.set(atRuleCacheKey, atRuleNode)
-            parent ? parent.append(atRuleNode) : directive.before(atRuleNode)
+            parent ? parent.append(atRuleNode) : where.before(atRuleNode)
           }
 
           parent = atRuleNode
         })
 
         if (selector) {
-          node = new postcss.Rule({ selector, source: directive.source })
+          node = new postcss.Rule({ selector })
           nodeCache.set(nodeCacheKey, node)
-          parent ? parent.append(node) : directive.before(node)
+          parent ? parent.append(node) : where.before(node)
         }
       }
 
       declarations.forEach((declaration) => {
-        declaration.value &&
-          node.append(
-            new postcss.Declaration({
-              ...declaration,
-              source: directive.source,
-            })
-          )
+        declaration.value && node.append(new postcss.Declaration(declaration))
       })
     })
   }
+}
+
+export function isSimpleIsSelector(selector: string): boolean {
+  if (selector.startsWith(':is(') && selector.endsWith(')')) {
+    let count = 1
+    for (let i = 4; i < selector.length; i++) {
+      if (selector.charAt(i) === '(') {
+        count++
+      } else if (selector.charAt(i) === ')') {
+        count--
+      }
+      if (count === 0) {
+        return i === selector.length - 1
+      }
+    }
+  }
+  return false
 }

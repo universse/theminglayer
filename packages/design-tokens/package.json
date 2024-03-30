@@ -25,7 +25,8 @@
   "scripts": {},
   "devDependencies": {
     "@radix-ui/colors": "3.0.0",
-    "@types/node": "20.11.0",
+    "@types/node": "20.11.25",
+    "open-props": "1.6.21",
     "tailwindcss": "3.4.1"
   },
   "publishConfig": {

@@ -521,7 +521,7 @@ Add `@theminglayer` directive to TailwindCSS's `@layer base`.
 ### Custom Plugin
 
 ```ts
-import { type PluginCreator } from 'theminglayer'
+import type { PluginCreator } from 'theminglayer'
 
 type PluginOptions = {
   // ...

@@ -302,3 +302,13 @@ video {
 .tl-text-neutral-primary {
   color: var(--tl-text-color-neutral-primary);
 }
+
+.tl-typography-body,
+.tl-typography-button {
+  font-family: var(--tl-font-family);
+  font-size: var(--tl-font-size);
+  font-style: var(--tl-font-style);
+  font-weight: var(--tl-font-weight);
+  letter-spacing: var(--tl-letter-spacing);
+  line-height: var(--tl-line-height);
+}

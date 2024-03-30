@@ -5,15 +5,12 @@
         intent: {
           primary: {
             $value: '[data-intent="primary"]',
-            $color: 'informative',
           },
           secondary: {
             $value: '[data-intent="secondary"]',
-            $color: 'neutral',
           },
           critical: {
             $value: '[data-intent="critical"]',
-            $color: 'critical',
           },
         },
         visual: {
@@ -49,7 +46,7 @@
           { $variant: { visual: 'filled' }, $value: '{color.white}' },
           {
             $variant: { intent: '*', visual: 'outline' },
-            $value: '{text_color[$color]primary}',
+            $value: '{text_color.$intent.primary}',
           },
 
           {
@@ -88,24 +85,24 @@
         $set: [
           {
             $variant: { intent: '*', visual: 'filled' },
-            $value: '{background_color[$color]element.static}',
+            $value: '{background_color.$intent.element.static}',
           },
           {
             $variant: { intent: '*', visual: 'filled', _state: 'hover' },
-            $value: '{background_color[$color]element.hover}',
+            $value: '{background_color.$intent.element.hover}',
           },
           {
             $variant: { intent: '*', visual: 'filled', _state: 'active' },
-            $value: '{background_color[$color]element.active}',
+            $value: '{background_color.$intent.element.active}',
           },
 
           {
             $variant: { intent: '*', visual: 'outline', _state: 'hover' },
-            $value: '{background_color[$color]element.inverted.hover}',
+            $value: '{background_color.$intent.element.faded.hover}',
           },
           {
             $variant: { intent: '*', visual: 'outline', _state: 'active' },
-            $value: '{background_color[$color]element.inverted.active}',
+            $value: '{background_color.$intent.element.faded.active}',
           },
 
           {
@@ -169,11 +166,11 @@
         $set: [
           {
             $variant: { intent: '*' },
-            $value: '{border_color[$color]static}',
+            $value: '{border_color.$intent.static}',
           },
           {
             $variant: { intent: '*', _state: 'hover' },
-            $value: '{border_color[$color]hover}',
+            $value: '{border_color.$intent.hover}',
           },
           {
             $variant: { intent: '*', visual: 'filled' },

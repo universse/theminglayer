@@ -2,7 +2,7 @@ import fs from 'node:fs'
 
 import { watchMode } from '~/lib/watchMode'
 import { cssPlugin } from '~/plugins'
-import { type BuildOptions } from '~/types'
+import type { BuildOptions } from '~/types'
 import { importJs } from '~/utils/importJs'
 import { toArray } from '~/utils/misc'
 

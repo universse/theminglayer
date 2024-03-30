@@ -1,13 +1,13 @@
-import { type Collection } from '~/lib/Collection'
-import { type appLogger } from '~/lib/logger'
-import { type TokenType } from '~/lib/spec'
+import type { Collection } from '~/lib/Collection'
+import type { appLogger } from '~/lib/logger'
+import type { TokenType } from '~/lib/spec'
 
 type UserTokenOptionaLAttributes = {
   $category?: string
   $type?: TokenType
   $condition?: Record<string, string>
   $variant?: Record<string, string | string[]>
-  $backdrop?: boolean
+  // $backdrop?: boolean
 }
 
 export type UserToken = {
@@ -54,8 +54,7 @@ export interface BuildOptions extends SharedBuildOptions {
 
 export type PostcssCachedData = {
   rulesByCustomPropertyName: Record<string, any>
-  rulesByComponentClassSelector: Record<string, any>
-  typographyRules: any
+  rulesByClassSelector: Record<string, any>
   customAtRules: any
   safelist: string[]
   containerSelector: string
