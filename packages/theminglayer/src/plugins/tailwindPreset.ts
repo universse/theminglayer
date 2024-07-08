@@ -1,20 +1,21 @@
 import { CssFormatter } from '~/lib/CssFormatter'
 import { cssNameFromKeys } from '~/lib/cssUtils'
-import { generateTokenNameKeys, getCategorySpec } from '~/lib/token'
+import type { TokenCategory } from '~/lib/spec'
+import { generateTokenNameKeys } from '~/lib/token'
 import { cssOptions } from '~/plugins/cssOptions'
 import type { PluginCreator, Token } from '~/types'
-import { deepSetObj, toArray } from '~/utils/misc'
+import { deepSetObj } from '~/utils/misc'
 import * as promises from '~/utils/promises'
 
 export const tailwindPresetPlugin: PluginCreator<{
   prefix?: string
   containerSelector?: string
-  files?: {
+  files?: Array<{
     path: string
     filter: (token: Token) => boolean
     format?: 'esm' | 'cjs'
     keepAliases?: boolean
-  }[]
+  }>
 }> = ({
   prefix = cssOptions.prefix,
   containerSelector = cssOptions.containerSelector,
@@ -53,10 +54,10 @@ export const tailwindPresetPlugin: PluginCreator<{
               $value,
               $type,
               $category,
-              $extensions: { keys, component },
+              $extensions: { keys, conditionTokens, variantTokens },
             } = token
 
-            if (component) return
+            if (keys[0] === 'group' || keys[0] === 'component') return
             if ($type === 'typography' || $type === 'text') return
 
             if ($type === 'condition') {
@@ -81,31 +82,35 @@ export const tailwindPresetPlugin: PluginCreator<{
               return
             }
 
-            const themeKey = getCategorySpec($category!)?.tailwind
-            if (!themeKey) return
+            const { themeKeys, extend } =
+              ThemeConfigByCategory[$category! as TokenCategory] || {}
+
+            if (!themeKeys) return
 
             const themePath = cssNameFromKeys(
-              generateTokenNameKeys(token.$extensions.keys).slice(1)
+              generateTokenNameKeys(keys).slice(1)
             )
 
-            const themeKeys = toArray(themeKey)
+            const isThemed =
+              keys.includes('$set') ||
+              conditionTokens.length ||
+              variantTokens.length
 
             themeKeys.forEach((themeKey) => {
-              if (
-                token.$extensions.keys.includes('$set') ||
-                token.$extensions.conditionTokens.length ||
-                token.$extensions.variantTokens.length
-              ) {
+              const keyParts = [themeKey, themePath]
+              extend && keyParts.unshift('extend')
+
+              if (isThemed) {
                 deepSetObj(
                   theme,
-                  [themeKey, themePath],
+                  keyParts,
                   `var(${cssFormatter.tokenToCustomPropertyName(token)})`
                 )
               } else {
                 try {
                   deepSetObj(
                     theme,
-                    [themeKey, themePath],
+                    keyParts,
                     cssFormatter.convertToCssValue(
                       { type: $type, value: $value },
                       { keepAliases }
@@ -159,3 +164,172 @@ function cjs({ code = '{}' } = {}) {
 exports.preset = ${code}
 `
 }
+
+type TailwindThemeKey =
+  | 'screens'
+  | 'colors'
+  | 'backgroundColor'
+  | 'textColor'
+  | 'fill'
+  | 'stroke'
+  | 'boxShadowColor'
+  | 'opacity'
+  | 'fontFamily'
+  | 'fontSize'
+  | 'fontWeight'
+  | 'lineHeight'
+  | 'letterSpacing'
+  | 'spacing'
+  | 'flexBasis'
+  | 'height'
+  | 'maxHeight'
+  | 'maxWidth'
+  | 'minHeight'
+  | 'minWidth'
+  | 'size'
+  | 'width'
+  | 'borderColor'
+  | 'borderWidth'
+  | 'borderRadius'
+  | 'outlineColor'
+  | 'outlineWidth'
+  | 'outlineOffset'
+  | 'boxShadow'
+  | 'transitionProperty'
+  | 'transitionDuration'
+  | 'transitionTimingFunction'
+  | 'transitionDelay'
+  | 'keyframes'
+  | 'animation'
+  | 'zIndex'
+
+const ThemeConfigByCategory: Partial<
+  Record<
+    TokenCategory,
+    { extend?: boolean; themeKeys?: Array<TailwindThemeKey> }
+  >
+> = {
+  screen: {
+    themeKeys: ['screens'],
+  },
+  get breakpoint() {
+    return this.screen!
+  },
+
+  color: {
+    themeKeys: ['colors'],
+  },
+  background_color: {
+    themeKeys: ['backgroundColor'],
+  },
+  text_color: {
+    themeKeys: ['textColor'],
+  },
+  icon_color: {
+    themeKeys: ['fill', 'stroke'],
+  },
+  box_shadow_color: {
+    themeKeys: ['boxShadowColor'],
+  },
+  opacity: {
+    themeKeys: ['opacity'],
+  },
+
+  font_family: {
+    themeKeys: ['fontFamily'],
+  },
+  font_size: {
+    themeKeys: ['fontSize'],
+  },
+  font_weight: {
+    themeKeys: ['fontWeight'],
+  },
+  leading: {
+    themeKeys: ['lineHeight'],
+  },
+  get line_height() {
+    return this.leading!
+  },
+  tracking: {
+    themeKeys: ['letterSpacing'],
+  },
+  get letter_spacing() {
+    return this.tracking!
+  },
+
+  space: {
+    themeKeys: ['spacing'],
+  },
+  get spacing() {
+    return this.space!
+  },
+
+  size: {
+    extend: true,
+    themeKeys: [
+      'flexBasis',
+      'height',
+      'maxHeight',
+      'maxWidth',
+      'minHeight',
+      'minWidth',
+      'size',
+      'width',
+    ],
+  },
+
+  border_color: {
+    themeKeys: ['borderColor'],
+  },
+  border_width: {
+    themeKeys: ['borderWidth'],
+  },
+  border_radius: {
+    themeKeys: ['borderRadius'],
+  },
+  outline_color: {
+    themeKeys: ['outlineColor'],
+  },
+  outline_width: {
+    themeKeys: ['outlineWidth'],
+  },
+  outline_offset: {
+    themeKeys: ['outlineOffset'],
+  },
+
+  box_shadow: {
+    themeKeys: ['boxShadow'],
+  },
+
+  transition_property: {
+    themeKeys: ['transitionProperty'],
+  },
+  duration: {
+    themeKeys: ['transitionDuration'],
+  },
+  timing_function: {
+    themeKeys: ['transitionTimingFunction'],
+  },
+  get cubic_bezier() {
+    return this.timing_function!
+  },
+  get easing() {
+    return this.timing_function!
+  },
+  delay: {
+    themeKeys: ['transitionDelay'],
+  },
+  keyframes: {
+    themeKeys: ['keyframes'],
+  },
+  animation: {
+    themeKeys: ['animation'],
+  },
+
+  layer: {
+    themeKeys: ['zIndex'],
+  },
+  get z_index() {
+    return this.layer!
+  },
+} as const

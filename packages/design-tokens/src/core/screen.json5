@@ -1,13 +1,13 @@
 {
   screen: {
     width: {
-      xs: { $value: '360px' },
-      sm: { $value: '640px' },
-      md: { $value: '768px' },
-      lg: { $value: '1024px' },
-      xl: { $value: '1280px' },
-      '2xl': { $value: '1440px' },
-      '3xl': { $value: '1920px' },
+      xs: { $value: '22.5rem' }, // 360px
+      sm: { $value: '40rem' }, // 640px
+      md: { $value: '48rem' }, // 768px
+      lg: { $value: '64rem' }, // 1024px
+      xl: { $value: '80rem' }, // 1280px
+      '2xl': { $value: '90rem' }, // 1440px
+      '3xl': { $value: '120rem' }, // 1920px
     },
   },
 }

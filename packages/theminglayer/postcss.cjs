@@ -1,1 +1,1 @@
-module.exports = require(`./dist/postcss.cjs`).default
+module.exports = require('./dist/postcss.cjs').default

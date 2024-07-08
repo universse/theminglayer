@@ -47,6 +47,7 @@
         "plugin:react/jsx-runtime",
         "plugin:react-hooks/recommended"
       ],
+      "plugins": ["react-compiler"],
       "rules": {
         "import/no-unresolved": "off",
         "react/jsx-sort-props": [
@@ -61,7 +62,8 @@
           {
             "additionalHooks": "(useIsomorphicLayoutEffect)"
           }
-        ]
+        ],
+        "react-compiler/react-compiler": "error"
       },
       "settings": {
         "react": {

@@ -1,19 +1,19 @@
-export function parallel(...promises: Promise<any>[]) {
+export function parallel(...promises: Array<Promise<any>>) {
   return Promise.all(promises)
 }
 
-export function serial(...promises: Promise<any>[]) {
+export function serial(...promises: Array<Promise<any>>) {
   return promises.reduce((p, next) => p.then(() => next), Promise.resolve())
 }
 
 type Callback<T, V> = (item: T, i?: number) => Promise<V>
 
-export function mapParallel<T, V>(items: T[], cb: Callback<T, V>) {
+export function mapParallel<T, V>(items: Array<T>, cb: Callback<T, V>) {
   return Promise.all(items.map(cb))
 }
 
-export async function mapSerial<T, V>(items: T[], cb: Callback<T, V>) {
-  const results: V[] = []
+export async function mapSerial<T, V>(items: Array<T>, cb: Callback<T, V>) {
+  const results: Array<V> = []
 
   for (let i = 0; i < items.length; i++) {
     results.push(await cb(items[i]!, i))
@@ -22,7 +22,7 @@ export async function mapSerial<T, V>(items: T[], cb: Callback<T, V>) {
   return results
 }
 
-// export function mapSerial<T>(items: T[], cb: Callback<T>) {
+// export function mapSerial<T>(items: Array<T>, cb: Callback<T>) {
 //   return items.reduce(
 //     (acc, curr, i) => acc.then(() => cb(curr, i)),
 //     Promise.resolve()
@@ -30,14 +30,14 @@ export async function mapSerial<T, V>(items: T[], cb: Callback<T, V>) {
 // }
 
 export function pool<T, V>(
-  items: T[],
+  items: Array<T>,
   cb: Callback<T, V>,
   concurrency: number
 ) {
   return new Promise((resolve, reject) => {
     let running = 0
     let index = 0
-    const results: V[] = []
+    const results: Array<V> = []
 
     let done = false
 
@@ -70,10 +70,10 @@ export function pool<T, V>(
   })
 }
 
-export function batch<T, V>(items: T[], cb: Callback<T, V>, size: number) {
+export function batch<T, V>(items: Array<T>, cb: Callback<T, V>, size: number) {
   return new Promise((resolve, reject) => {
     let index = 0
-    const results: V[] = []
+    const results: Array<V> = []
 
     let done = false
 

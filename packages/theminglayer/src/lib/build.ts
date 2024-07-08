@@ -10,33 +10,8 @@ import { appLogger } from '~/lib/logger'
 import { importTokens } from '~/lib/token'
 import type { BuildOptions, PluginOutputFile } from '~/types'
 import { deepSet, toArray, writeFile } from '~/utils/misc'
-import { cwd, require } from '~/utils/node'
+import { resolvePathFromPackage } from '~/utils/node'
 import * as promises from '~/utils/promises'
-
-function resolvePathFromPackage(path: string): string {
-  const parts = path.split('/')
-  let packageJsonPath = ''
-  let packageDir = ''
-
-  while (!packageJsonPath) {
-    if (!parts.length) return ''
-
-    packageDir = nodePath.join(packageDir, parts.shift()!)
-
-    try {
-      // TODO consider using resolve-cwd package instead
-      packageJsonPath = require.resolve(
-        nodePath.join(packageDir, 'package.json'),
-        { paths: [cwd] }
-      )
-    } catch {}
-  }
-
-  return nodePath.join(
-    nodePath.dirname(packageJsonPath),
-    path.slice(packageDir.length + 1)
-  )
-}
 
 function isRemote(str: string): boolean {
   try {
@@ -114,7 +89,9 @@ async function resolveSource(source: string): Promise<ResolvedSource> {
 async function parseSource({
   type,
   source,
-}: ResolvedSource): Promise<{ sourceUnit: string; rawTokenObject: object }[]> {
+}: ResolvedSource): Promise<
+  Array<{ sourceUnit: string; rawTokenObject: object }>
+> {
   switch (type) {
     case 'file': {
       return [
@@ -149,7 +126,7 @@ export async function build({
 }: BuildOptions): Promise<{
   collection: Collection
   _internal: {
-    resolvedSources: ResolvedSource[]
+    resolvedSources: Array<ResolvedSource>
   }
 }> {
   const resolvedSources = await promises.mapParallel(
@@ -169,7 +146,7 @@ export async function build({
     return pluginData[pluginName]?.[key]
   }
 
-  const outputFiles: PluginOutputFile[] = []
+  const outputFiles: Array<PluginOutputFile> = []
 
   function addOutputFile(outputFile: PluginOutputFile): void {
     outputFiles.push(outputFile)

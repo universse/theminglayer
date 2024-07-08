@@ -16,18 +16,17 @@ import {
   deepSetObj,
   getObjValue,
   isPrimitive,
-  toArray,
   traverseObj,
 } from '~/utils/misc'
 
 export class Collection {
   tokenObject: object = {}
-  tokens: Token[] = []
+  tokens: Array<Token> = []
 
   constructor({
     tokenSources,
   }: {
-    tokenSources: { sourceUnit: string; rawTokenObject: object }[][]
+    tokenSources: Array<Array<{ sourceUnit: string; rawTokenObject: object }>>
   }) {
     tokenSources.forEach((tokenSource) => {
       const tokenObjectFromSource = {}
@@ -70,13 +69,14 @@ export class Collection {
     })
 
     // convert token-like objects to tokens
-    const tokensWithUnknownCategoryOrType: Token[] = []
+    const tokensWithUnknownCategoryOrType: Array<Token> = []
 
     traverseObj(this.tokenObject, (obj, _, keys) => {
       if (!isToken(obj)) return
 
       const isComponent = keys[0] === 'component'
-      let category: string | null = isComponent ? null : keys[0]!
+      const isGroup = keys[0] === 'group'
+      let category: string | null = isComponent || isGroup ? null : keys[0]!
       const component = isComponent ? keys[1] : null
 
       if (obj.$category) {
@@ -89,11 +89,12 @@ export class Collection {
 
       // TODO references may not be a token or token set
       const referencedTokensOrSets = getReferences(obj.$value).reduce<
-        (Token | TokenSet)[]
+        Array<Token | TokenSet>
       >((acc, ref) => {
         const referenced = this.#expandReferences(`{${ref}}`)
-        // @ts-expect-error todo
-        referenced && acc.push(referenced)
+
+        if (isToken(referenced) || isTokenSet(referenced)) acc.push(referenced)
+
         return acc
       }, [])
 
@@ -103,33 +104,27 @@ export class Collection {
 
       const variantTokens = Object.entries(obj.$variant || {}).reduce(
         (acc, [key, value]) => {
-          if (!key.startsWith('_') && Array.isArray(value)) {
-            // TODO warn
-          }
+          let componentKey = component
 
-          toArray(value).forEach((value) => {
-            let componentKey = component
+          if (typeof value === 'object') {
+            componentKey = key
 
-            if (typeof value === 'object') {
-              componentKey = key
-
-              Object.entries(value).forEach(([variantKey, variantValue]) => {
-                acc.push(
-                  // @ts-expect-error todo
-                  this.#expandReferences(
-                    `{${['component', componentKey, '$variant', variantKey, variantValue].join('.')}}`
-                  )
-                )
-              })
-            } else {
+            Object.entries(value).forEach(([variantKey, variantValue]) => {
               acc.push(
                 // @ts-expect-error todo
                 this.#expandReferences(
-                  `{${['component', componentKey, '$variant', key, value].join('.')}}`
+                  `{${['component', componentKey, '$variant', variantKey, variantValue].join('.')}}`
                 )
               )
-            }
-          })
+            })
+          } else {
+            acc.push(
+              // @ts-expect-error todo
+              this.#expandReferences(
+                `{${['component', componentKey, '$variant', key, value].join('.')}}`
+              )
+            )
+          }
 
           return acc
         },
@@ -186,7 +181,7 @@ export class Collection {
       const token = tokensWithUnknownCategoryOrType.shift()!
 
       const referencedTokens = token._internal.referencedTokensOrSets.reduce<
-        Token[]
+        Array<Token>
       >((acc, tokenOrSet) => {
         if (isToken(tokenOrSet)) {
           acc.push(tokenOrSet)
@@ -236,7 +231,7 @@ export class Collection {
 
   #mergeTokenObjects(
     { target, source }: { target: object; source: object },
-    { onCollision }: { onCollision?: (keys: string[]) => void } = {}
+    { onCollision }: { onCollision?: (keys: Array<string>) => void } = {}
   ): void {
     traverseObj(source, (obj, key, keys) => {
       const objInTarget = getObjValue(target, keys)
@@ -274,12 +269,6 @@ export class Collection {
 
     traverseObj(tokenObject, (obj, key, keys) => {
       if (!isToken(obj) || !obj.$variant || key !== '$variant') return
-
-      if (
-        Object.values(obj.$variant).filter((value) => value === '*').length > 1
-      ) {
-        appLogger.warnings.multipleWildcardVariants(keys)
-      }
 
       const component = keys[1]
       // @ts-expect-error todo

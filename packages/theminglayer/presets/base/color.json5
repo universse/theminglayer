@@ -1,6 +1,0 @@
-{
-  color: {
-    white: { $value: '#ffffff' },
-    transparent: { $value: '#00000000' },
-  },
-}

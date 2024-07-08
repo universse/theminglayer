@@ -44,7 +44,7 @@ export function createCompareRuleSpecificity(containerSelector: string) {
   }
 }
 
-export function cssNameFromKeys(keys: string[]): string {
+export function cssNameFromKeys(keys: Array<string>): string {
   return toKebabCase(keys.join('-').replace(/\$/g, ''))
 }
 

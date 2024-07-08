@@ -2,7 +2,8 @@
 
 Extensible design token management & cross-platform code generation tool with powerful theming capabilities
 
-⚠️ _ThemingLayer is under active development. Bugs, breaking changes and missing features are expected before the 1.0 release._
+> [!NOTE]  
+> ThemingLayer is under active development. Bugs, breaking changes and missing features are expected before the 1.0 release.
 
 ## Features
 
@@ -555,12 +556,12 @@ export const plugin: PluginCreator<PluginOptions> = (options = {}) => {
       $type: TokenType
       $category: string
       $condition?: Record<string, string>
-      $variant?: Record<string, string | string[]>
+      $variant?: Record<string, string | Array<string>>
       $extensions: {
-        keys: string[]
+        keys: Array<string>
         component: string | null
-        conditionTokens: Token[]
-        variantTokens: Token[]
+        conditionTokens: Array<Token>
+        variantTokens: Array<Token>
       }
     }
 
@@ -572,6 +573,8 @@ export const plugin: PluginCreator<PluginOptions> = (options = {}) => {
       | 'font_family'
       | 'font_style'
       | 'font_weight'
+      | 'letter_spacing'
+      | 'line_height'
       | 'number'
       | 'border'
       | 'gradient'
@@ -581,8 +584,6 @@ export const plugin: PluginCreator<PluginOptions> = (options = {}) => {
       | 'typography'
       | 'condition'
       | 'font_variant'
-      | 'leading'
-      | 'tracking'
       | 'transition_property'
       | 'variant'
       | 'outline'

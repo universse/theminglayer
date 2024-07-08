@@ -30,7 +30,7 @@ Take a look at dist-tokens/theme.css for the full CSS output generated.
 }
 
 @media (forced-colors: active) {
-  .tl-button[data-intent='primary'][data-visual='filled']
+  .tl-button[data-tone='accent'][data-visual='filled']
     .tl-button-label {
     forced-color-adjust: none;
   }

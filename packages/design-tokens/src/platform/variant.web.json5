@@ -18,36 +18,30 @@
     selected: {
       $value: ':is([data-selected="true"], [aria-selected="true"])',
     },
+
     enabled: {
-      $value: ':enabled',
+      $value: ':not(:disabled, [disabled], [data-disabled="true"])',
     },
     disabled: {
       $value: ':is(:disabled, [disabled], [data-disabled="true"])',
     },
+
     pending: {
       $value: '[data-pending="true"]',
     },
-    interactive: {
-      $value: ':not(:disabled, [disabled], [data-disabled="true"])',
-    },
-    non_interactive: {
-      $value: ':is(:disabled, [disabled], [data-disabled="true"], [data-pending="true"])',
+    non_pending: {
+      $value: ':not([data-pending="true"])',
     },
 
-    valid: {
-      $value: ':valid',
-    },
-    invalid: {
-      $value: ':invalid',
-    },
-    input_valid: {
-      $value: ':user-valid',
-    },
     input_invalid: {
-      $value: ':user-invalid',
+      $value: ':is(:user-invalid, [data-invalid="true"], [aria-invalid="true"])',
     },
+
     read_only: {
-      $value: ':is(:read-only, [readonly], [aria-readonly="true"])',
+      $value: ':is([readonly], [data-readonly="true"], [aria-readonly="true"])',
+    },
+    editable: {
+      $value: ':not([readonly], [data-readonly="true"], [aria-readonly="true"])',
     },
 
     horizontal: {

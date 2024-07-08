@@ -1,2 +1,18 @@
-@import url('tailwind.css');
-@import url('~/components/button/style.css');
+@layer reset, theme, global, ds, utils;
+
+@import url('~/components/button/style.css') layer(ds);
+
+@config '../../tailwind.config.js';
+
+@layer reset {
+  @tailwind base;
+}
+
+@layer theme {
+  @theminglayer;
+}
+
+@layer utils {
+  @tailwind components;
+  @tailwind utilities;
+}

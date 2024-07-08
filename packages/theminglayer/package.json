@@ -1,6 +1,6 @@
 {
   "name": "theminglayer",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "ThemingLayer",
   "keywords": [
     "design tokens",
@@ -58,14 +58,15 @@
     "test:watch": "glob -c \"node --import tsx --test --watch\" \"__tests__/**/*.test.ts\""
   },
   "dependencies": {
-    "@csstools/selector-specificity": "3.0.2",
+    "@csstools/selector-specificity": "3.1.1",
+    "@humanwhocodes/momoa": "3.1.1",
     "cac": "6.7.14",
     "chalk": "5.3.0",
     "chokidar": "3.6.0",
-    "clsx": "2.1.0",
+    "clsx": "2.1.1",
     "culori": "4.0.1",
     "destr": "2.0.3",
-    "esbuild": "0.20.1",
+    "esbuild": "0.23.0",
     "fast-glob": "3.3.2",
     "fastest-levenshtein": "1.0.16",
     "glob-parent": "6.0.2",
@@ -74,13 +75,13 @@
     "klona": "2.0.6",
     "lodash.groupby": "4.6.0",
     "lodash.setwith": "4.3.2",
-    "micromatch": "4.0.5",
-    "postcss": "8.4.35",
-    "postcss-selector-parser": "6.0.15",
-    "ts-pattern": "5.0.8",
-    "valibot": "0.30.0",
+    "micromatch": "4.0.7",
+    "postcss": "8.4.39",
+    "postcss-selector-parser": "6.1.0",
+    "ts-pattern": "5.2.0",
+    "valibot": "0.36.0",
     "zipson": "0.2.12",
-    "zod": "3.22.4"
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@theminglayer/design-tokens": "workspace:*",
@@ -88,15 +89,15 @@
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.9",
     "@types/lodash.setwith": "4.3.9",
-    "@types/micromatch": "4.0.6",
-    "@types/node": "20.11.25",
-    "glob": "10.3.10",
+    "@types/micromatch": "4.0.9",
+    "@types/node": "20.14.10",
+    "glob": "10.4.3",
     "npm-run-all": "4.1.5",
     "pattycake": "0.0.2",
-    "tsup": "8.0.2",
-    "tsx": "4.7.1",
-    "type-fest": "4.11.1",
-    "typescript": "5.4.2"
+    "tsup": "8.1.0",
+    "tsx": "4.16.2",
+    "type-fest": "4.21.0",
+    "typescript": "5.5.3"
   },
   "publishConfig": {
     "access": "public"

@@ -1,18 +1,50 @@
 {
   space: {
-    '0': { $value: '0px' },
-    '4': { $value: '4px' },
-    '8': { $value: '8px' },
-    '12': { $value: '12px' },
-    '16': { $value: '16px' },
-    '20': { $value: '20px' },
-    '24': { $value: '24px' },
-    '32': { $value: '32px' },
-    '40': { $value: '40px' },
-    '48': { $value: '48px' },
-    '64': { $value: '64px' },
-    '80': { $value: '80px' },
-    '96': { $value: '96px' },
-    '128': { $value: '128px' },
+    none: { $value: '0px' },
+
+    '4': {
+      px: { $value: '4px' },
+      rem: { $value: '0.25rem' },
+    },
+    '8': {
+      px: { $value: '8px' },
+      rem: { $value: '0.5rem' },
+    },
+    '12': {
+      px: { $value: '12px' },
+      rem: { $value: '0.75rem' },
+    },
+    '16': {
+      px: { $value: '16px' },
+      rem: { $value: '1rem' },
+    },
+    '24': {
+      px: { $value: '24px' },
+      rem: { $value: '1.5rem' },
+    },
+    '32': {
+      px: { $value: '32px' },
+      rem: { $value: '2rem' },
+    },
+    '48': {
+      px: { $value: '48px' },
+      rem: { $value: '3rem' },
+    },
+    '64': {
+      px: { $value: '64px' },
+      rem: { $value: '4rem' },
+    },
+    '80': {
+      px: { $value: '80px' },
+      rem: { $value: '5rem' },
+    },
+    '120': {
+      px: { $value: '120px' },
+      rem: { $value: '7.5rem' },
+    },
+    '160': {
+      px: { $value: '160px' },
+      rem: { $value: '10rem' },
+    },
   },
 }

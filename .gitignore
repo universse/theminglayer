@@ -66,4 +66,5 @@ ideas.md
 *.pem
 
 # Generated
+*.gen
 *.gen.*

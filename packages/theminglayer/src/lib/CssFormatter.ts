@@ -9,6 +9,7 @@ import {
   generateTokenNameKeys,
   getReferences,
   isAlias,
+  isMathExpression,
   isToken,
   isTokenSet,
 } from '~/lib/token'
@@ -192,7 +193,7 @@ export class CssFormatter {
     { value }: { value: unknown },
     { keepAliases = false } = {}
   ) {
-    const properties: { type: TokenType; prop: string; value: any }[] = [
+    const properties: Array<{ type: TokenType; prop: string; value: any }> = [
       {
         type: 'font_family',
         prop: 'font-family',
@@ -285,14 +286,9 @@ export class CssFormatter {
     ]
   }
 
-  typographyTokenToCssRules(
-    token: Token,
-    { keepAliases = false } = {}
-  ): { customPropertyRules: []; classSelectorRules: [] } {
+  typographyTokenToCssRules(token: Token, { keepAliases = false } = {}) {
     const { tokenObject } = this.collection
     const { prefix } = this.options
-
-    const result = { customPropertyRules: [], classSelectorRules: [] }
 
     let typographyValue = []
 
@@ -332,35 +328,25 @@ export class CssFormatter {
           this.aliasTokenToCssTypographyValue(resolvedTokenOrSet)
       } else if (typeof resolvedTokenOrSet === 'undefined') {
         // TODO warn
-        return result
+        return []
       } else {
         // TODO warn
-        return result
+        return []
       }
     }
 
     const { keys, component } = token.$extensions
 
-    const customPropertyDeclarations = []
-    const classSelectorDeclarations = []
+    const declarations = []
+
+    const nameKeys = generateTokenNameKeys(keys)
+    if (keys[0] === 'component' || keys[0] === 'group') nameKeys.splice(0, 1)
 
     typographyValue.forEach(({ prop, value }) => {
-      const nameKeys = generateTokenNameKeys(keys)
-      nameKeys.push(prop)
-
-      if (component) nameKeys.splice(0, 1)
-
-      customPropertyDeclarations.push({
-        prop: `--${prefix}${cssNameFromKeys(nameKeys)}`,
+      declarations.push({
+        prop: `--${prefix}${cssNameFromKeys([...nameKeys, prop])}`,
         value,
       })
-
-      if (!component) {
-        classSelectorDeclarations.push({
-          prop: `--${prefix}${prop}`,
-          value,
-        })
-      }
     })
 
     const atRules = []
@@ -388,34 +374,16 @@ export class CssFormatter {
       atRules.push(...variantAtRules)
     }
 
-    if (customPropertyDeclarations.length) {
-      result.customPropertyRules.push({
+    return [
+      {
         component,
         rule: {
-          declarations: customPropertyDeclarations,
+          declarations,
           selector,
           atRules,
         },
-      })
-    }
-
-    // if (classSelectorDeclarations.length) {
-    //   selector = clsx(
-    //     conditionSelector && selector,
-    //     this.typographyTokenToClassSelector(token)
-    //   )
-
-    //   result.classSelectorRules.push({
-    //     component,
-    //     rule: {
-    //       declarations: classSelectorDeclarations,
-    //       selector,
-    //       atRules,
-    //     },
-    //   })
-    // }
-
-    return result
+      },
+    ]
   }
 
   transform(
@@ -462,7 +430,7 @@ export class CssFormatter {
 
         const border = []
 
-        const parts: { type: TokenType; value: any }[] = [
+        const parts: Array<{ type: TokenType; value: any }> = [
           { type: 'dimension', value: value.width || 'medium' },
           { type: 'stroke_style', value: value.style || 'none' },
           { type: 'color', value: value.color || 'currentcolor' },
@@ -476,7 +444,7 @@ export class CssFormatter {
         return border.join(' ')
       }
       case 'gradient': {
-        if (typeof value === `string`) return value
+        if (typeof value === 'string') return value
         return value
       }
       case 'shadow': {
@@ -495,7 +463,7 @@ export class CssFormatter {
 
         const shadow = value.inset ? ['inset'] : []
 
-        const parts: { type: TokenType; value: any }[] = [
+        const parts: Array<{ type: TokenType; value: any }> = [
           {
             type: 'dimension',
             value: value.offset_x || value.offsetX || value.x || 0,
@@ -522,36 +490,56 @@ export class CssFormatter {
       case 'transition': {
         if (typeof value === 'string') return value
 
-        const transition = []
+        if (Array.isArray(value)) {
+          return value
+            .map((transition) => {
+              return this.convertToCssValue(
+                { type: 'transition', value: transition },
+                { keepAliases }
+              )
+            })
+            .join(', ')
+        }
 
-        const parts: { type: TokenType; value: any }[] = [
-          {
-            type: 'transition_property',
-            value:
-              value.transition_property || value.transitionProperty || 'all',
-          },
-          {
-            type: 'duration',
-            value: value.duration || 0,
-          },
-          {
-            type: 'cubic_bezier',
-            value:
-              value.timing_function ||
-              value.timingFunction ||
-              value.cubic_bezier ||
-              value.cubicBezier ||
-              value.easing ||
-              'ease',
-          },
-          { type: 'duration', value: value.delay || 0 },
-        ]
+        let transitionProperties = value.transition_property ||
+          value.transitionProperty || ['all']
 
-        parts.forEach((part) => {
-          transition.push(this.convertToCssValue(part, { keepAliases }))
+        if (typeof transitionProperties === 'string') {
+          transitionProperties = transitionProperties.split(/,\s*/)
+        }
+
+        const transitions: Array<string> = []
+
+        transitionProperties.forEach((transitionProperty) => {
+          const transition = []
+
+          const parts: Array<{ type: TokenType; value: any }> = [
+            { type: 'transition_property', value: transitionProperty },
+            {
+              type: 'duration',
+              value: value.duration || 0,
+            },
+            {
+              type: 'cubic_bezier',
+              value:
+                value.timing_function ||
+                value.timingFunction ||
+                value.cubic_bezier ||
+                value.cubicBezier ||
+                value.easing ||
+                'ease',
+            },
+            { type: 'duration', value: value.delay || 0 },
+          ]
+
+          parts.forEach((part) => {
+            transition.push(this.convertToCssValue(part, { keepAliases }))
+          })
+
+          transitions.push(transition.join(' '))
         })
 
-        return transition.join(' ')
+        return transitions.join(', ')
       }
 
       case 'font_variant': {
@@ -571,7 +559,8 @@ export class CssFormatter {
         return value
       }
       case 'transition_property': {
-        return value
+        if (typeof value === 'string') return value
+        return value.join(', ')
       }
 
       case 'outline': {
@@ -580,7 +569,7 @@ export class CssFormatter {
 
         const outline = []
 
-        const parts: { type: TokenType; value: any }[] = [
+        const parts: Array<{ type: TokenType; value: any }> = [
           { type: 'dimension', value: value.width || 'medium' },
           { type: 'stroke_style', value: value.style || 'none' },
           { type: 'color', value: value.color || 'currentcolor' },
@@ -609,7 +598,7 @@ export class CssFormatter {
 
         const shadow = []
 
-        const parts: { type: TokenType; value: any }[] = [
+        const parts: Array<{ type: TokenType; value: any }> = [
           {
             type: 'dimension',
             value: value.offset_x || value.offsetX || value.x || 0,
@@ -628,7 +617,7 @@ export class CssFormatter {
 
         return `drop-shadow(${shadow.join(' ')})`
       }
-      // case `keyframes`: {
+      // case 'keyframes': {
       //   return value
       // }
 
@@ -643,7 +632,8 @@ export class CssFormatter {
     { keepAliases = false } = {}
   ): string {
     if (keepAliases && isAlias(value)) {
-      return this.#aliasToCustomProperty(value)
+      const cssValue = this.#aliasToCustomProperty(value)
+      return isMathExpression(value) ? `calc(${cssValue})` : cssValue
     }
 
     const resolvedValue = this.aliasToCssValue(value, {
@@ -663,11 +653,7 @@ export class CssFormatter {
       throw new Error()
     }
 
-    // if (/[+\-*/]/.test(cssValue)) {
-    //   cssValue = `calc(${cssValue})`
-    // }
-
-    return cssValue
+    return isMathExpression(value) ? `calc(${cssValue})` : cssValue
   }
 
   // TODO return value type is string or any valid token schema
@@ -709,7 +695,10 @@ export class CssFormatter {
             const customProperty = `var(--${cssNameFromKeys(ref.split('.'))})`
             obj[key] = obj[key].replace(refString, customProperty)
           } else if (isPrimitive(referenced)) {
-            obj[key] = obj[key].replace(refString, referenced)
+            obj[key] = obj[key].replace(
+              refString,
+              this.aliasToCssValue(referenced, { keepAliases: false })
+            )
           } else {
             // * refs are object or array
             if (refs.length !== 1) {
@@ -743,12 +732,11 @@ export class CssFormatter {
   }
 
   tokenToCssName(tokenOrSet: Token | TokenSet): string {
-    const { component, keys } =
-      tokenOrSet.$extensions || tokenOrSet.$set[0].$extensions
+    const { keys } = tokenOrSet.$extensions || tokenOrSet.$set[0].$extensions
 
     const nameKeys = generateTokenNameKeys(keys)
 
-    if (component) {
+    if (keys[0] === 'component' || keys[0] === 'group') {
       // remove 'component' from keys
       nameKeys.splice(0, 1)
 
@@ -763,7 +751,7 @@ export class CssFormatter {
 
   #parseConditions(token: Token): {
     selector: string
-    atRules: { name: string; params: string }[]
+    atRules: Array<{ name: string; params: string }>
   } {
     const {
       selector = [],
@@ -821,7 +809,7 @@ export class CssFormatter {
   #parseVariants(token: Token): {
     variantSelector: string
     parentVariantSelector: string
-    atRules: { name: string; params: string }[]
+    atRules: Array<{ name: string; params: string }>
   } {
     // TODO validate only 1 parent component is allowed e.g. tabs.visual and tabs.color, not tabs.visual and tab_list.orientation
 

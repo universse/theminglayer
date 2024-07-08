@@ -11,6 +11,7 @@ import { clearCache } from '~/lib/cache'
 import { findConfigFilePath, loadConfigFile } from '~/lib/config'
 import { appLogger } from '~/lib/logger'
 import { watchMode } from '~/lib/watchMode'
+import { resolvePathFromPackage } from '~/utils/node'
 import * as promises from '~/utils/promises'
 
 async function main() {
@@ -50,7 +51,7 @@ export default defineConfig({
 
         if (!fs.existsSync(presetPath) || force) {
           await fsp.cp(
-            new URL('../presets/base', import.meta.url),
+            resolvePathFromPackage('@theminglayer/design-tokens/src'),
             presetPath,
             { recursive: true }
           )
@@ -114,7 +115,7 @@ export default defineConfig({
           appLogger.log(`Built token collection ${i! + 1}/${config.length}`)
 
           return {
-            resolvedSources: resolvedSources.reduce<string[]>(
+            resolvedSources: resolvedSources.reduce<Array<string>>(
               (acc, { type, source }) => {
                 if (
                   (type === 'glob' || type === 'file') &&

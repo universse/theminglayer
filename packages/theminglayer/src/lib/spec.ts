@@ -47,6 +47,7 @@ export type TokenCategory =
   | 'animation'
   | 'layer'
   | 'z_index'
+  | 'runtime'
 
 export type TokenType =
   // w3c simple
@@ -73,6 +74,7 @@ export type TokenType =
   | 'transition_property'
   | 'variant'
   | 'text'
+  | 'runtime'
   // tl composite
   | 'outline'
   | 'drop_shadow'
@@ -100,43 +102,9 @@ export const FontWeightMap = {
   ultrablack: '950',
 } as const
 
-type TailwindThemeKey =
-  | 'screens'
-  | 'colors'
-  | 'backgroundColor'
-  | 'textColor'
-  | 'fill'
-  | 'stroke'
-  | 'boxShadowColor'
-  | 'opacity'
-  | 'fontFamily'
-  | 'fontSize'
-  | 'fontWeight'
-  | 'lineHeight'
-  | 'letterSpacing'
-  | 'spacing'
-  | 'borderColor'
-  | 'borderWidth'
-  | 'borderRadius'
-  | 'outlineColor'
-  | 'outlineWidth'
-  | 'outlineOffset'
-  | 'boxShadow'
-  | 'transitionProperty'
-  | 'transitionDuration'
-  | 'transitionTimingFunction'
-  | 'transitionDelay'
-  | 'keyframes'
-  | 'animation'
-  | 'zIndex'
-
-export const TokenCategorySpec: Record<
-  TokenCategory,
-  { type: TokenType; tailwind?: TailwindThemeKey | TailwindThemeKey[] }
-> = {
+export const TokenCategorySpec: Record<TokenCategory, { type: TokenType }> = {
   screen: {
     type: 'dimension',
-    tailwind: 'screens',
   },
   get breakpoint() {
     return this.screen
@@ -150,40 +118,31 @@ export const TokenCategorySpec: Record<
 
   color: {
     type: 'color',
-    tailwind: 'colors',
   },
   background_color: {
     type: 'color',
-    tailwind: 'backgroundColor',
   },
   text_color: {
     type: 'color',
-    tailwind: 'textColor',
   },
   icon_color: {
     type: 'color',
-    tailwind: ['fill', 'stroke'],
   },
   box_shadow_color: {
     type: 'color',
-    tailwind: 'boxShadowColor',
   },
   opacity: {
     type: 'number',
-    tailwind: 'opacity',
   },
 
   font_family: {
     type: 'font_family',
-    tailwind: 'fontFamily',
   },
   font_size: {
     type: 'dimension',
-    tailwind: 'fontSize',
   },
   font_weight: {
     type: 'font_weight',
-    tailwind: 'fontWeight',
   },
   font_style: {
     type: 'font_style',
@@ -193,14 +152,12 @@ export const TokenCategorySpec: Record<
   },
   leading: {
     type: 'leading',
-    tailwind: 'lineHeight',
   },
   get line_height() {
     return this.leading
   },
   tracking: {
     type: 'tracking',
-    tailwind: 'letterSpacing',
   },
   get letter_spacing() {
     return this.tracking
@@ -211,7 +168,6 @@ export const TokenCategorySpec: Record<
 
   space: {
     type: 'dimension',
-    tailwind: 'spacing',
   },
   get spacing() {
     return this.space
@@ -226,36 +182,30 @@ export const TokenCategorySpec: Record<
   },
   border_color: {
     type: 'color',
-    tailwind: 'borderColor',
   },
   border_width: {
     type: 'dimension',
-    tailwind: 'borderWidth',
   },
   get border_style() {
     return this.stroke_style
   },
   border_radius: {
     type: 'dimension',
-    tailwind: 'borderRadius',
   },
   border: {
     type: 'border',
   },
   outline_color: {
     type: 'color',
-    tailwind: 'outlineColor',
   },
   outline_width: {
     type: 'dimension',
-    tailwind: 'outlineWidth',
   },
   get outline_style() {
     return this.stroke_style
   },
   outline_offset: {
     type: 'dimension',
-    tailwind: 'outlineOffset',
   },
   outline: {
     type: 'outline',
@@ -263,7 +213,6 @@ export const TokenCategorySpec: Record<
 
   box_shadow: {
     type: 'shadow',
-    tailwind: 'boxShadow',
   },
   drop_shadow: {
     type: 'drop_shadow',
@@ -274,15 +223,12 @@ export const TokenCategorySpec: Record<
 
   transition_property: {
     type: 'transition_property',
-    tailwind: 'transitionProperty',
   },
   duration: {
     type: 'duration',
-    tailwind: 'transitionDuration',
   },
   timing_function: {
     type: 'cubic_bezier',
-    tailwind: 'transitionTimingFunction',
   },
   get cubic_bezier() {
     return this.timing_function
@@ -292,25 +238,25 @@ export const TokenCategorySpec: Record<
   },
   delay: {
     type: 'duration',
-    tailwind: 'transitionDelay',
   },
   transition: {
     type: 'transition',
   },
   keyframes: {
     type: 'keyframes',
-    tailwind: 'keyframes',
   },
   animation: {
     type: 'animation',
-    tailwind: 'animation',
   },
 
   layer: {
     type: 'number',
-    tailwind: 'zIndex',
   },
   get z_index() {
     return this.layer
+  },
+
+  runtime: {
+    type: 'runtime',
   },
 } as const

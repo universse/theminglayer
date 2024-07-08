@@ -6,7 +6,7 @@ type UserTokenOptionaLAttributes = {
   $category?: string
   $type?: TokenType
   $condition?: Record<string, string>
-  $variant?: Record<string, string | string[]>
+  $variant?: Record<string, string | Array<string>>
   // $backdrop?: boolean
 }
 
@@ -18,14 +18,14 @@ export type Token = {
   $value: unknown
   $type: TokenType
   $extensions: {
-    keys: string[]
+    keys: Array<string>
     // source: string
     component: string | null
-    conditionTokens: Token[]
-    variantTokens: Token[]
+    conditionTokens: Array<Token>
+    variantTokens: Array<Token>
   }
   _internal: {
-    referencedTokensOrSets: (Token | TokenSet)[]
+    referencedTokensOrSets: Array<Token | TokenSet>
   }
 } & UserTokenOptionaLAttributes
 
@@ -40,7 +40,7 @@ export type RESERVED_TOKEN_KEYS =
   | '$extensions'
 
 export type TokenSet = {
-  $set: Token[]
+  $set: Array<Token>
 }
 
 interface SharedBuildOptions {
@@ -48,15 +48,14 @@ interface SharedBuildOptions {
 }
 
 export interface BuildOptions extends SharedBuildOptions {
-  sources: string | string[]
-  plugins: Plugin[]
+  sources: string | Array<string>
+  plugins: Array<Plugin>
 }
 
 export type PostcssCachedData = {
   rulesByCustomPropertyName: Record<string, any>
-  rulesByClassSelector: Record<string, any>
   customAtRules: any
-  safelist: string[]
+  safelist: Array<string>
   containerSelector: string
 }
 

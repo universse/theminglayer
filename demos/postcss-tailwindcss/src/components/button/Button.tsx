@@ -2,7 +2,7 @@ import React from 'react'
 
 // this can be generated from token files with a custom plugin
 export interface ButtonVariants {
-  intent?: 'primary' | 'critical'
+  tone?: 'accent' | 'critical'
   visual?: 'filled' | 'outline'
   disabled?: boolean
 }
@@ -12,7 +12,7 @@ export interface ButtonProps extends ButtonVariants {
 }
 
 export function Button({
-  intent = 'primary',
+  tone = 'accent',
   visual = 'filled',
   disabled = false,
   children,
@@ -21,7 +21,7 @@ export function Button({
   return (
     <button
       className='tl-button'
-      data-intent={intent}
+      data-tone={tone}
       data-visual={visual}
       disabled={disabled}
       type='button'

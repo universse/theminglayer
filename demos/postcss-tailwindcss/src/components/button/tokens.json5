@@ -2,12 +2,12 @@
   component: {
     button: {
       $variant: {
-        intent: {
-          primary: {
-            $value: '[data-intent="primary"]',
+        tone: {
+          accent: {
+            $value: '[data-tone="accent"]',
           },
           critical: {
-            $value: '[data-intent="critical"]',
+            $value: '[data-tone="critical"]',
           },
         },
         visual: {
@@ -27,40 +27,40 @@
           focus: '{variant.focus}',
         },
       },
-      typography: { $value: '{typography.button}' },
+      typography: '{group.typography.button}',
       foreground_color: {
         $type: 'color',
         $set: [
           { $variant: { visual: 'filled' }, $value: '{color.white}' },
           {
-            $variant: { intent: '*', visual: 'outline' },
-            $value: '{text_color.$intent.primary}',
+            $variant: { tone: '*', visual: 'outline' },
+            $value: '{text_color.$tone.primary}',
           },
 
           {
             $condition: { contrast_pref: 'forced' },
-            $variant: { intent: 'primary', visual: 'filled' },
+            $variant: { tone: 'accent', visual: 'filled' },
             $value: 'ButtonFace',
           },
           {
             $condition: { contrast_pref: 'forced' },
-            $variant: { intent: 'primary', visual: 'filled', _state: 'hover' },
+            $variant: { tone: 'accent', visual: 'filled', _state: 'hover' },
             $value: 'ButtonFace',
           },
           {
             $condition: { contrast_pref: 'forced' },
-            $variant: { intent: 'primary', visual: 'filled', _state: 'active' },
+            $variant: { tone: 'accent', visual: 'filled', _state: 'active' },
             $value: 'ButtonFace',
           },
           {
             $condition: { contrast_pref: 'forced' },
-            $variant: { intent: 'primary', visual: 'filled', _state: 'focus' },
+            $variant: { tone: 'accent', visual: 'filled', _state: 'focus' },
             $value: 'ButtonFace',
           },
           {
             $condition: { contrast_pref: 'forced' },
             $variant: {
-              intent: 'primary',
+              tone: 'accent',
               visual: 'filled',
               disabled: true,
             },
@@ -72,51 +72,51 @@
         $type: 'color',
         $set: [
           {
-            $variant: { intent: '*', visual: 'filled' },
-            $value: '{background_color.$intent.element.static}',
+            $variant: { tone: '*', visual: 'filled' },
+            $value: '{background_color.$tone.element.static}',
           },
           {
-            $variant: { intent: '*', visual: 'filled', _state: 'hover' },
-            $value: '{background_color.$intent.element.hover}',
+            $variant: { tone: '*', visual: 'filled', _state: 'hover' },
+            $value: '{background_color.$tone.element.hover}',
           },
           {
-            $variant: { intent: '*', visual: 'filled', _state: 'active' },
-            $value: '{background_color.$intent.element.active}',
+            $variant: { tone: '*', visual: 'filled', _state: 'active' },
+            $value: '{background_color.$tone.element.active}',
           },
 
           {
-            $variant: { intent: '*', visual: 'outline', _state: 'hover' },
-            $value: '{background_color.$intent.element.faded.hover}',
+            $variant: { tone: '*', visual: 'outline', _state: 'hover' },
+            $value: '{background_color.$tone.element.faded.hover}',
           },
           {
-            $variant: { intent: '*', visual: 'outline', _state: 'active' },
-            $value: '{background_color.$intent.element.faded.active}',
+            $variant: { tone: '*', visual: 'outline', _state: 'active' },
+            $value: '{background_color.$tone.element.faded.active}',
           },
 
           {
             $condition: { contrast_pref: 'forced' },
-            $variant: { intent: 'primary', visual: 'filled' },
+            $variant: { tone: 'accent', visual: 'filled' },
             $value: 'ButtonText',
           },
           {
             $condition: { contrast_pref: 'forced' },
-            $variant: { intent: 'primary', visual: 'filled', _state: 'hover' },
+            $variant: { tone: 'accent', visual: 'filled', _state: 'hover' },
             $value: 'Highlight',
           },
           {
             $condition: { contrast_pref: 'forced' },
-            $variant: { intent: 'primary', visual: 'filled', _state: 'active' },
+            $variant: { tone: 'accent', visual: 'filled', _state: 'active' },
             $value: 'Highlight',
           },
           {
             $condition: { contrast_pref: 'forced' },
-            $variant: { intent: 'primary', visual: 'filled', _state: 'focus' },
+            $variant: { tone: 'accent', visual: 'filled', _state: 'focus' },
             $value: 'Highlight',
           },
           {
             $condition: { contrast_pref: 'forced' },
             $variant: {
-              intent: 'primary',
+              tone: 'accent',
               visual: 'filled',
               disabled: true,
             },
@@ -127,19 +127,19 @@
       border_color: {
         $set: [
           {
-            $variant: { intent: '*' },
-            $value: '{border_color.$intent.static}',
+            $variant: { tone: '*' },
+            $value: '{border_color.$tone.static}',
           },
           {
-            $variant: { intent: '*', visual: 'filled' },
+            $variant: { tone: '*', visual: 'filled' },
             $value: '{color.transparent}',
           },
           {
-            $variant: { intent: '*', _state: 'hover' },
-            $value: '{border_color.$intent.hover}',
+            $variant: { tone: '*', _state: 'hover' },
+            $value: '{border_color.$tone.hover}',
           },
           {
-            $variant: { intent: '*', visual: 'filled', _state: 'hover' },
+            $variant: { tone: '*', visual: 'filled', _state: 'hover' },
             $value: '{color.transparent}',
           },
         ],

@@ -1,15 +1,50 @@
 {
   space: {
     none: { $value: '0px' },
-    xs: { $value: '4px' },
-    sm: { $value: '8px' },
-    md: { $value: '16px' },
-    lg: { $value: '24px' },
-    xl: { $value: '32px' },
-    '2xl': { $value: '48px' },
-    '3xl': { $value: '64px' },
-    '4xl': { $value: '80px' },
-    '5xl': { $value: '120px' },
-    '6xl': { $value: '160px' },
+
+    '2xs': {
+      px: { $value: '4px' },
+      rem: { $value: '0.25rem' },
+    },
+    xs: {
+      px: { $value: '8px' },
+      rem: { $value: '0.5rem' },
+    },
+    sm: {
+      px: { $value: '12px' },
+      rem: { $value: '0.75rem' },
+    },
+    md: {
+      px: { $value: '16px' },
+      rem: { $value: '1rem' },
+    },
+    lg: {
+      px: { $value: '24px' },
+      rem: { $value: '1.5rem' },
+    },
+    xl: {
+      px: { $value: '32px' },
+      rem: { $value: '2rem' },
+    },
+    '2xl': {
+      px: { $value: '48px' },
+      rem: { $value: '3rem' },
+    },
+    '3xl': {
+      px: { $value: '64px' },
+      rem: { $value: '4rem' },
+    },
+    '4xl': {
+      px: { $value: '80px' },
+      rem: { $value: '5rem' },
+    },
+    '5xl': {
+      px: { $value: '120px' },
+      rem: { $value: '7.5rem' },
+    },
+    '6xl': {
+      px: { $value: '160px' },
+      rem: { $value: '10rem' },
+    },
   },
 }

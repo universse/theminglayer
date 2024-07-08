@@ -4,9 +4,9 @@ import setWith from 'lodash.setwith'
 
 export function traverseObj(
   obj: object,
-  fn: (obj: object, key: string, keys: string[]) => unknown
+  fn: (obj: object, key: string, keys: Array<string>) => unknown
 ) {
-  const keys: string[] = []
+  const keys: Array<string> = []
 
   function run(current: object) {
     for (const key in current) {
@@ -15,8 +15,8 @@ export function traverseObj(
 
         fn(current, key, keys.slice(0, -1))
 
-        // to stop and process to next key, throw `continue`. it is necessary when fn turns current[key] from a primitive value into an object and there is no need to traverse that object
-        // to stop and exit the current object, throw `break`
+        // to stop and process to next key, throw 'continue'. it is necessary when fn turns current[key] from a primitive value into an object and there is no need to traverse that object
+        // to stop and exit the current object, throw 'break'
 
         if (current[key] && !isPrimitive(current[key])) {
           run(current[key])
@@ -38,7 +38,7 @@ export function traverseObj(
   return run(obj)
 }
 
-export function getObjValue(obj: any, keys: string[]): any {
+export function getObjValue(obj: any, keys: Array<string>): any {
   let value = obj
 
   for (const key of keys) {
@@ -57,8 +57,8 @@ export function deepSetObj(obj, paths, value) {
   return setWith(obj, paths, value, Object)
 }
 
-export function toArray<T>(value: T | T[]): T[] {
-  if (!value) return []
+export function toArray<T>(value: T | Array<T>): Array<T> {
+  if (value == null) return []
   if (Array.isArray(value)) return value
   return [value]
 }
@@ -71,7 +71,7 @@ export function isNullish(val: unknown): boolean {
   return typeof val === 'undefined' || val === null
 }
 
-export function generateKeyString(keys: string[]): string {
+export function generateKeyString(keys: Array<string>): string {
   return keys.join('.')
 }
 
@@ -101,12 +101,12 @@ export async function deleteFileAndDirectory(filePath: string) {
   await fsp.rm(filePath, { force: true, recursive: true })
 }
 
-export function cartesian<T>(arrays: T[][]): T[][] {
+export function cartesian<T>(arrays: Array<Array<T>>): Array<Array<T>> {
   if (!arrays.length) return []
-  const result: T[][] = []
+  const result: Array<Array<T>> = []
   const max = arrays.length - 1
 
-  function helper(array: T[], i: number) {
+  function helper(array: Array<T>, i: number) {
     for (let j = 0, l = arrays[i]!.length; j < l; j++) {
       const clone = [...array]
       clone.push(arrays[i]![j]!)

@@ -1,7 +1,0 @@
-@config '../../tailwind.config.js';
-
-@layer reset {
-  @tailwind base;
-}
-
-@tailwind components;

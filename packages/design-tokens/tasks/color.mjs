@@ -7,9 +7,9 @@ import tailwindColors from 'tailwindcss/colors.js'
 main()
 
 async function main() {
-  // await convertOpenPropsColorsToTokens()
+  await convertOpenPropsColorsToTokens()
   await convertRadixColorsToTokens()
-  // await convertTailwindColorsToTokens()
+  await convertTailwindColorsToTokens()
 }
 
 async function convertOpenPropsColorsToTokens({ hsl = true } = {}) {
@@ -22,7 +22,7 @@ async function convertOpenPropsColorsToTokens({ hsl = true } = {}) {
   }
 
   await fsp.writeFile(
-    'open-props-color.json5',
+    '.gen/open-props-color.json5',
     JSON.stringify({ color: output }),
     'utf8'
   )
@@ -65,20 +65,6 @@ async function convertRadixColorsToTokens({ p3 = false } = {}) {
 
   const output = {}
 
-  // const a = {
-  //   brown: {
-  //     1: {
-  //       $set: [
-  //         { $value: '#fefdfc' },
-  //         {
-  //           $condition: { color_gamut: 'p3', supports_p3: true },
-  //           $value: 'color(display-p3 ...)',
-  //         },
-  //       ],
-  //     },
-  //   },
-  // }
-
   for (const [hue, scale] of Object.entries(scales)) {
     const isP3 = hue.includes('P3')
 
@@ -107,7 +93,7 @@ async function convertRadixColorsToTokens({ p3 = false } = {}) {
   }
 
   await fsp.writeFile(
-    'radix-color.json5',
+    '.gen/radix-color.json5',
     JSON.stringify({ color: output }),
     'utf8'
   )
@@ -139,7 +125,7 @@ async function convertTailwindColorsToTokens() {
   }
 
   await fsp.writeFile(
-    'tailwind-color.json5',
+    '.gen/tailwind-color.json5',
     JSON.stringify({ color: output }),
     'utf8'
   )

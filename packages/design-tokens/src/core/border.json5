@@ -1,5 +1,6 @@
 {
   border_radius: {
+    none: { $value: '0px' },
     sm: { $value: '4px' },
     md: { $value: '8px' },
     lg: { $value: '16px' },
@@ -12,12 +13,14 @@
     '0': { $value: '0px' },
     '1': { $value: '1px' },
     '2': { $value: '2px' },
+    '3': { $value: '3px' },
     '4': { $value: '4px' },
   },
   outline_width: {
     '0': { $value: '0px' },
     '1': { $value: '1px' },
     '2': { $value: '2px' },
+    '3': { $value: '3px' },
     '4': { $value: '4px' },
   },
   outline_style: {
@@ -27,14 +30,26 @@
     '0': { $value: '0px' },
     '1': { $value: '1px' },
     '2': { $value: '2px' },
-    '4': { $value: '4px' },
   },
-  outline: {
-    focus_ring: {
-      $value: {
-        color: '{color.blue.9}',
-        width: '{outline_width.2}',
-        style: '{outline_style.solid}',
+  group: {
+    outline: {
+      focus_ring: {
+        color: {
+          $type: 'color',
+          $set: [
+            { $value: '{color.blue.9}' },
+            { $condition: { contrast_pref: 'forced' }, $value: 'Highlight' },
+          ],
+        },
+        width: {
+          $value: '{outline_width.3}',
+        },
+        style: {
+          $value: '{outline_style.solid}',
+        },
+        offset: {
+          $value: '{outline_offset.2}',
+        },
       },
     },
   },

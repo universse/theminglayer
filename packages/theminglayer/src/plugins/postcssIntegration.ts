@@ -10,7 +10,7 @@ export const postcssIntegrationPlugin: PluginCreator<{
   prefix?: string
   containerSelector?: string
   keepAliases?: boolean
-  safelist?: string[]
+  safelist?: Array<string>
 }> = ({
   prefix = cssOptions.prefix,
   containerSelector = cssOptions.containerSelector,
@@ -29,7 +29,6 @@ export const postcssIntegrationPlugin: PluginCreator<{
 
       const data: PostcssCachedData = {
         rulesByCustomPropertyName: {},
-        rulesByClassSelector: {},
         customAtRules: [
           {
             rule: {
@@ -53,8 +52,13 @@ export const postcssIntegrationPlugin: PluginCreator<{
       collection.tokens.forEach((token) => {
         const {
           $type,
-          $extensions: { keys, component },
+          $extensions: { keys, conditionTokens, variantTokens },
         } = token
+
+        const isThemed =
+          keys.includes('$set') ||
+          conditionTokens.length ||
+          variantTokens.length
 
         try {
           if ($type === 'variant' || $type === 'condition') {
@@ -63,76 +67,46 @@ export const postcssIntegrationPlugin: PluginCreator<{
           }
 
           if ($type === 'typography') {
-            const {
-              customPropertyRules,
-              // classSelectorRules
-            } = cssFormatter.typographyTokenToCssRules(token, { keepAliases })
+            const rules = cssFormatter.typographyTokenToCssRules(token, {
+              keepAliases,
+            })
 
-            if (component) {
-              const componentClassSelector =
-                cssFormatter.tokenToComponentClassSelector(token)
+            rules.forEach((rule) => {
+              rule.rule.declarations.forEach((declaration) => {
+                data.rulesByCustomPropertyName[declaration.prop] = data
+                  .rulesByCustomPropertyName[declaration.prop] || {
+                  isStatic: !isThemed,
+                  rules: [],
+                }
 
-              data.rulesByClassSelector[componentClassSelector] =
-                data.rulesByClassSelector[componentClassSelector] || []
-
-              data.rulesByClassSelector[componentClassSelector]!.push(
-                ...customPropertyRules
-              )
-            } else {
-              // const typographyClassSelector =
-              //   cssFormatter.typographyTokenToClassSelector(token)
-
-              // data.rulesByClassSelector[typographyClassSelector] =
-              //   data.rulesByClassSelector[typographyClassSelector] || []
-
-              // data.rulesByClassSelector[typographyClassSelector]!.push(
-              //   ...classSelectorRules
-              // )
-
-              // const customPropertyName =
-              //   cssFormatter.tokenToCustomPropertyName(token)
-
-              customPropertyRules.forEach((rule) => {
-                // @ts-expect-error todo
-                rule.rule.declarations.forEach((declaration) => {
-                  data.rulesByCustomPropertyName[declaration.prop] =
-                    data.rulesByCustomPropertyName[declaration.prop] || []
-
-                  data.rulesByCustomPropertyName[declaration.prop]!.push({
-                    // @ts-expect-error todo
-                    ...rule,
-                    rule: {
-                      // @ts-expect-error todo
-                      ...rule.rule,
-                      declarations: [declaration],
-                    },
-                  })
+                data.rulesByCustomPropertyName[declaration.prop]!.rules.push({
+                  ...rule,
+                  rule: {
+                    ...rule.rule,
+                    declarations: [declaration],
+                  },
                 })
               })
-            }
+            })
             return
           }
 
           const rules = cssFormatter.tokenToCssRules(token, { keepAliases })
 
-          if (component) {
-            const componentClassSelector =
-              cssFormatter.tokenToComponentClassSelector(token)
+          const customPropertyName =
+            cssFormatter.tokenToCustomPropertyName(token)
 
-            data.rulesByClassSelector[componentClassSelector] =
-              data.rulesByClassSelector[componentClassSelector] || []
-
-            data.rulesByClassSelector[componentClassSelector]!.push(...rules)
-          } else {
-            const customPropertyName =
-              cssFormatter.tokenToCustomPropertyName(token)
-
-            data.rulesByCustomPropertyName[customPropertyName] =
-              data.rulesByCustomPropertyName[customPropertyName] || []
-
-            data.rulesByCustomPropertyName[customPropertyName]!.push(...rules)
+          data.rulesByCustomPropertyName[customPropertyName] = data
+            .rulesByCustomPropertyName[customPropertyName] || {
+            isStatic: !isThemed,
+            rules: [],
           }
+
+          data.rulesByCustomPropertyName[customPropertyName]!.rules.push(
+            ...rules
+          )
         } catch (e) {
+          console.log(e)
           logger.warnings.invalidCssValue(keys)
         }
       })

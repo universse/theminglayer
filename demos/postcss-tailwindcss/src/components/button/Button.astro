@@ -1,7 +1,7 @@
 ---
 // this can be generated from token files with a custom plugin
 export interface ButtonVariants {
-  intent?: 'primary' | 'critical'
+  tone?: 'accent' | 'critical'
   visual?: 'filled' | 'outline'
   disabled?: boolean
 }
@@ -9,8 +9,8 @@ export interface ButtonVariants {
 type Props = ButtonVariants
 
 const {
-  intent = `primary`,
-  visual = `filled`,
+  tone = 'accent',
+  visual = 'filled',
   disabled = false,
   ...props
 } = Astro.props
@@ -18,7 +18,7 @@ const {
 
 <button
   class='tl-button'
-  data-intent={intent}
+  data-tone={tone}
   data-visual={visual}
   disabled={disabled}
   type='button'

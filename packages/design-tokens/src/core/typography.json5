@@ -43,14 +43,14 @@
     },
   },
   font_size: {
-    xs: { $value: '12px' },
-    sm: { $value: '14px' },
-    md: { $value: '16px' },
-    lg: { $value: '20px' },
-    xl: { $value: '28px' },
-    '2xl': { $value: '40px' },
-    '3xl': { $value: '60px' },
-    '4xl': { $value: '96px' },
+    xs: { $value: '0.8125rem' },
+    sm: { $value: '0.875rem' },
+    md: { $value: '1rem' },
+    lg: { $value: '1.1875rem' },
+    xl: { $value: '1.5rem' },
+    '2xl': { $value: '2.5rem' },
+    '3xl': { $value: '3.75rem' },
+    '4xl': { $value: '6rem' },
   },
   font_weight: {
     normal: { $value: 'Normal' },
@@ -59,11 +59,11 @@
     bold: { $value: 'Bold' },
     black: { $value: 'Black' },
   },
-  leading: {
+  line_height: {
     heading: { $value: '1.2' },
     body: { $value: '1.5' },
   },
-  tracking: {
+  letter_spacing: {
     small_caps: { $value: '2%' },
     all_caps: { $value: '1.5%' },
     xs: { $value: '1%' },
@@ -75,121 +75,227 @@
     '3xl': { $value: '-2.5%' },
     '4xl': { $value: '-3%' },
   },
-  typography: {
-    h1: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.4xl}',
-        font_weight: '{font_weight.normal}',
-        leading: '{leading.heading}',
-        tracking: '{tracking.4xl}',
+  group: {
+    typography: {
+      h1: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.4xl}',
+        },
+        font_weight: {
+          $value: '{font_weight.normal}',
+        },
+        line_height: {
+          $value: '{line_height.heading}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.4xl}',
+        },
       },
-    },
-    h2: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.3xl}',
-        font_weight: '{font_weight.semibold}',
-        leading: '{leading.heading}',
-        tracking: '{tracking.3xl}',
+      h2: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.3xl}',
+        },
+        font_weight: {
+          $value: '{font_weight.semibold}',
+        },
+        line_height: {
+          $value: '{line_height.heading}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.3xl}',
+        },
       },
-    },
-    h3: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.2xl}',
-        font_weight: '{font_weight.semibold}',
-        leading: '{leading.heading}',
-        tracking: '{tracking.2xl}',
+      h3: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.2xl}',
+        },
+        font_weight: {
+          $value: '{font_weight.bold}',
+        },
+        line_height: {
+          $value: '{line_height.heading}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.2xl}',
+        },
       },
-    },
-    h4: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.xl}',
-        font_weight: '{font_weight.semibold}',
-        leading: '{leading.heading}',
-        tracking: '{tracking.xl}',
+      h4: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.xl}',
+        },
+        font_weight: {
+          $value: '{font_weight.semibold}',
+        },
+        line_height: {
+          $value: '{line_height.heading}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.xl}',
+        },
       },
-    },
-    h5: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.lg}',
-        font_weight: '{font_weight.semibold}',
-        leading: '{leading.body}',
-        tracking: '{tracking.lg}',
+      h5: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.lg}',
+        },
+        font_weight: {
+          $value: '{font_weight.semibold}',
+        },
+        line_height: {
+          $value: '{line_height.body}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.lg}',
+        },
       },
-    },
-    h6: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.lg}',
-        font_weight: '{font_weight.normal}',
-        leading: '{leading.body}',
-        tracking: '{tracking.lg}',
+      h6: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.lg}',
+        },
+        font_weight: {
+          $value: '{font_weight.normal}',
+        },
+        line_height: {
+          $value: '{line_height.body}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.lg}',
+        },
       },
-    },
-    subtitle1: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.md}',
-        font_weight: '{font_weight.semibold}',
-        leading: '{leading.body}',
-        tracking: '{tracking.md}',
+      subtitle1: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.md}',
+        },
+        font_weight: {
+          $value: '{font_weight.semibold}',
+        },
+        line_height: {
+          $value: '{line_height.body}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.md}',
+        },
       },
-    },
-    body1: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.md}',
-        font_weight: '{font_weight.normal}',
-        leading: '{leading.body}',
-        tracking: '{tracking.md}',
+      body1: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.md}',
+        },
+        font_weight: {
+          $value: '{font_weight.normal}',
+        },
+        line_height: {
+          $value: '{line_height.body}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.md}',
+        },
       },
-    },
-    subtitle2: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.sm}',
-        font_weight: '{font_weight.semibold}',
-        leading: '{leading.body}',
-        tracking: '{tracking.sm}',
+      subtitle2: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.sm}',
+        },
+        font_weight: {
+          $value: '{font_weight.semibold}',
+        },
+        line_height: {
+          $type: 'dimension',
+          $value: '1.25rem',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.sm}',
+        },
       },
-    },
-    body2: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.sm}',
-        font_weight: '{font_weight.normal}',
-        leading: '{leading.body}',
-        tracking: '{tracking.sm}',
+      body2: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.sm}',
+        },
+        font_weight: {
+          $value: '{font_weight.normal}',
+        },
+        line_height: {
+          $type: 'dimension',
+          $value: '1.25rem',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.sm}',
+        },
       },
-    },
-    caption: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.xs}',
-        font_weight: '{font_weight.semibold}',
-        leading: '{leading.body}',
-        tracking: '{tracking.xs}',
+      caption: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.xs}',
+        },
+        font_weight: {
+          $value: '{font_weight.normal}',
+        },
+        line_height: {
+          $value: '{line_height.body}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.xs}',
+        },
       },
-    },
-    button: {
-      $value: {
-        font_family: '{font_family.sans}',
-        font_size: '{font_size.md}',
-        font_weight: '{font_weight.medium}',
-        leading: '{leading.body}',
-        tracking: '{tracking.sm}',
+      button: {
+        font_family: {
+          $value: '{font_family.sans}',
+        },
+        font_size: {
+          $value: '{font_size.md}',
+        },
+        font_weight: {
+          $value: '{font_weight.medium}',
+        },
+        line_height: {
+          $value: '{line_height.body}',
+        },
+        letter_spacing: {
+          $value: '{letter_spacing.sm}',
+        },
       },
-    },
-    code: {
-      $value: {
-        font_family: '{font_family.mono}',
-        font_size: '{font_size.sm}',
-        font_weight: '{font_weight.normal}',
-        leading: '{leading.body}',
+      code: {
+        font_family: {
+          $value: '{font_family.mono}',
+        },
+        font_size: {
+          $value: '{font_size.sm}',
+        },
+        font_weight: {
+          $value: '{font_weight.normal}',
+        },
+        line_height: {
+          $value: '{line_height.body}',
+        },
       },
     },
   },

@@ -5,13 +5,12 @@ import { generateKeyString } from '~/utils/misc'
 
 function createWarnings() {
   const missingAliases = new Set<string>([])
-  const invalidVariants = new Set<string>([])
   const collisions = new Map<string, Set<string>>()
   const typeMissing = new Set<string>([])
   const invalidCssValues = new Set<string>([])
 
   return {
-    tokenCollision(keys: string[], sources: [string, string]) {
+    tokenCollision(keys: Array<string>, sources: [string, string]) {
       const keyString = generateKeyString(keys)
       let collisionByKeyString = collisions.get(keyString)
       if (!collisionByKeyString) {
@@ -21,41 +20,29 @@ function createWarnings() {
       collisionByKeyString.add(sources[0])
       collisionByKeyString.add(sources[1])
     },
-    multipleWildcardVariants(keys: string[]) {
-      invalidVariants.add(generateKeyString(keys))
-    },
     missingAlias(key: string) {
       missingAliases.add(key)
     },
-    missingTokenType(keys: string[]) {
+    missingTokenType(keys: Array<string>) {
       typeMissing.add(generateKeyString(keys))
     },
-    invalidCssValue(keys: string[]) {
+    invalidCssValue(keys: Array<string>) {
       invalidCssValues.add(generateKeyString(keys))
     },
     generateMessage() {
-      const lines: string[] = []
+      const lines: Array<string> = []
 
       if (collisions.size) {
         lines.push('----------')
         lines.push('Token collisions found:')
         collisions.forEach((sources, keyString) => {
           lines.push(`- Key: ${chalk.yellowBright(keyString)}`)
-          lines.push(`- Sources:`)
+          lines.push('- Sources:')
           sources.forEach((source) => {
             lines.push(`  ${chalk.yellowBright(source)}`)
           })
         })
         collisions.clear()
-      }
-
-      if (invalidVariants.size) {
-        lines.push('----------')
-        lines.push('Multiple wildcard variants are not supported:')
-        invalidVariants.forEach((keyString) =>
-          lines.push(`- ${chalk.yellowBright(keyString)}`)
-        )
-        invalidVariants.clear()
       }
 
       if (missingAliases.size) {

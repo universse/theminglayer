@@ -1,6 +1,8 @@
 {
   opacity: {
-    disabled: { $value: '0.6' },
+    disabled: { $value: '0.4' },
+    read_only: { $value: '0.6' },
     disabled_high_contrast: { $value: '1' },
+    read_only_high_contrast: { $value: '1' },
   },
 }

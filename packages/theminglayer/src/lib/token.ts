@@ -16,7 +16,7 @@ export async function importTokens(filePath: string) {
       const { module } = await importJs(filePath, { watch: watchMode.active })
       return module.default ?? module
     }
-    // case `js`: {
+    // case 'js': {
     //   try {
     //     delete require.cache[filePath]
     //     return require(filePath)
@@ -25,35 +25,95 @@ export async function importTokens(filePath: string) {
     //     return importMjs(url, ms)
     //   }
     // }
-    // case `cjs`: {
+    // case 'cjs': {
     //   delete require.cache[filePath]
     //   return require(filePath)
     // }
-    // case `mjs`: {
+    // case 'mjs': {
     //   const url = URL.pathToFileURL(filePath).toString()
     //   return importMjs(url, ms)
     // }
     case 'json': {
-      return JSON.parse(await fsp.readFile(filePath, 'utf8'))
+      try {
+        return JSON.parse(await fsp.readFile(filePath, 'utf8'))
+      } catch {
+        return {}
+      }
     }
     case 'json5': {
-      return JSON5.parse(await fsp.readFile(filePath, 'utf8'))
+      try {
+        return JSON5.parse(await fsp.readFile(filePath, 'utf8'))
+      } catch {
+        return {}
+      }
     }
     case 'yaml':
-      return yaml.load(await fsp.readFile(filePath, 'utf8'))
+      try {
+        return yaml.load(await fsp.readFile(filePath, 'utf8'))
+      } catch {
+        return {}
+      }
     default: {
       throw new Error('Unsupported token collection file extension')
     }
   }
 }
 
-export const ALIAS_RE = /{([^}]+)}/
+const ALIAS_RE = /{([^}^\s]+)}/
+const EXACT_ALIAS_RE = /^{([^}^\s]+)}$/
+
+const EXACT_INTEGER_WITH_OPTIONAL_UNIT_RE = /^[\d]+[a-zA-Z%]*$/
+const EXACT_SIGNED_INTEGER_WITH_OPTIONAL_UNIT_RE = /^[+-][\d]+[a-zA-Z%]*$/
+
+const EXACT_DECIMAL_WITH_OPTIONAL_UNIT_RE = /^(.|[\d]+.)[\d]+[a-zA-Z%]*$/
+const EXACT_SIGNED_DECIMAL_WITH_OPTIONAL_UNIT_RE =
+  /^[+-](.|[\d]+.)[\d]+[a-zA-Z%]*$/
+
+const OPERATOR_RE = /\s[+\-*/]\s|[()]/
+
+export function isMathExpression(value: unknown): boolean {
+  if (typeof value !== 'string') return false
+  if (!OPERATOR_RE.test(value)) return false
+
+  const parts = value
+    .replace(/[\s]+/g, ' ')
+    .replace(/\(\s/g, '(')
+    .replace(/\s\)/g, ')')
+    .trim()
+    .split(OPERATOR_RE)
+
+  return (
+    parts.length > 1 &&
+    parts.every(
+      (part) =>
+        part === '' || // split by parentheses
+        EXACT_INTEGER_WITH_OPTIONAL_UNIT_RE.test(part) ||
+        EXACT_SIGNED_INTEGER_WITH_OPTIONAL_UNIT_RE.test(part) ||
+        EXACT_ALIAS_RE.test(part) ||
+        EXACT_DECIMAL_WITH_OPTIONAL_UNIT_RE.test(part) ||
+        EXACT_SIGNED_DECIMAL_WITH_OPTIONAL_UNIT_RE.test(part)
+    )
+  )
+
+  // return (
+  //   parts.filter(Boolean).length > 1 &&
+  //   parts.filter(Boolean).every(
+  //     (part) =>
+  //       part === '' || // split by parentheses
+  //       EXACT_INTEGER_WITH_OPTIONAL_UNIT_RE.test(part) ||
+  //       EXACT_SIGNED_INTEGER_WITH_OPTIONAL_UNIT_RE.test(part) ||
+  //       EXACT_ALIAS_RE.test(part) ||
+  //       EXACT_DECIMAL_WITH_OPTIONAL_UNIT_RE.test(part) ||
+  //       EXACT_SIGNED_DECIMAL_WITH_OPTIONAL_UNIT_RE.test(part)
+  //   )
+  // )
+}
 
 export function isAlias(value: unknown): value is string {
   return typeof value === 'string' && ALIAS_RE.test(value)
 }
 
-export function getReferences(value: unknown): string[] {
+export function getReferences(value: unknown): Array<string> {
   return [...(value?.matchAll?.(new RegExp(ALIAS_RE, 'g')) || [])].map(
     (match) => match[1]
   )
@@ -77,7 +137,7 @@ export function isTokenSet(obj: unknown): obj is TokenSet {
 }
 
 // TODO arg should be token?
-export function generateTokenNameKeys(keys: string[]): string[] {
+export function generateTokenNameKeys(keys: Array<string>): Array<string> {
   const setIndex = keys.indexOf('$set')
   return setIndex > -1 ? keys.slice(0, setIndex) : [...keys]
 }

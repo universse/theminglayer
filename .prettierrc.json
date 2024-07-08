@@ -10,14 +10,13 @@
     "prettier-plugin-tailwindcss"
   ],
   "importOrder": [
-    "^(react/(.*)$)|^(react$)",
+    "<BUILTIN_MODULES>",
     "<THIRD_PARTY_MODULES>",
     "",
-    "^types$",
-    "^~/components/(.*)$",
-    "^~/hooks/(.*)$",
     "^[~/]",
     "^[./]",
+    "",
+    "^(?!.*[.]css$)[./].*$",
     "\\.css$"
   ],
   "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],

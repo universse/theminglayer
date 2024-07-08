@@ -1,0 +1,46 @@
+{
+  text_color: {
+    white: {
+      primary: {
+        $set: [
+          {
+            $value: '{color.white_alpha.12}',
+          },
+          {
+            $condition: { contrast: 'high' },
+            $value: '{color.white}',
+          },
+        ],
+      },
+      secondary: {
+        $set: [
+          {
+            $value: '{color.white_alpha.10}',
+          },
+          {
+            $condition: { contrast: 'high' },
+            $value: '{color.white_alpha.11}',
+          },
+        ],
+      },
+      muted: {
+        $set: [
+          {
+            $value: '{color.white_alpha.8}',
+          },
+          {
+            $condition: { contrast: 'high' },
+            $value: '{color.white_alpha.9}',
+          },
+        ],
+      },
+    },
+  },
+  icon_color: {
+    white: {
+      primary: { $value: '{color.white_alpha.10}' },
+      secondary: { $value: '{color.white_alpha.8}' },
+      muted: { $value: '{color.white_alpha.6}' },
+    },
+  },
+}

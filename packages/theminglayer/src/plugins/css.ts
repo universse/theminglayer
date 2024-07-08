@@ -16,18 +16,18 @@ import * as promises from '~/utils/promises'
 export const cssPlugin: PluginCreator<{
   prefix?: string
   containerSelector?: string
-  files?: {
+  files?: Array<{
     path: string
     filter: (token: Token) => boolean
     keepAliases?: boolean
-  }[]
+  }>
 }> = ({
   prefix = cssOptions.prefix,
   containerSelector = cssOptions.containerSelector,
   files = [{ path: 'theme.css', filter: () => true, keepAliases: false }],
 } = {}) => {
   const postcssPlugin: PostcssPluginCreator<{
-    rules: unknown[]
+    rules: Array<unknown>
   }> = ({ rules } = { rules: [] }) => {
     const insertRules = createCachedInsertRules()
 
@@ -81,16 +81,10 @@ export const cssPlugin: PluginCreator<{
 
             try {
               if ($type === 'typography') {
-                const {
-                  customPropertyRules,
-                  // classSelectorRules
-                } = cssFormatter.typographyTokenToCssRules(token, {
-                  keepAliases,
-                })
-
                 rules.push(
-                  ...customPropertyRules
-                  // ,...classSelectorRules
+                  ...cssFormatter.typographyTokenToCssRules(token, {
+                    keepAliases,
+                  })
                 )
               } else {
                 rules.push(

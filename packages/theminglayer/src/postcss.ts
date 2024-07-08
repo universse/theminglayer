@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
-import type { Node, PluginCreator, Postcss } from 'postcss'
+import type { Node, PluginCreator, Postcss, Root } from 'postcss'
 
 import { name as packageName } from '~/../package.json'
 import { CACHE_DIRECTORY, getCacheFilePath, readCachedFile } from '~/lib/cache'
@@ -8,16 +8,23 @@ import {
   createCachedInsertRules,
   createCompareRuleSpecificity,
 } from '~/lib/cssUtils'
-import type { Token } from '~/types'
 import * as promises from '~/utils/promises'
 
 const PLUGIN_NAME = 'postcss-plugin-theminglayer'
 
-let lastMtime = 0
-// @ts-expect-error todo
-let jitEngine
+type JITEngine = {
+  collectRulesFromDeclarationValue: (declarationValue: string) => void
+  insertCustomAtRules: (where: Node, postcss: Postcss) => void
+  insertCollectedRules: (where: Node, postcss: Postcss) => void
+  replaceStaticCustomPropertiesInDeclarationValue: (
+    declarationValue: string
+  ) => string
+}
 
-async function getJitEngine() {
+let lastMtime = 0
+let jitEngine: JITEngine
+
+async function getJitEngine(): Promise<JITEngine> {
   const cacheFilePaths = await fsp.readdir(CACHE_DIRECTORY)
 
   const mtime = cacheFilePaths.reduce<number>(
@@ -27,26 +34,23 @@ async function getJitEngine() {
   )
 
   if (mtime === lastMtime) {
-    // @ts-expect-error todo
     return jitEngine
   }
 
   lastMtime = mtime
 
-  const CUSTOM_PROPERTY_RE = `var\\(\\s*(--[\\w\\d-_]+)`
-  const SELECTOR_RE = `\\.[\\w\\d-_]+`
+  const CUSTOM_PROPERTY_RE_STR = 'var\\(\\s*(--[\\w\\d-_]+)'
+  const REPLACEABLE_CUSTOM_PROPERTY_RE_STR = '(var\\(\\s*(--[\\w\\d-_]+)\\))'
 
   const JIT: {
-    rulesByCustomPropertyName: Record<string, Token[]>
-    rulesByClassSelector: Record<string, Token[]>
-    processedCustomPropertyNamesAndClassSelectors: Set<string>
+    rulesByCustomPropertyName: Record<string, Array<any>>
+    processedCustomPropertyNames: Set<string>
     collectedCustomAtRules: any
     collectedRules: any
     containerSelector: string
   } = {
     rulesByCustomPropertyName: {},
-    rulesByClassSelector: {},
-    processedCustomPropertyNamesAndClassSelectors: new Set(),
+    processedCustomPropertyNames: new Set(),
     collectedCustomAtRules: [],
     collectedRules: [],
     containerSelector: '',
@@ -55,13 +59,11 @@ async function getJitEngine() {
   await promises.mapParallel(cacheFilePaths, async (cacheFilePath) => {
     const {
       rulesByCustomPropertyName,
-      rulesByClassSelector,
       customAtRules,
       safelist,
       containerSelector,
     } = await readCachedFile(cacheFilePath)
 
-    Object.assign(JIT.rulesByClassSelector, rulesByClassSelector)
     Object.assign(JIT.rulesByCustomPropertyName, rulesByCustomPropertyName)
 
     JIT.collectedCustomAtRules.push(...customAtRules)
@@ -71,7 +73,7 @@ async function getJitEngine() {
     })
   })
 
-  function collectRules(rules: any[]) {
+  function collectRules(rules: Array<any>) {
     rules.forEach((rule) => {
       JIT.collectedRules.push(rule)
 
@@ -83,40 +85,43 @@ async function getJitEngine() {
   }
 
   function collectRulesFromDeclarationValue(declarationValue: string) {
-    const customPropertyRe = new RegExp(CUSTOM_PROPERTY_RE, 'g')
+    const customPropertyRe = new RegExp(CUSTOM_PROPERTY_RE_STR, 'g')
     const matches = [...declarationValue.matchAll(customPropertyRe)]
 
     matches.forEach(([, customPropertyName]) => {
-      if (
-        JIT.processedCustomPropertyNamesAndClassSelectors.has(
-          customPropertyName!
-        )
-      )
-        return
-      JIT.processedCustomPropertyNamesAndClassSelectors.add(customPropertyName!)
+      if (JIT.processedCustomPropertyNames.has(customPropertyName!)) return
+      JIT.processedCustomPropertyNames.add(customPropertyName!)
 
-      const rules = JIT.rulesByCustomPropertyName[customPropertyName!] || []
+      const rules =
+        // @ts-expect-error todo
+        JIT.rulesByCustomPropertyName[customPropertyName!]?.rules || []
+
       collectRules(rules)
     })
   }
 
-  function collectRulesFromSelector(selector: string) {
-    const selectorRe = new RegExp(SELECTOR_RE, 'g')
-    const matches = [...selector.matchAll(selectorRe)]
+  function replaceStaticCustomPropertiesInDeclarationValue(
+    declarationValue: string
+  ) {
+    return declarationValue.replace(
+      new RegExp(REPLACEABLE_CUSTOM_PROPERTY_RE_STR, 'g'),
+      (_, customProperty, customPropertyName) => {
+        // @ts-expect-error todo
+        const { isStatic, rules = [] } =
+          JIT.rulesByCustomPropertyName[customPropertyName!] || {}
 
-    matches.forEach(([classSelector]) => {
-      if (JIT.processedCustomPropertyNamesAndClassSelectors.has(classSelector))
-        return
-      JIT.processedCustomPropertyNamesAndClassSelectors.add(classSelector)
+        // * declarations.length is always 1
+        if (isStatic) {
+          return rules[0].rule.declarations[0].value
+        }
 
-      const rules = JIT.rulesByClassSelector[classSelector] || []
-      collectRules(rules)
-    })
+        return customProperty
+      }
+    )
   }
 
   jitEngine = {
     collectRulesFromDeclarationValue,
-    collectRulesFromSelector,
     insertCustomAtRules(where: Node, postcss: Postcss) {
       const insertRules = createCachedInsertRules()
       insertRules(JIT.collectedCustomAtRules, where, postcss)
@@ -131,9 +136,20 @@ async function getJitEngine() {
         postcss
       )
     },
+    replaceStaticCustomPropertiesInDeclarationValue,
   }
 
   return jitEngine
+}
+
+function getDirective(root: Root): Node | undefined {
+  let directive: Node
+
+  root.walkAtRules(packageName, (atRule) => {
+    directive = atRule
+  })
+
+  return directive!
 }
 
 const plugin: PluginCreator<never> = () => {
@@ -143,22 +159,31 @@ const plugin: PluginCreator<never> = () => {
       const jitEnginePromise = getJitEngine()
 
       return {
+        async Declaration(declaration) {
+          const {
+            collectRulesFromDeclarationValue,
+            replaceStaticCustomPropertiesInDeclarationValue,
+          } = await jitEnginePromise
+
+          declaration.value = replaceStaticCustomPropertiesInDeclarationValue(
+            declaration.value
+          )
+
+          collectRulesFromDeclarationValue(declaration.value)
+        },
         async Once(root, { postcss }) {
           if (!root.first) return
 
           const { insertCustomAtRules } = await jitEnginePromise
+
           insertCustomAtRules(root.first, postcss)
         },
         async OnceExit(root, { result, postcss }) {
-          let directive: Node
-
-          root.walkAtRules(packageName, (atRule) => {
-            directive = atRule
-          })
-
-          if (!directive!) return
+          const directive = getDirective(root)
+          if (!directive) return
 
           const { insertCollectedRules } = await jitEnginePromise
+
           insertCollectedRules(directive, postcss)
 
           directive.remove()
@@ -169,18 +194,6 @@ const plugin: PluginCreator<never> = () => {
             plugin: PLUGIN_NAME,
             parent: result.opts.from,
           })
-        },
-        async Rule(rule) {
-          const { collectRulesFromDeclarationValue, collectRulesFromSelector } =
-            await jitEnginePromise
-
-          rule.nodes.forEach((node) => {
-            if (node.type === 'decl') {
-              collectRulesFromDeclarationValue(node.value)
-            }
-          })
-
-          collectRulesFromSelector(rule.selector)
         },
       }
     },

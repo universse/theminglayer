@@ -2,10 +2,10 @@
   condition: {
     color_scheme: {
       light: {
-        $value: ':is(:has([name="color-scheme"][value="light"]:checked), [data-color-scheme="light"])',
+        $value: '[data-color-scheme="light"]',
       },
       dark: {
-        $value: ':is(:has([name="color-scheme"][value="dark"]:checked), [data-color-scheme="dark"])',
+        $value: '[data-color-scheme="dark"]',
       },
     },
 
@@ -26,10 +26,10 @@
 
     contrast: {
       standard: {
-        $value: ':is(:has([name="contrast"][value="standard"]:checked), [data-contrast="standard"])',
+        $value: '[data-contrast="standard"]',
       },
       high: {
-        $value: ':is(:has([name="contrast"][value="high"]:checked), [data-contrast="high"])',
+        $value: '[data-contrast="high"]',
       },
     },
 
@@ -37,8 +37,8 @@
       compact: {
         $value: '[data-density="compact"]',
       },
-      standard: {
-        $value: '[data-density="standard"]',
+      cozy: {
+        $value: '[data-density="cozy"]',
       },
       spacious: {
         $value: '[data-density="spacious"]',
@@ -47,10 +47,10 @@
 
     motion: {
       standard: {
-        $value: '[data-motion="standard"]',
+        $value: '[data-motion="spacious"]',
       },
       reduced: {
-        $value: '[data-motion="reduced"]',
+        $value: '[data-motion="spacious"]',
       },
     },
 
@@ -289,6 +289,12 @@
     supports_p3: {
       true: {
         $value: '@supports (color: color(display-p3 0 0 0))',
+      },
+    },
+
+    supports_relative_color: {
+      true: {
+        $value: '@supports (color: rgb(from white r g b))',
       },
     },
 

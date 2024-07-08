@@ -27,14 +27,14 @@ type UserBuildOptions = Partial<BuildOptions> & {
 }
 
 export function defineConfig(
-  config: UserBuildOptions | UserBuildOptions[]
-): BuildOptions[] {
+  config: UserBuildOptions | Array<UserBuildOptions>
+): Array<BuildOptions> {
   return toArray(config).map((c) => ({ ...DEFAULT_BUILD_CONFIG, ...c }))
 }
 
 export async function loadConfigFile(
   filePath: string | undefined
-): Promise<{ config: BuildOptions[]; dependencies: string[] }> {
+): Promise<{ config: Array<BuildOptions>; dependencies: Array<string> }> {
   if (!filePath)
     return {
       config: defineConfig(DEFAULT_BUILD_CONFIG),
