@@ -1,6 +1,6 @@
 {
   "name": "theminglayer",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "ThemingLayer",
   "keywords": [
     "design tokens",
@@ -78,6 +78,7 @@
     "micromatch": "4.0.7",
     "postcss": "8.4.39",
     "postcss-selector-parser": "6.1.0",
+    "slash": "5.1.0",
     "ts-pattern": "5.2.0",
     "valibot": "0.36.0",
     "zipson": "0.2.12",

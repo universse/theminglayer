@@ -3,6 +3,7 @@ import fsp from 'node:fs/promises'
 import nodePath from 'node:path'
 import glob from 'fast-glob'
 import globParent from 'glob-parent'
+import slash from 'slash'
 
 import { name as packageName } from '~/../package.json'
 import { Collection } from '~/lib/Collection'
@@ -44,9 +45,9 @@ async function resolveSource(source: string): Promise<ResolvedSource> {
     return isDirectory
       ? {
           type: 'glob',
-          source: `${glob.convertPathToPattern(path)}/${GLOB_PATTERN}`,
+          source: `${slash(path)}/${GLOB_PATTERN}`,
         }
-      : { type: 'file', source: glob.convertPathToPattern(path) }
+      : { type: 'file', source: slash(path) }
   } else if (glob.isDynamicPattern(source)) {
     const parent = globParent(source)
 
@@ -65,7 +66,7 @@ async function resolveSource(source: string): Promise<ResolvedSource> {
 
     return {
       type: 'glob',
-      source: `${glob.convertPathToPattern(parentPath)}/${pattern}`,
+      source: `${slash(parentPath)}/${pattern}`,
     }
   } else {
     const path = resolvePathFromPackage(source)
@@ -80,9 +81,9 @@ async function resolveSource(source: string): Promise<ResolvedSource> {
     return isDirectory
       ? {
           type: 'glob',
-          source: `${glob.convertPathToPattern(path)}/${GLOB_PATTERN}`,
+          source: `${slash(path)}/${GLOB_PATTERN}`,
         }
-      : { type: 'file', source: glob.convertPathToPattern(path) }
+      : { type: 'file', source: slash(path) }
   }
 }
 
