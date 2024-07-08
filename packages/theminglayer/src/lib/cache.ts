@@ -1,4 +1,4 @@
-import fsp from 'node:fs/promises'
+import fs from 'node:fs'
 import nodePath from 'node:path'
 
 import type { PostcssCachedData } from '~/types'
@@ -11,10 +11,8 @@ export function getCacheFilePath(filePath: string): string {
   return nodePath.join(CACHE_DIRECTORY, filePath)
 }
 
-export async function readCachedFile(
-  filePath: string
-): Promise<PostcssCachedData> {
-  return JSON.parse(await fsp.readFile(getCacheFilePath(filePath), 'utf8'))
+export function readCachedFile(filePath: string): PostcssCachedData {
+  return JSON.parse(fs.readFileSync(getCacheFilePath(filePath), 'utf8'))
 }
 
 export function clearCache() {

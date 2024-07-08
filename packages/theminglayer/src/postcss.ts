@@ -8,7 +8,6 @@ import {
   createCachedInsertRules,
   createCompareRuleSpecificity,
 } from '~/lib/cssUtils'
-import * as promises from '~/utils/promises'
 
 const PLUGIN_NAME = 'postcss-plugin-theminglayer'
 
@@ -56,13 +55,13 @@ async function getJitEngine(): Promise<JITEngine> {
     containerSelector: '',
   }
 
-  await promises.mapParallel(cacheFilePaths, async (cacheFilePath) => {
+  cacheFilePaths.forEach((cacheFilePath) => {
     const {
       rulesByCustomPropertyName,
       customAtRules,
       safelist,
       containerSelector,
-    } = await readCachedFile(cacheFilePath)
+    } = readCachedFile(cacheFilePath)
 
     Object.assign(JIT.rulesByCustomPropertyName, rulesByCustomPropertyName)
 
