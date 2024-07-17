@@ -9,7 +9,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:import-x/typescript"
   ],
   "parser": "@typescript-eslint/parser",
   "rules": {
@@ -20,13 +21,9 @@
     "prefer-const": "error"
   },
   "settings": {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
-    },
-    "import/resolver": {
-      "eslint-import-resolver-typescript": {
-        "alwaysTryTypes": true
-      }
+    "import-x/resolver": {
+      "typescript": true,
+      "node": true
     },
     "react": {
       "version": "detect"
@@ -41,7 +38,6 @@
         "node": true
       },
       "extends": [
-        "plugin:import/recommended",
         "plugin:jsx-a11y/strict",
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
@@ -49,7 +45,6 @@
       ],
       "plugins": ["react-compiler"],
       "rules": {
-        "import/no-unresolved": "off",
         "react/jsx-sort-props": [
           "error",
           {

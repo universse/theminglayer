@@ -8,12 +8,10 @@
       xl: { $value: '2rem' },
     },
     touch_target: {
-      '2xs': { $value: '2rem' },
-      xs: { $value: '2.25rem' },
-      sm: { $value: '2.5rem' },
+      xs: { $value: '1.25rem' },
+      sm: { $value: '2rem' },
       md: { $value: '2.75rem' },
-      lg: { $value: '3rem' },
-      xl: { $value: '3.25rem' },
+      lg: { $value: '3.5rem' },
     },
   },
 }
