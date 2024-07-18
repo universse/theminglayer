@@ -4,7 +4,7 @@
     sm: { $value: '4px' },
     md: { $value: '8px' },
     lg: { $value: '16px' },
-    rounded: { $value: '9999px' },
+    full: { $value: '9999px' },
   },
   border_style: {
     solid: { $value: 'solid' },
