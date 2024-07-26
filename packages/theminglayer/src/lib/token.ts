@@ -9,12 +9,28 @@ import type { Token, TokenSet } from '~/types'
 import { importJs } from '~/utils/importJs'
 import { toSnakeCase } from '~/utils/misc'
 
+export function parseTokenString(tokenString: string) {
+  try {
+    return JSON.parse(tokenString)
+  } catch {}
+
+  try {
+    return yaml.load(tokenString)
+  } catch {}
+
+  return {}
+}
+
 export async function importTokens(filePath: string) {
   switch (nodePath.extname(filePath).slice(1)) {
     case 'js':
     case 'ts': {
-      const { module } = await importJs(filePath, { watch: watchMode.active })
-      return module.default ?? module
+      try {
+        const { module } = await importJs(filePath, { watch: watchMode.active })
+        return module.default ?? module
+      } catch {
+        return {}
+      }
     }
     // case 'js': {
     //   try {

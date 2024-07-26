@@ -5,6 +5,7 @@
   "rules": {
     "at-rule-no-unknown": [true, { "ignoreAtRules": ["config", "tailwind"] }],
     "function-no-unknown": [true, { "ignoreFunctions": ["theme"] }],
+    "selector-not-notation": "complex",
     "csstools/use-logical": "always",
     "order/order": ["custom-properties", "declarations"],
     "order/properties-alphabetical-order": true

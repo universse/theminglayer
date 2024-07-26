@@ -45,7 +45,7 @@ const SystemColors = new Set([
   'AccentColorText',
 ])
 
-export const typographyKeys = [
+const TypographyKeys = [
   'font-family',
   'font-size',
   'font-style',

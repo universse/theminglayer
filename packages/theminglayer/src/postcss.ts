@@ -1,20 +1,17 @@
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
-import type { Node, PluginCreator, Postcss, Root } from 'postcss'
+import type { Node, PluginCreator, Root } from 'postcss'
 
-import { name as packageName } from '~/../package.json'
-import { CACHE_DIRECTORY, getCacheFilePath, readCachedFile } from '~/lib/cache'
-import {
-  createCachedInsertRules,
-  createCompareRuleSpecificity,
-} from '~/lib/cssUtils'
+import { getCacheFilePath, readCachedFile } from '~/lib/cache'
+import { DefaultFileAndDirectoryPaths, packageName } from '~/lib/constants'
+import { createCompareRuleSpecificity, generateCss } from '~/lib/cssUtils'
 
-const PLUGIN_NAME = 'postcss-plugin-theminglayer'
+const PLUGIN_NAME = `postcss-plugin-${packageName}`
 
 type JITEngine = {
   collectRulesFromDeclarationValue: (declarationValue: string) => void
-  insertCustomAtRules: (where: Node, postcss: Postcss) => void
-  insertCollectedRules: (where: Node, postcss: Postcss) => void
+  insertCustomAtRules: (where: Node) => void
+  insertCollectedRules: (where: Node) => void
   replaceStaticCustomPropertiesInDeclarationValue: (
     declarationValue: string
   ) => string
@@ -24,7 +21,9 @@ let lastMtime = 0
 let jitEngine: JITEngine
 
 async function getJitEngine(): Promise<JITEngine> {
-  const cacheFilePaths = await fsp.readdir(CACHE_DIRECTORY)
+  const cacheFilePaths = await fsp.readdir(
+    DefaultFileAndDirectoryPaths['.cache']
+  )
 
   const mtime = cacheFilePaths.reduce<number>(
     (acc, curr) =>
@@ -121,18 +120,16 @@ async function getJitEngine(): Promise<JITEngine> {
 
   jitEngine = {
     collectRulesFromDeclarationValue,
-    insertCustomAtRules(where: Node, postcss: Postcss) {
-      const insertRules = createCachedInsertRules()
-      insertRules(JIT.collectedCustomAtRules, where, postcss)
+    insertCustomAtRules(where: Node) {
+      where.before(generateCss(JIT.collectedCustomAtRules))
     },
-    insertCollectedRules(where: Node, postcss: Postcss) {
-      const insertRules = createCachedInsertRules()
-      insertRules(
-        JIT.collectedRules.sort(
-          createCompareRuleSpecificity(JIT.containerSelector)
-        ),
-        where,
-        postcss
+    insertCollectedRules(where: Node) {
+      where.before(
+        generateCss(
+          JIT.collectedRules.sort(
+            createCompareRuleSpecificity(JIT.containerSelector)
+          )
+        )
       )
     },
     replaceStaticCustomPropertiesInDeclarationValue,
@@ -170,26 +167,26 @@ const plugin: PluginCreator<never> = () => {
 
           collectRulesFromDeclarationValue(declaration.value)
         },
-        async Once(root, { postcss }) {
+        async Once(root) {
           if (!root.first) return
 
           const { insertCustomAtRules } = await jitEnginePromise
 
-          insertCustomAtRules(root.first, postcss)
+          insertCustomAtRules(root.first)
         },
-        async OnceExit(root, { result, postcss }) {
+        async OnceExit(root, { result }) {
           const directive = getDirective(root)
           if (!directive) return
 
           const { insertCollectedRules } = await jitEnginePromise
 
-          insertCollectedRules(directive, postcss)
+          insertCollectedRules(directive)
 
           directive.remove()
 
           result.messages.push({
             type: 'dir-dependency',
-            dir: CACHE_DIRECTORY,
+            dir: DefaultFileAndDirectoryPaths['.cache'],
             plugin: PLUGIN_NAME,
             parent: result.opts.from,
           })

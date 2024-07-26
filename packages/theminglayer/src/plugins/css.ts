@@ -1,13 +1,9 @@
-import postcss, {
-  type AtRule,
-  type PluginCreator as PostcssPluginCreator,
-} from 'postcss'
-
-import { name as packageName } from '~/../package.json'
+import { packageName } from '~/lib/constants'
 import { CssFormatter } from '~/lib/CssFormatter'
 import {
-  createCachedInsertRules,
   createCompareRuleSpecificity,
+  generateCss,
+  type Rule,
 } from '~/lib/cssUtils'
 import { cssOptions } from '~/plugins/cssOptions'
 import type { PluginCreator, Token } from '~/types'
@@ -26,32 +22,8 @@ export const cssPlugin: PluginCreator<{
   containerSelector = cssOptions.containerSelector,
   files = [{ path: 'theme.css', filter: () => true, keepAliases: false }],
 } = {}) => {
-  const postcssPlugin: PostcssPluginCreator<{
-    rules: Array<unknown>
-  }> = ({ rules } = { rules: [] }) => {
-    const insertRules = createCachedInsertRules()
-
-    return {
-      postcssPlugin: 'postcss-name',
-      Once(root, { postcss }) {
-        let directive: AtRule
-        root.walkAtRules(packageName, (atRule) => {
-          directive = atRule
-        })
-        insertRules(
-          rules.sort(createCompareRuleSpecificity(containerSelector)),
-          directive!,
-          postcss
-        )
-        directive!.remove()
-      },
-    }
-  }
-
-  postcssPlugin.postcss = true
-
   return {
-    name: 'theminglayer/css',
+    name: `${packageName}/css`,
     async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,
@@ -61,8 +33,7 @@ export const cssPlugin: PluginCreator<{
       await promises.mapParallel(
         files,
         async ({ path, filter = () => true, keepAliases = false }) => {
-          // @ts-expect-error todo
-          const rules = []
+          const rules: Array<Rule> = []
 
           collection.tokens.forEach((token) => {
             const {
@@ -88,6 +59,7 @@ export const cssPlugin: PluginCreator<{
                 )
               } else {
                 rules.push(
+                  // @ts-expect-error todo
                   ...cssFormatter.tokenToCssRules(token, { keepAliases })
                 )
               }
@@ -96,16 +68,11 @@ export const cssPlugin: PluginCreator<{
             }
           })
 
-          // TODO add postcss preset env?
-          // @ts-expect-error todo
-          const result = await postcss([postcssPlugin({ rules })]).process(
-            '@theminglayer',
-            { from: undefined! }
-          )
-
           addOutputFile({
             filePath: path,
-            content: result.css,
+            content: generateCss(
+              rules.sort(createCompareRuleSpecificity(containerSelector))
+            ),
           })
         }
       )

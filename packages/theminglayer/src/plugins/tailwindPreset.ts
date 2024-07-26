@@ -1,3 +1,4 @@
+import { packageName } from '~/lib/constants'
 import { CssFormatter } from '~/lib/CssFormatter'
 import { cssNameFromKeys } from '~/lib/cssUtils'
 import type { TokenCategory } from '~/lib/spec'
@@ -29,7 +30,7 @@ export const tailwindPresetPlugin: PluginCreator<{
   ],
 } = {}) => {
   return {
-    name: 'theminglayer/tailwind-preset',
+    name: `${packageName}/tailwind-preset`,
     async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,

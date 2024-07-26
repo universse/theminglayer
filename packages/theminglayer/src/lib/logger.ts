@@ -1,6 +1,6 @@
-import chalk from 'chalk'
+import kleur from 'kleur'
 
-import { name as packageName } from '~/../package.json'
+import { packageName } from '~/lib/constants'
 import { generateKeyString } from '~/utils/misc'
 
 function createWarnings() {
@@ -36,10 +36,10 @@ function createWarnings() {
         lines.push('----------')
         lines.push('Token collisions found:')
         collisions.forEach((sources, keyString) => {
-          lines.push(`- Key: ${chalk.yellowBright(keyString)}`)
+          lines.push(`- Key: ${kleur.yellow(keyString)}`)
           lines.push('- Sources:')
           sources.forEach((source) => {
-            lines.push(`  ${chalk.yellowBright(source)}`)
+            lines.push(`  ${kleur.yellow(source)}`)
           })
         })
         collisions.clear()
@@ -49,7 +49,7 @@ function createWarnings() {
         lines.push('----------')
         lines.push('Aliases not found:')
         missingAliases.forEach((keyString) =>
-          lines.push(`- ${chalk.yellowBright(keyString)}`)
+          lines.push(`- ${kleur.yellow(keyString)}`)
         )
         missingAliases.clear()
       }
@@ -58,7 +58,7 @@ function createWarnings() {
         lines.push('----------')
         lines.push('Missing token type:')
         typeMissing.forEach((keyString) =>
-          lines.push(`- ${chalk.yellowBright(keyString)}`)
+          lines.push(`- ${kleur.yellow(keyString)}`)
         )
         typeMissing.clear()
       }
@@ -67,13 +67,13 @@ function createWarnings() {
         lines.push('----------')
         lines.push('Failed to transform token to CSS:')
         invalidCssValues.forEach((keyString) =>
-          lines.push(`- ${chalk.yellowBright(keyString)}`)
+          lines.push(`- ${kleur.yellow(keyString)}`)
         )
         invalidCssValues.clear()
       }
 
       if (lines.length) {
-        lines.unshift(`${chalk.bgYellowBright.bold(' WARNINGS ')}`)
+        lines.unshift(`${kleur.bgYellow().bold(' WARNINGS ')}`)
         lines.push('----------')
         const message = lines.join('\n')
         lines.length = 0
@@ -90,7 +90,7 @@ function createLogger(name: string) {
       _name = name
     },
     log(message: string) {
-      console.log(`${chalk.green(_name)} ${message}`)
+      console.log(`${kleur.green(_name)} ${message}`)
     },
     warnings: createWarnings(),
   }

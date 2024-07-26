@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 
+import { DefaultFileAndDirectoryPaths } from '~/lib/constants'
 import { watchMode } from '~/lib/watchMode'
 import { cssPlugin } from '~/plugins'
 import type { BuildOptions } from '~/types'
@@ -8,18 +9,18 @@ import { toArray } from '~/utils/misc'
 
 export function findConfigFilePath() {
   const filePath = [
-    'theminglayer.config.js',
-    'theminglayer.config.mjs',
-    'theminglayer.config.ts',
+    DefaultFileAndDirectoryPaths['config.js'],
+    DefaultFileAndDirectoryPaths['config.mjs'],
+    DefaultFileAndDirectoryPaths['config.ts'],
   ].find((filePath) => fs.existsSync(filePath))
 
   return filePath
 }
 
 const DEFAULT_BUILD_CONFIG = {
-  sources: 'design-tokens.json',
+  sources: DefaultFileAndDirectoryPaths['design-tokens'],
   plugins: [cssPlugin()],
-  outDir: 'dist-tokens',
+  outDir: DefaultFileAndDirectoryPaths.dist,
 }
 
 type UserBuildOptions = Partial<BuildOptions> & {

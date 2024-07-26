@@ -1,6 +1,6 @@
 import nodePath from 'node:path'
 
-import { CACHE_DIRECTORY } from '~/lib/cache'
+import { DefaultFileAndDirectoryPaths, packageName } from '~/lib/constants'
 import { CssFormatter } from '~/lib/CssFormatter'
 import { isSimpleIsSelector } from '~/lib/cssUtils'
 import { cssOptions } from '~/plugins/cssOptions'
@@ -20,7 +20,7 @@ export const postcssIntegrationPlugin: PluginCreator<{
   const filePath = `${Date.now()}`
 
   return {
-    name: 'theminglayer/postcss-integration',
+    name: `${packageName}/postcss-integration`,
     async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,
@@ -112,7 +112,10 @@ export const postcssIntegrationPlugin: PluginCreator<{
       })
 
       addOutputFile({
-        filePath: nodePath.join(CACHE_DIRECTORY, filePath),
+        filePath: nodePath.join(
+          DefaultFileAndDirectoryPaths['.cache'],
+          filePath
+        ),
         content: JSON.stringify(data),
       })
     },

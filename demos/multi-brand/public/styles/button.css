@@ -2,7 +2,7 @@
 For demo purpose, only color and typography properties are made design tokens.
 By updating the design tokens, you can generate new variants without touching the component's styling.
 Design token files become the true source of truth for your design system.
-Take a look at dist-tokens/theme.css for the full CSS output generated.
+Take a look at public/dist-tokens/theme.css for the full CSS output generated.
 */
 
 .tl-button {

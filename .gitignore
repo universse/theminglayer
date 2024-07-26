@@ -49,12 +49,6 @@ ideas.md
 # # Vercel
 # .vercel
 
-# # Contentlayer
-# .contentlayer
-
-# ThemingLayer
-.tl
-
 # Tooling
 .vscode
 .eslintcache

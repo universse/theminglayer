@@ -5,10 +5,10 @@ import glob from 'fast-glob'
 import globParent from 'glob-parent'
 import slash from 'slash'
 
-import { name as packageName } from '~/../package.json'
 import { Collection } from '~/lib/Collection'
+import { packageName } from '~/lib/constants'
 import { appLogger } from '~/lib/logger'
-import { importTokens } from '~/lib/token'
+import { importTokens, parseTokenString } from '~/lib/token'
 import type { BuildOptions, PluginOutputFile } from '~/types'
 import { deepSet, toArray, writeFile } from '~/utils/misc'
 import { resolvePathFromPackage } from '~/utils/node'
@@ -25,14 +25,18 @@ function isRemote(str: string): boolean {
 
 type ResolvedSource =
   | {
-      type: 'file' | 'glob' | 'object' | 'url'
+      type: 'file' | 'glob' | 'url'
       source: string
+    }
+  | {
+      type: 'object'
+      source: object
     }
   | { type: 'not_found'; source: null }
 
 const GLOB_PATTERN = '**/!(___*).{js,mjs,cjs,json,json5,yml,yaml}'
 
-async function resolveSource(source: string): Promise<ResolvedSource> {
+async function resolveSource(source: string | object): Promise<ResolvedSource> {
   if (typeof source === 'object') {
     return { type: 'object', source }
   } else if (isRemote(source)) {
@@ -108,9 +112,18 @@ async function parseSource({
         }
       })
     }
-    case 'url':
+    case 'url': {
+      const response = await fetch(source)
+
+      return [
+        {
+          sourceUnit: source,
+          rawTokenObject: parseTokenString(await response.text()),
+        },
+      ]
+    }
     case 'object': {
-      return []
+      return [{ sourceUnit: '', rawTokenObject: source }]
     }
 
     case 'not_found': {

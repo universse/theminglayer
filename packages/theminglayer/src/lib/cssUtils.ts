@@ -3,10 +3,22 @@ import {
   selectorSpecificity,
   type Specificity,
 } from '@csstools/selector-specificity'
-import type { Node, Postcss } from 'postcss'
 import parser from 'postcss-selector-parser'
 
 import { toKebabCase } from '~/utils/misc'
+
+export type Declaration = { prop: string; value: string }
+
+export type AtRule = { name: string; params: string }
+
+export type Rule = {
+  component: string | null
+  rule: {
+    atRules: Array<AtRule>
+    selector: string
+    declarations: Array<Declaration>
+  }
+}
 
 const getSpecificity = (() => {
   const processor = parser()
@@ -16,7 +28,7 @@ const getSpecificity = (() => {
 })()
 
 export function createCompareRuleSpecificity(containerSelector: string) {
-  return (ruleA, ruleB): number => {
+  return (ruleA: Rule, ruleB: Rule): number => {
     // TODO sort viewport size atRules?
 
     if (ruleA.component === ruleB.component) {
@@ -44,65 +56,96 @@ export function createCompareRuleSpecificity(containerSelector: string) {
   }
 }
 
+function addDeclarations(
+  target: Map<string, string>,
+  declarations: Array<Declaration>
+) {
+  declarations.forEach(({ prop, value }) => {
+    target.set(prop, value)
+  })
+}
+
+function addNestedRules(
+  target: Map<string, string | Map<string, string>>,
+  atRules: Array<AtRule>,
+  selector: string,
+  declarations: Array<Declaration>
+) {
+  if (atRules.length === 0) {
+    if (!target.get(selector)) {
+      target.set(selector, new Map())
+    }
+    // @ts-expect-error todo
+    addDeclarations(target.get(selector), declarations)
+    return
+  }
+
+  const [currentAtRule, ...remainingAtRules] = atRules
+  const { name, params } = currentAtRule!
+
+  const atRuleKey = `@${name} ${params}`
+
+  if (!target.get(atRuleKey)) {
+    target.set(atRuleKey, new Map())
+  }
+
+  if (name.startsWith('custom-')) {
+    return
+  }
+
+  addNestedRules(
+    // @ts-expect-error todo
+    target.get(atRuleKey),
+    remainingAtRules,
+    selector,
+    declarations
+  )
+}
+
+// @ts-expect-error todo
+function rulesMapToCss(rulesMap, indent = ''): string {
+  return [...rulesMap]
+    .map(([key, value]) => {
+      if (key.startsWith('@')) {
+        // Handle at-rules
+        const atRuleContent = rulesMapToCss(value, `${indent}  `)
+        return `${indent}${key} {\n${atRuleContent}${indent}}\n`
+      } else {
+        // Handle selectors and their properties
+        const declarations = [...value]
+          .map(([prop, val]) => {
+            return `${indent}  ${prop}: ${val};\n`
+          })
+          .join('')
+        return `${indent}${key} {\n${declarations}${indent}}\n`
+      }
+    })
+    .join('\n')
+}
+
+export function generateCss(rules: Array<Rule>) {
+  const groupedByComponent = new Map()
+
+  rules.forEach(({ component, rule }) => {
+    if (!groupedByComponent.get(component)) {
+      groupedByComponent.set(component, new Map())
+    }
+
+    addNestedRules(
+      groupedByComponent.get(component),
+      rule.atRules,
+      rule.selector,
+      rule.declarations
+    )
+  })
+
+  return [...groupedByComponent]
+    .map(([, rulesMap]) => rulesMapToCss(rulesMap))
+    .join(`\n`)
+}
+
 export function cssNameFromKeys(keys: Array<string>): string {
   return toKebabCase(keys.join('-').replace(/\$/g, ''))
-}
-
-function generateNodeCacheKey(
-  component: string | null,
-  atRules,
-  selector?: string
-) {
-  const cacheKeys = []
-
-  component && cacheKeys.push(component)
-  atRules.forEach(({ name, params }) => cacheKeys.push(`${name}:${params}`))
-  selector && cacheKeys.push(selector)
-
-  return cacheKeys.join('|').replace(/['"]/g, '')
-}
-
-export function createCachedInsertRules() {
-  const nodeCache = new Map()
-
-  return function (rules, where: Node, postcss: Postcss) {
-    rules.forEach(({ component = '', rule }) => {
-      const { atRules = [], selector = '', declarations = [] } = rule
-
-      const nodeCacheKey = generateNodeCacheKey(component, atRules, selector)
-      let node = nodeCache.get(nodeCacheKey)
-
-      if (!node) {
-        let parent
-
-        atRules.forEach((atRule, i) => {
-          const atRuleCacheKey = generateNodeCacheKey(
-            component,
-            atRules.slice(0, i + 1)
-          )
-          let atRuleNode = nodeCache.get(atRuleCacheKey)
-
-          if (!atRuleNode) {
-            atRuleNode = new postcss.AtRule(atRule)
-            nodeCache.set(atRuleCacheKey, atRuleNode)
-            parent ? parent.append(atRuleNode) : where.before(atRuleNode)
-          }
-
-          parent = atRuleNode
-        })
-
-        if (selector) {
-          node = new postcss.Rule({ selector })
-          nodeCache.set(nodeCacheKey, node)
-          parent ? parent.append(node) : where.before(node)
-        }
-      }
-
-      declarations.forEach((declaration) => {
-        declaration.value && node.append(new postcss.Declaration(declaration))
-      })
-    })
-  }
 }
 
 export function isSimpleIsSelector(selector: string): boolean {

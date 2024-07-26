@@ -48,7 +48,7 @@ interface SharedBuildOptions {
 }
 
 export interface BuildOptions extends SharedBuildOptions {
-  sources: string | Array<string>
+  sources: string | Array<string> | object | Array<object>
   plugins: Array<Plugin>
 }
 

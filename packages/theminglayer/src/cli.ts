@@ -1,18 +1,24 @@
+#!/usr/bin/env node
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
 import { cac } from 'cac'
-import chalk from 'chalk'
 import chokidar from 'chokidar'
+import kleur from 'kleur'
 import micromatch from 'micromatch'
 
-import { name as packageName, version } from '~/../package.json'
 import { build } from '~/lib/build'
 import { clearCache } from '~/lib/cache'
 import { findConfigFilePath, loadConfigFile } from '~/lib/config'
+import {
+  DefaultFileAndDirectoryPaths,
+  packageName,
+  version,
+} from '~/lib/constants'
 import { appLogger } from '~/lib/logger'
 import { watchMode } from '~/lib/watchMode'
 import { resolvePathFromPackage } from '~/utils/node'
 import * as promises from '~/utils/promises'
+import { writeFile } from './utils/misc'
 
 async function main() {
   const cli = cac(packageName)
@@ -22,7 +28,6 @@ async function main() {
     .option('-f, --force', 'Force')
     .action(async ({ force }) => {
       async function createConfigFile() {
-        const configFilePath = './theminglayer.config.js'
         const configFileContent = `import { defineConfig } from 'theminglayer'
 import { cssPlugin } from 'theminglayer/plugins'
 
@@ -32,37 +37,40 @@ export default defineConfig({
 })
 `
 
+        const configFilePath = DefaultFileAndDirectoryPaths['config.js']
+
         if (!fs.existsSync(configFilePath) || force) {
-          await fsp.writeFile(configFilePath, configFileContent)
-          appLogger.log(`Created config file at ${chalk.blue(configFilePath)}.`)
+          await writeFile(configFilePath, configFileContent)
+          appLogger.log(`Created config file at ${kleur.blue(configFilePath)}.`)
         } else {
           appLogger.log(
-            `${chalk.blue(
+            `${kleur.blue(
               configFilePath
-            )} already exists. Please remove the file or re-run the command with the ${chalk.blue(
+            )} already exists. Please remove the file or re-run the command with the ${kleur.blue(
               '--force'
-            )}/${chalk.blue('-f')} flag.\n`
+            )}/${kleur.blue('-f')} flag.\n`
           )
         }
       }
 
       async function createPreset() {
-        const presetPath = './design-tokens'
+        const presetDirectoryPath =
+          DefaultFileAndDirectoryPaths['design-tokens']
 
-        if (!fs.existsSync(presetPath) || force) {
+        if (!fs.existsSync(presetDirectoryPath) || force) {
           await fsp.cp(
             resolvePathFromPackage('@theminglayer/design-tokens/src'),
-            presetPath,
+            presetDirectoryPath,
             { recursive: true }
           )
-          appLogger.log(`Created preset at ${chalk.blue(presetPath)}.`)
+          appLogger.log(`Created preset at ${kleur.blue(presetDirectoryPath)}.`)
         } else {
           appLogger.log(
-            `${chalk.blue(
-              presetPath
-            )} already exists. Please remove the file or re-run the command with the ${chalk.blue(
+            `${kleur.blue(
+              presetDirectoryPath
+            )} already exists. Please remove the file or re-run the command with the ${kleur.blue(
               '--force'
-            )}/${chalk.blue('-f')} flag.`
+            )}/${kleur.blue('-f')} flag.`
           )
         }
       }
