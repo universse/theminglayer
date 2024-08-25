@@ -9,7 +9,8 @@ Extensible design token management & cross-platform code generation tool with po
 
 - Interopable, W3C-compatible design token format
 - Three-tier token architecture - global, semantic and component
-- Define contextual token values with `$condition` and `$variant` (for component tokens)
+- Beyond dark mode — define conditional token values that adapt to user preference, system settings and device capabilities
+- Define component tokens that express different states and variants.
 - Integrate design tokens into your design and development workflow
   - [CSS plugin](#css-plugin)
   - [PostCSS integration](#postcss-integration)

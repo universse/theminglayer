@@ -196,6 +196,8 @@ type TailwindThemeKey =
   | 'outlineWidth'
   | 'outlineOffset'
   | 'boxShadow'
+  | 'blur'
+  | 'backdropBlur'
   | 'transitionProperty'
   | 'transitionDuration'
   | 'transitionTimingFunction'
@@ -300,6 +302,12 @@ const ThemeConfigByCategory: Partial<
 
   box_shadow: {
     themeKeys: ['boxShadow'],
+  },
+  blur: {
+    themeKeys: ['blur'],
+  },
+  backdrop_blur: {
+    themeKeys: ['backdropBlur'],
   },
 
   transition_property: {

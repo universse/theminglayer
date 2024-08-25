@@ -1,0 +1,26 @@
+@media (forced-colors: active) {
+  .tl-button[data-tone="accent"][data-visual="filled"] {
+    --tl-button-foreground-color: ButtonFace;
+    --tl-button-background-color: ButtonText;
+  }
+
+  .tl-button:is(:hover, [data-hovered])[data-tone="accent"][data-visual="filled"] {
+    --tl-button-foreground-color: ButtonFace;
+    --tl-button-background-color: Highlight;
+  }
+
+  .tl-button:is(:active, [data-pressed])[data-tone="accent"][data-visual="filled"] {
+    --tl-button-foreground-color: ButtonFace;
+    --tl-button-background-color: Highlight;
+  }
+
+  .tl-button:focus[data-tone="accent"][data-visual="filled"] {
+    --tl-button-foreground-color: ButtonFace;
+    --tl-button-background-color: Highlight;
+  }
+
+  .tl-button:is(:disabled, [disabled], [aria-disabled="true"])[data-tone="accent"][data-visual="filled"] {
+    --tl-button-foreground-color: GrayText;
+    --tl-button-background-color: ButtonFace;
+  }
+}

@@ -35,6 +35,8 @@ export type TokenCategory =
   | 'outline'
   | 'box_shadow'
   | 'drop_shadow'
+  | 'blur'
+  | 'backdrop_blur'
   | 'gradient'
   | 'transition_property'
   | 'duration'
@@ -216,6 +218,12 @@ export const TokenCategorySpec: Record<TokenCategory, { type: TokenType }> = {
   },
   drop_shadow: {
     type: 'drop_shadow',
+  },
+  blur: {
+    type: 'dimension',
+  },
+  backdrop_blur: {
+    type: 'dimension',
   },
   gradient: {
     type: 'gradient',

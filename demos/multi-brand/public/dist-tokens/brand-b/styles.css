@@ -1,0 +1,270 @@
+:root {
+  --tl-color-white: #ffffff;
+  --tl-color-transparent: #00000000;
+  --tl-color-black-alpha-1: rgb(0 0 0 / 5%);
+  --tl-color-black-alpha-2: rgb(0 0 0 / 10%);
+  --tl-color-black-alpha-3: rgb(0 0 0 / 15%);
+  --tl-color-black-alpha-4: rgb(0 0 0 / 20%);
+  --tl-color-black-alpha-5: rgb(0 0 0 / 30%);
+  --tl-color-black-alpha-6: rgb(0 0 0 / 40%);
+  --tl-color-black-alpha-7: rgb(0 0 0 / 50%);
+  --tl-color-black-alpha-8: rgb(0 0 0 / 60%);
+  --tl-color-black-alpha-9: rgb(0 0 0 / 70%);
+  --tl-color-black-alpha-10: rgb(0 0 0 / 80%);
+  --tl-color-black-alpha-11: rgb(0 0 0 / 90%);
+  --tl-color-black-alpha-12: rgb(0 0 0 / 95%);
+  --tl-color-blue-1: #fbfdff;
+  --tl-color-blue-2: #f4faff;
+  --tl-color-blue-3: #e6f4fe;
+  --tl-color-blue-4: #d5efff;
+  --tl-color-blue-5: #c2e5ff;
+  --tl-color-blue-6: #acd8fc;
+  --tl-color-blue-7: #8ec8f6;
+  --tl-color-blue-8: #5eb1ef;
+  --tl-color-blue-9: #0090ff;
+  --tl-color-blue-10: #0588f0;
+  --tl-color-blue-11: #0d74ce;
+  --tl-color-blue-12: #113264;
+  --tl-color-blue-dark-1: #0d1520;
+  --tl-color-blue-dark-2: #111927;
+  --tl-color-blue-dark-3: #0d2847;
+  --tl-color-blue-dark-4: #003362;
+  --tl-color-blue-dark-5: #004074;
+  --tl-color-blue-dark-6: #104d87;
+  --tl-color-blue-dark-7: #205d9e;
+  --tl-color-blue-dark-8: #2870bd;
+  --tl-color-blue-dark-9: #0090ff;
+  --tl-color-blue-dark-10: #3b9eff;
+  --tl-color-blue-dark-11: #70b8ff;
+  --tl-color-blue-dark-12: #c2e6ff;
+  --tl-color-purple-1: #fefcfe;
+  --tl-color-purple-2: #fbf7fe;
+  --tl-color-purple-3: #f7edfe;
+  --tl-color-purple-4: #f2e2fc;
+  --tl-color-purple-5: #ead5f9;
+  --tl-color-purple-6: #e0c4f4;
+  --tl-color-purple-7: #d1afec;
+  --tl-color-purple-8: #be93e4;
+  --tl-color-purple-9: #8e4ec6;
+  --tl-color-purple-10: #8347b9;
+  --tl-color-purple-11: #8145b5;
+  --tl-color-purple-12: #402060;
+  --tl-color-purple-dark-1: #18111b;
+  --tl-color-purple-dark-2: #1e1523;
+  --tl-color-purple-dark-3: #301c3b;
+  --tl-color-purple-dark-4: #3d224e;
+  --tl-color-purple-dark-5: #48295c;
+  --tl-color-purple-dark-6: #54346b;
+  --tl-color-purple-dark-7: #664282;
+  --tl-color-purple-dark-8: #8457aa;
+  --tl-color-purple-dark-9: #8e4ec6;
+  --tl-color-purple-dark-10: #9a5cd0;
+  --tl-color-purple-dark-11: #d19dff;
+  --tl-color-purple-dark-12: #ecd9fa;
+  --tl-color-gray-dark-1: #111111;
+  --tl-color-gray-dark-2: #191919;
+  --tl-color-gray-dark-3: #222222;
+  --tl-color-gray-dark-4: #2a2a2a;
+  --tl-color-gray-dark-5: #313131;
+  --tl-color-gray-dark-6: #3a3a3a;
+  --tl-color-gray-dark-7: #484848;
+  --tl-color-gray-dark-8: #606060;
+  --tl-color-gray-dark-9: #6e6e6e;
+  --tl-color-gray-dark-10: #7b7b7b;
+  --tl-color-gray-dark-11: #b4b4b4;
+  --tl-color-gray-dark-12: #eeeeee;
+  --tl-color-ruby-1: #fffcfd;
+  --tl-color-ruby-2: #fff7f8;
+  --tl-color-ruby-3: #feeaed;
+  --tl-color-ruby-4: #ffdce1;
+  --tl-color-ruby-5: #ffced6;
+  --tl-color-ruby-6: #f8bfc8;
+  --tl-color-ruby-7: #efacb8;
+  --tl-color-ruby-8: #e592a3;
+  --tl-color-ruby-9: #e54666;
+  --tl-color-ruby-10: #dc3b5d;
+  --tl-color-ruby-11: #ca244d;
+  --tl-color-ruby-12: #64172b;
+  --tl-color-ruby-dark-1: #191113;
+  --tl-color-ruby-dark-2: #1e1517;
+  --tl-color-ruby-dark-3: #3a141e;
+  --tl-color-ruby-dark-4: #4e1325;
+  --tl-color-ruby-dark-5: #5e1a2e;
+  --tl-color-ruby-dark-6: #6f2539;
+  --tl-color-ruby-dark-7: #883447;
+  --tl-color-ruby-dark-8: #b3445a;
+  --tl-color-ruby-dark-9: #e54666;
+  --tl-color-ruby-dark-10: #ec5a72;
+  --tl-color-ruby-dark-11: #ff949d;
+  --tl-color-ruby-dark-12: #fed2e1;
+  --tl-color-white-alpha-1: rgb(255 255 255 / 5%);
+  --tl-color-white-alpha-2: rgb(255 255 255 / 10%);
+  --tl-color-white-alpha-3: rgb(255 255 255 / 15%);
+  --tl-color-white-alpha-4: rgb(255 255 255 / 20%);
+  --tl-color-white-alpha-5: rgb(255 255 255 / 30%);
+  --tl-color-white-alpha-6: rgb(255 255 255 / 40%);
+  --tl-color-white-alpha-7: rgb(255 255 255 / 50%);
+  --tl-color-white-alpha-8: rgb(255 255 255 / 60%);
+  --tl-color-white-alpha-9: rgb(255 255 255 / 70%);
+  --tl-color-white-alpha-10: rgb(255 255 255 / 80%);
+  --tl-color-white-alpha-11: rgb(255 255 255 / 90%);
+  --tl-color-white-alpha-12: rgb(255 255 255 / 95%);
+  --tl-font-family-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --tl-font-size-base: 1rem;
+  --tl-font-size-md: 1rem;
+  --tl-font-weight-normal: 400;
+  --tl-font-weight-bold: 700;
+  --tl-line-height-body: 1.5;
+  --tl-letter-spacing-text-sm: 0.005em;
+  --tl-letter-spacing-text-md: 0em;
+  --tl-typography-body-font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --tl-typography-body-font-size: 1rem;
+  --tl-typography-body-font-weight: 400;
+  --tl-typography-body-line-height: 1.5;
+  --tl-typography-body-letter-spacing: 0em;
+  --tl-typography-button-font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --tl-typography-button-font-size: 1rem;
+  --tl-typography-button-font-weight: 700;
+  --tl-typography-button-line-height: 1.5;
+  --tl-typography-button-letter-spacing: 0.005em;
+}
+
+:root:is(:has([name="color-scheme"][value="light"]:checked), [data-color-scheme="light"]) {
+  --tl-background-color-critical-element-static: #e54666;
+  --tl-background-color-critical-element-hover: #dc3b5d;
+  --tl-background-color-critical-element-active: #ca244d;
+  --tl-background-color-critical-element-faded-hover: #ffdce1;
+  --tl-background-color-critical-element-faded-active: #ffced6;
+  --tl-background-color-surface: #ffffff;
+  --tl-background-color-accent-element-static: #8e4ec6;
+  --tl-background-color-accent-element-hover: #8347b9;
+  --tl-background-color-accent-element-active: #8145b5;
+  --tl-background-color-accent-element-faded-hover: #f2e2fc;
+  --tl-background-color-accent-element-faded-active: #ead5f9;
+  --tl-border-color-critical-static: #efacb8;
+  --tl-border-color-critical-hover: #e592a3;
+  --tl-border-color-accent-static: #d1afec;
+  --tl-border-color-accent-hover: #be93e4;
+}
+
+:root:is(:has([name="color-scheme"][value="dark"]:checked), [data-color-scheme="dark"]) {
+  --tl-background-color-critical-element-static: #e54666;
+  --tl-background-color-critical-element-hover: #ec5a72;
+  --tl-background-color-critical-element-active: #ff949d;
+  --tl-background-color-critical-element-faded-hover: #4e1325;
+  --tl-background-color-critical-element-faded-active: #5e1a2e;
+  --tl-background-color-surface: #191919;
+  --tl-background-color-accent-element-static: #8e4ec6;
+  --tl-background-color-accent-element-hover: #9a5cd0;
+  --tl-background-color-accent-element-active: #d19dff;
+  --tl-background-color-accent-element-faded-hover: #3d224e;
+  --tl-background-color-accent-element-faded-active: #48295c;
+  --tl-border-color-critical-static: #883447;
+  --tl-border-color-critical-hover: #b3445a;
+  --tl-border-color-accent-static: #664282;
+  --tl-border-color-accent-hover: #8457aa;
+}
+
+:root:is(:has([name="color-scheme"][value="light"]:checked), [data-color-scheme="light"]):is(:has([name="contrast"][value="standard"]:checked), [data-contrast="standard"]) {
+  --tl-text-color-critical-primary: #ca244d;
+  --tl-text-color-neutral-primary: rgb(0 0 0 / 80%);
+  --tl-text-color-accent-primary: #8145b5;
+}
+
+:root:is(:has([name="color-scheme"][value="dark"]:checked), [data-color-scheme="dark"]):is(:has([name="contrast"][value="standard"]:checked), [data-contrast="standard"]) {
+  --tl-text-color-critical-primary: #ff949d;
+  --tl-text-color-neutral-primary: rgb(255 255 255 / 80%);
+  --tl-text-color-accent-primary: #d19dff;
+}
+
+:root:is(:has([name="color-scheme"][value="light"]:checked), [data-color-scheme="light"]):is(:has([name="contrast"][value="high"]:checked), [data-contrast="high"]) {
+  --tl-text-color-critical-primary: #64172b;
+  --tl-text-color-neutral-primary: rgb(0 0 0 / 95%);
+  --tl-text-color-accent-primary: #402060;
+}
+
+:root:is(:has([name="color-scheme"][value="dark"]:checked), [data-color-scheme="dark"]):is(:has([name="contrast"][value="high"]:checked), [data-contrast="high"]) {
+  --tl-text-color-critical-primary: #fed2e1;
+  --tl-text-color-neutral-primary: rgb(255 255 255 / 95%);
+  --tl-text-color-accent-primary: #ecd9fa;
+}
+
+.tl-button {
+  --tl-button-typography-font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --tl-button-typography-font-size: 1rem;
+  --tl-button-typography-font-weight: 700;
+  --tl-button-typography-line-height: 1.5;
+  --tl-button-typography-letter-spacing: 0.005em;
+}
+
+.tl-button[data-visual="filled"] {
+  --tl-button-foreground-color: #ffffff;
+}
+
+.tl-button[data-tone="accent"] {
+  --tl-button-border-color: var(--tl-border-color-accent-static);
+}
+
+.tl-button[data-tone="critical"] {
+  --tl-button-border-color: var(--tl-border-color-critical-static);
+}
+
+.tl-button[data-tone="accent"][data-visual="outline"] {
+  --tl-button-foreground-color: var(--tl-text-color-accent-primary);
+}
+
+.tl-button[data-tone="critical"][data-visual="outline"] {
+  --tl-button-foreground-color: var(--tl-text-color-critical-primary);
+}
+
+.tl-button[data-tone="accent"][data-visual="filled"] {
+  --tl-button-background-color: var(--tl-background-color-accent-element-static);
+  --tl-button-border-color: #00000000;
+}
+
+.tl-button[data-tone="critical"][data-visual="filled"] {
+  --tl-button-background-color: var(--tl-background-color-critical-element-static);
+  --tl-button-border-color: #00000000;
+}
+
+.tl-button:is(:hover, [data-hovered])[data-tone="accent"] {
+  --tl-button-border-color: var(--tl-border-color-accent-hover);
+}
+
+.tl-button:is(:hover, [data-hovered])[data-tone="critical"] {
+  --tl-button-border-color: var(--tl-border-color-critical-hover);
+}
+
+.tl-button:is(:hover, [data-hovered])[data-tone="accent"][data-visual="filled"] {
+  --tl-button-background-color: var(--tl-background-color-accent-element-hover);
+  --tl-button-border-color: #00000000;
+}
+
+.tl-button:is(:hover, [data-hovered])[data-tone="critical"][data-visual="filled"] {
+  --tl-button-background-color: var(--tl-background-color-critical-element-hover);
+  --tl-button-border-color: #00000000;
+}
+
+.tl-button:is(:active, [data-pressed])[data-tone="accent"][data-visual="filled"] {
+  --tl-button-background-color: var(--tl-background-color-accent-element-active);
+}
+
+.tl-button:is(:active, [data-pressed])[data-tone="critical"][data-visual="filled"] {
+  --tl-button-background-color: var(--tl-background-color-critical-element-active);
+}
+
+.tl-button:is(:hover, [data-hovered])[data-tone="accent"][data-visual="outline"] {
+  --tl-button-background-color: var(--tl-background-color-accent-element-faded-hover);
+}
+
+.tl-button:is(:hover, [data-hovered])[data-tone="critical"][data-visual="outline"] {
+  --tl-button-background-color: var(--tl-background-color-critical-element-faded-hover);
+}
+
+.tl-button:is(:active, [data-pressed])[data-tone="accent"][data-visual="outline"] {
+  --tl-button-background-color: var(--tl-background-color-accent-element-faded-active);
+}
+
+.tl-button:is(:active, [data-pressed])[data-tone="critical"][data-visual="outline"] {
+  --tl-button-background-color: var(--tl-background-color-critical-element-faded-active);
+}
