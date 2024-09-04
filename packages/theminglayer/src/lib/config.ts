@@ -1,26 +1,26 @@
 import fs from 'node:fs'
 
-import { DefaultFileAndDirectoryPaths } from '~/lib/constants'
-import { watchMode } from '~/lib/watchMode'
+import { DEFAULT_PATHS } from '~/lib/constants'
+import { watchMode } from '~/lib/watch-mode'
 import { cssPlugin } from '~/plugins'
 import type { BuildOptions } from '~/types'
-import { importJs } from '~/utils/importJs'
+import { importJs } from '~/utils/import-js'
 import { toArray } from '~/utils/misc'
 
 export function findConfigFilePath() {
   const filePath = [
-    DefaultFileAndDirectoryPaths['config.js'],
-    DefaultFileAndDirectoryPaths['config.mjs'],
-    DefaultFileAndDirectoryPaths['config.ts'],
+    DEFAULT_PATHS['config.js'],
+    DEFAULT_PATHS['config.mjs'],
+    DEFAULT_PATHS['config.ts'],
   ].find((filePath) => fs.existsSync(filePath))
 
   return filePath
 }
 
 const DEFAULT_BUILD_CONFIG = {
-  sources: DefaultFileAndDirectoryPaths['design-tokens'],
+  sources: DEFAULT_PATHS['design-tokens'],
   plugins: [cssPlugin()],
-  outDir: DefaultFileAndDirectoryPaths.dist,
+  outDir: DEFAULT_PATHS.dist,
 }
 
 type UserBuildOptions = Partial<BuildOptions> & {

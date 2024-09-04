@@ -1,17 +1,20 @@
 import nodePath from 'node:path'
 
-import { name as packageName, version } from '~/../package.json'
+import {
+  name as PACKAGE_NAME,
+  version as PACKAGE_VERSION,
+} from '~/../package.json'
 import { cwd } from '~/utils/node'
 
-const directory = `.${packageName}`
+const DIRECTORY = `.${PACKAGE_NAME}`
 
-export const DefaultFileAndDirectoryPaths = {
-  'config.js': nodePath.join(directory, 'config.js'),
-  'config.mjs': nodePath.join(directory, 'config.mjs'),
-  'config.ts': nodePath.join(directory, 'config.ts'),
-  dist: nodePath.join(directory, 'dist'),
-  'design-tokens': nodePath.join(directory, 'design-tokens'),
-  '.cache': nodePath.join(cwd, directory, '.cache'),
+export const DEFAULT_PATHS = {
+  'config.js': nodePath.join(DIRECTORY, 'config.js'),
+  'config.mjs': nodePath.join(DIRECTORY, 'config.mjs'),
+  'config.ts': nodePath.join(DIRECTORY, 'config.ts'),
+  dist: nodePath.join(DIRECTORY, 'dist'),
+  'design-tokens': nodePath.join(DIRECTORY, 'design-tokens'),
+  '.cache': nodePath.join(cwd, DIRECTORY, '.cache'),
 } as const
 
-export { packageName, version }
+export { PACKAGE_NAME, PACKAGE_VERSION }

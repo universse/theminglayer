@@ -5,8 +5,8 @@ import glob from 'fast-glob'
 import globParent from 'glob-parent'
 import slash from 'slash'
 
-import { Collection } from '~/lib/Collection'
-import { packageName } from '~/lib/constants'
+import { Collection } from '~/lib/collection'
+import { PACKAGE_NAME } from '~/lib/constants'
 import { appLogger } from '~/lib/logger'
 import { importTokens, parseTokenString } from '~/lib/token'
 import type { BuildOptions, PluginOutputFile } from '~/types'
@@ -177,7 +177,7 @@ export async function build({
       },
       logger: appLogger,
     })
-    appLogger.withLineHeader(packageName)
+    appLogger.withLineHeader(PACKAGE_NAME)
   })
 
   const warningMessage = appLogger.warnings.generateMessage()

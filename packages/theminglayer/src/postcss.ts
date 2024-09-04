@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
-import type { Node, PluginCreator, Root } from 'postcss'
+import type { Declaration, Node, PluginCreator, Root } from 'postcss'
 
 import { getCacheFilePath, readCachedFile } from '~/lib/cache'
-import { DefaultFileAndDirectoryPaths, packageName } from '~/lib/constants'
-import { createCompareRuleSpecificity, generateCss } from '~/lib/cssUtils'
+import { DEFAULT_PATHS, PACKAGE_NAME } from '~/lib/constants'
+import { createCompareRuleSpecificity, generateCss } from '~/lib/css-utils'
 
-const PLUGIN_NAME = `postcss-plugin-${packageName}`
+const PLUGIN_NAME = `postcss-plugin-${PACKAGE_NAME}`
 
 type JITEngine = {
   collectRulesFromDeclarationValue: (declarationValue: string) => void
@@ -21,9 +21,7 @@ let lastMtime = 0
 let jitEngine: JITEngine
 
 async function getJitEngine(): Promise<JITEngine> {
-  const cacheFilePaths = await fsp.readdir(
-    DefaultFileAndDirectoryPaths['.cache']
-  )
+  const cacheFilePaths = await fsp.readdir(DEFAULT_PATHS['.cache'])
 
   const mtime = cacheFilePaths.reduce<number>(
     (acc, curr) =>
@@ -141,11 +139,16 @@ async function getJitEngine(): Promise<JITEngine> {
 function getDirective(root: Root): Node | undefined {
   let directive: Node
 
-  root.walkAtRules(packageName, (atRule) => {
+  root.walkAtRules(PACKAGE_NAME, (atRule) => {
     directive = atRule
   })
 
   return directive!
+}
+
+const processed = Symbol('processed')
+interface ExtendedDeclaration extends Declaration {
+  [processed]?: boolean
 }
 
 const plugin: PluginCreator<never> = () => {
@@ -155,7 +158,10 @@ const plugin: PluginCreator<never> = () => {
       const jitEnginePromise = getJitEngine()
 
       return {
-        async Declaration(declaration) {
+        async Declaration(declaration: ExtendedDeclaration) {
+          if (declaration[processed]) return
+          declaration[processed] = true
+
           const {
             collectRulesFromDeclarationValue,
             replaceStaticCustomPropertiesInDeclarationValue,
@@ -186,7 +192,7 @@ const plugin: PluginCreator<never> = () => {
 
           result.messages.push({
             type: 'dir-dependency',
-            dir: DefaultFileAndDirectoryPaths['.cache'],
+            dir: DEFAULT_PATHS['.cache'],
             plugin: PLUGIN_NAME,
             parent: result.opts.from,
           })

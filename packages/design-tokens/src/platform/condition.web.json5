@@ -47,10 +47,10 @@
 
     motion: {
       standard: {
-        $value: '[data-motion="spacious"]',
+        $value: '[data-motion="standard"]',
       },
       reduced: {
-        $value: '[data-motion="spacious"]',
+        $value: '[data-motion="reduced"]',
       },
     },
 

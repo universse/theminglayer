@@ -1,6 +1,6 @@
 import kleur from 'kleur'
 
-import { packageName } from '~/lib/constants'
+import { PACKAGE_NAME } from '~/lib/constants'
 import { generateKeyString } from '~/utils/misc'
 
 function createWarnings() {
@@ -96,4 +96,4 @@ function createLogger(name: string) {
   }
 }
 
-export const appLogger = createLogger(packageName)
+export const appLogger = createLogger(PACKAGE_NAME)

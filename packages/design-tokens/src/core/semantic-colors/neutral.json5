@@ -152,6 +152,18 @@
             },
           ],
         },
+        glass: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.white_alpha.1}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.black_alpha.1}',
+            },
+          ],
+        },
       },
       subtle: {
         static: {

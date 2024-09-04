@@ -1,11 +1,11 @@
-import { packageName } from '~/lib/constants'
-import { CssFormatter } from '~/lib/CssFormatter'
+import { PACKAGE_NAME } from '~/lib/constants'
+import { CssFormatter } from '~/lib/css-formatter'
 import {
   createCompareRuleSpecificity,
   generateCss,
   type Rule,
-} from '~/lib/cssUtils'
-import { cssOptions } from '~/plugins/cssOptions'
+} from '~/lib/css-utils'
+import { CSS_OPTIONS } from '~/plugins/css-options'
 import type { PluginCreator, Token } from '~/types'
 import * as promises from '~/utils/promises'
 
@@ -14,16 +14,22 @@ export const cssPlugin: PluginCreator<{
   containerSelector?: string
   files?: Array<{
     path: string
-    filter: (token: Token) => boolean
+    filter?: (token: Token) => boolean
     keepAliases?: boolean
   }>
 }> = ({
-  prefix = cssOptions.prefix,
-  containerSelector = cssOptions.containerSelector,
-  files = [{ path: 'theme.css', filter: () => true, keepAliases: false }],
+  prefix = CSS_OPTIONS.prefix,
+  containerSelector = CSS_OPTIONS.containerSelector,
+  files = [
+    {
+      path: 'theme.css',
+      filter: () => true,
+      keepAliases: process.env.NODE_ENV !== 'production',
+    },
+  ],
 } = {}) => {
   return {
-    name: `${packageName}/css`,
+    name: `${PACKAGE_NAME}/css`,
     async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,

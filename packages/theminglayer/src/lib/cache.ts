@@ -3,10 +3,10 @@ import nodePath from 'node:path'
 
 import type { PostcssCachedData } from '~/types'
 import { deleteFileAndDirectory } from '~/utils/misc'
-import { DefaultFileAndDirectoryPaths } from './constants'
+import { DEFAULT_PATHS } from './constants'
 
 export function getCacheFilePath(filePath: string): string {
-  return nodePath.join(DefaultFileAndDirectoryPaths['.cache'], filePath)
+  return nodePath.join(DEFAULT_PATHS['.cache'], filePath)
 }
 
 export function readCachedFile(filePath: string): PostcssCachedData {
@@ -14,5 +14,5 @@ export function readCachedFile(filePath: string): PostcssCachedData {
 }
 
 export function clearCache() {
-  return deleteFileAndDirectory(DefaultFileAndDirectoryPaths['.cache'])
+  return deleteFileAndDirectory(DEFAULT_PATHS['.cache'])
 }

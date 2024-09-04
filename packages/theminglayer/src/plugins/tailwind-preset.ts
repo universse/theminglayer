@@ -1,9 +1,9 @@
-import { packageName } from '~/lib/constants'
-import { CssFormatter } from '~/lib/CssFormatter'
-import { cssNameFromKeys } from '~/lib/cssUtils'
+import { PACKAGE_NAME } from '~/lib/constants'
+import { CssFormatter } from '~/lib/css-formatter'
+import { cssNameFromKeys } from '~/lib/css-utils'
 import type { TokenCategory } from '~/lib/spec'
 import { generateTokenNameKeys } from '~/lib/token'
-import { cssOptions } from '~/plugins/cssOptions'
+import { CSS_OPTIONS } from '~/plugins/css-options'
 import type { PluginCreator, Token } from '~/types'
 import { deepSetObj } from '~/utils/misc'
 import * as promises from '~/utils/promises'
@@ -13,24 +13,24 @@ export const tailwindPresetPlugin: PluginCreator<{
   containerSelector?: string
   files?: Array<{
     path: string
-    filter: (token: Token) => boolean
+    filter?: (token: Token) => boolean
     format?: 'esm' | 'cjs'
     keepAliases?: boolean
   }>
 }> = ({
-  prefix = cssOptions.prefix,
-  containerSelector = cssOptions.containerSelector,
+  prefix = CSS_OPTIONS.prefix,
+  containerSelector = CSS_OPTIONS.containerSelector,
   files = [
     {
-      path: 'tailwindPreset.js',
+      path: 'tailwind-preset.js',
       format: 'esm' as const,
       filter: () => true,
-      keepAliases: false,
+      keepAliases: process.env.NODE_ENV !== 'production',
     },
   ],
 } = {}) => {
   return {
-    name: `${packageName}/tailwind-preset`,
+    name: `${PACKAGE_NAME}/tailwind-preset`,
     async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,

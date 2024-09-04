@@ -500,7 +500,7 @@ export const preset = {
 Add the generated preset to Tailwind config:
 
 ```ts
-import { preset } from './.theminglayer/dist/tailwindPreset.js'
+import { preset } from './.theminglayer/dist/tailwind-preset.js'
 
 export default {
   // ...

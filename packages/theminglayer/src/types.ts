@@ -1,4 +1,4 @@
-import type { Collection } from '~/lib/Collection'
+import type { Collection } from '~/lib/collection'
 import type { appLogger } from '~/lib/logger'
 import type { TokenType } from '~/lib/spec'
 

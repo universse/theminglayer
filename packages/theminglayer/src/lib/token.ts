@@ -4,9 +4,9 @@ import yaml from 'js-yaml'
 import JSON5 from 'json5'
 
 import { TokenCategorySpec } from '~/lib/spec'
-import { watchMode } from '~/lib/watchMode'
+import { watchMode } from '~/lib/watch-mode'
 import type { Token, TokenSet } from '~/types'
-import { importJs } from '~/utils/importJs'
+import { importJs } from '~/utils/import-js'
 import { toSnakeCase } from '~/utils/misc'
 
 export function parseTokenString(tokenString: string) {

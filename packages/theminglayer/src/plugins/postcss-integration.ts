@@ -1,9 +1,9 @@
 import nodePath from 'node:path'
 
-import { DefaultFileAndDirectoryPaths, packageName } from '~/lib/constants'
-import { CssFormatter } from '~/lib/CssFormatter'
-import { isSimpleIsSelector } from '~/lib/cssUtils'
-import { cssOptions } from '~/plugins/cssOptions'
+import { DEFAULT_PATHS, PACKAGE_NAME } from '~/lib/constants'
+import { CssFormatter } from '~/lib/css-formatter'
+import { isSimpleIsSelector } from '~/lib/css-utils'
+import { CSS_OPTIONS } from '~/plugins/css-options'
 import type { PluginCreator, PostcssCachedData } from '~/types'
 
 export const postcssIntegrationPlugin: PluginCreator<{
@@ -12,15 +12,15 @@ export const postcssIntegrationPlugin: PluginCreator<{
   keepAliases?: boolean
   safelist?: Array<string>
 }> = ({
-  prefix = cssOptions.prefix,
-  containerSelector = cssOptions.containerSelector,
-  keepAliases = false,
+  prefix = CSS_OPTIONS.prefix,
+  containerSelector = CSS_OPTIONS.containerSelector,
+  keepAliases = process.env.NODE_ENV !== 'production',
   safelist = [],
 } = {}) => {
   const filePath = `${Date.now()}`
 
   return {
-    name: `${packageName}/postcss-integration`,
+    name: `${PACKAGE_NAME}/postcss-integration`,
     async build({ collection, addOutputFile, logger }) {
       const cssFormatter = new CssFormatter(collection, {
         prefix,
@@ -112,10 +112,7 @@ export const postcssIntegrationPlugin: PluginCreator<{
       })
 
       addOutputFile({
-        filePath: nodePath.join(
-          DefaultFileAndDirectoryPaths['.cache'],
-          filePath
-        ),
+        filePath: nodePath.join(DEFAULT_PATHS['.cache'], filePath),
         content: JSON.stringify(data),
       })
     },

@@ -2,14 +2,14 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig([
   {
-    clean: true,
+    clean: !!process.env.CI,
     dts: true,
     entry: ['src/index.ts', 'src/cli.ts', 'src/plugins.ts'],
     format: ['esm'],
     external: ['esbuild'],
   },
   {
-    clean: true,
+    clean: !!process.env.CI,
     dts: true,
     entry: {
       'browser/index': 'src/index.ts',
@@ -21,7 +21,7 @@ export default defineConfig([
     platform: 'browser',
   },
   {
-    clean: true,
+    clean: !!process.env.CI,
     dts: true,
     entry: ['src/postcss.ts'],
     format: ['esm', 'cjs'],

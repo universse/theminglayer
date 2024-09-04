@@ -2,8 +2,8 @@ import { clsx } from 'clsx/lite'
 import { klona } from 'klona/json'
 import groupBy from 'lodash.groupby'
 
-import type { Collection } from '~/lib/Collection'
-import { cssNameFromKeys, isSimpleIsSelector } from '~/lib/cssUtils'
+import type { Collection } from '~/lib/collection'
+import { cssNameFromKeys, isSimpleIsSelector } from '~/lib/css-utils'
 import { FontWeightMap, type TokenType } from '~/lib/spec'
 import {
   generateTokenNameKeys,

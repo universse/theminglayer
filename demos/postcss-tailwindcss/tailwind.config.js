@@ -1,6 +1,6 @@
 import plugin from 'tailwindcss/plugin'
 
-import { preset } from './.theminglayer/dist/tailwindPreset.js'
+import { preset } from './.theminglayer/dist/tailwind-preset.js'
 
 /** @type {import('tailwindcss').Config} */
 export default {

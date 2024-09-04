@@ -9,19 +9,15 @@ import micromatch from 'micromatch'
 import { build } from '~/lib/build'
 import { clearCache } from '~/lib/cache'
 import { findConfigFilePath, loadConfigFile } from '~/lib/config'
-import {
-  DefaultFileAndDirectoryPaths,
-  packageName,
-  version,
-} from '~/lib/constants'
+import { DEFAULT_PATHS, PACKAGE_NAME, PACKAGE_VERSION } from '~/lib/constants'
 import { appLogger } from '~/lib/logger'
-import { watchMode } from '~/lib/watchMode'
+import { watchMode } from '~/lib/watch-mode'
 import { resolvePathFromPackage } from '~/utils/node'
 import * as promises from '~/utils/promises'
 import { writeFile } from './utils/misc'
 
 async function main() {
-  const cli = cac(packageName)
+  const cli = cac(PACKAGE_NAME)
 
   cli
     .command('init', 'Initialize ThemingLayer project')
@@ -37,7 +33,7 @@ export default defineConfig({
 })
 `
 
-        const configFilePath = DefaultFileAndDirectoryPaths['config.js']
+        const configFilePath = DEFAULT_PATHS['config.js']
 
         if (!fs.existsSync(configFilePath) || force) {
           await writeFile(configFilePath, configFileContent)
@@ -54,8 +50,7 @@ export default defineConfig({
       }
 
       async function createPreset() {
-        const presetDirectoryPath =
-          DefaultFileAndDirectoryPaths['design-tokens']
+        const presetDirectoryPath = DEFAULT_PATHS['design-tokens']
 
         if (!fs.existsSync(presetDirectoryPath) || force) {
           await fsp.cp(
@@ -190,7 +185,7 @@ export default defineConfig({
     })
 
   cli.help()
-  cli.version(version)
+  cli.version(PACKAGE_VERSION)
 
   cli.parse()
 }
