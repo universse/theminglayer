@@ -20,47 +20,47 @@ import {
 } from '~/utils/misc'
 
 export class Collection {
-  tokenObject: object = {}
+  tokenTree: object = {}
   tokens: Array<Token> = []
 
   constructor({
     tokenSources,
   }: {
-    tokenSources: Array<Array<{ sourceUnit: string; rawTokenObject: object }>>
+    tokenSources: Array<Array<{ tokenSrc: string; tokenTree: object }>>
   }) {
     tokenSources.forEach((tokenSource) => {
-      const tokenObjectFromSource = {}
+      const tokenTreeFromSource = {}
 
-      tokenSource.forEach(({ sourceUnit, rawTokenObject }) => {
-        this.#mergeTokenObjects(
-          { target: tokenObjectFromSource, source: rawTokenObject },
+      tokenSource.forEach(({ tokenSrc, tokenTree }) => {
+        this.#mergeTokenTrees(
+          { target: tokenTreeFromSource, source: tokenTree },
           {
             onCollision(keys) {
               const nameKeys = generateTokenNameKeys(keys)
 
-              const { sourceUnit: existingSourceUnit } = tokenSource.find(
-                ({ rawTokenObject }) => {
-                  return getObjValue(rawTokenObject, keys)
+              const { tokenSrc: existingTokenSrc } = tokenSource.find(
+                ({ tokenTree }) => {
+                  return getObjValue(tokenTree, keys)
                 }
               )!
 
               appLogger.warnings.tokenCollision(nameKeys, [
-                existingSourceUnit,
-                sourceUnit,
+                existingTokenSrc,
+                tokenSrc,
               ])
             },
           }
         )
       })
-      this.#preprocess(tokenObjectFromSource)
-      this.#mergeTokenObjects({
-        target: this.tokenObject,
-        source: tokenObjectFromSource,
+      this.#preprocess(tokenTreeFromSource)
+      this.#mergeTokenTrees({
+        target: this.tokenTree,
+        source: tokenTreeFromSource,
       })
     })
 
     // resolve any references except for those in token-like objects
-    traverseObj(this.tokenObject, (obj, key, _) => {
+    traverseObj(this.tokenTree, (obj, key, _) => {
       if (isToken(obj)) throw 'break'
       // @ts-expect-error todo
       if (!isAlias(obj[key])) return
@@ -71,7 +71,7 @@ export class Collection {
     // convert token-like objects to tokens
     const tokensWithUnknownCategoryOrType: Array<Token> = []
 
-    traverseObj(this.tokenObject, (obj, _, keys) => {
+    traverseObj(this.tokenTree, (obj, _, keys) => {
       if (!isToken(obj)) return
 
       const isComponent = keys[0] === 'component'
@@ -151,8 +151,7 @@ export class Collection {
 
       if (!type) {
         for (let i = 0; i < keys.length - 1; i++) {
-          type =
-            getObjValue(this.tokenObject, keys.slice(0, i + 1)).$type || null
+          type = getObjValue(this.tokenTree, keys.slice(0, i + 1)).$type || null
           if (type) break
         }
       }
@@ -192,28 +191,39 @@ export class Collection {
       }, [])
 
       for (const referencedToken of referencedTokens) {
-        if (!('$category' in token) && '$category' in referencedToken) {
+        if (
+          !Object.hasOwn(token, '$category') &&
+          Object.hasOwn(referencedToken, '$category')
+        ) {
           const category = referencedToken.$category
-          token.$category = category
-          const type = getCategorySpec(category)?.type
+          token.$category = category!
+          const type = getCategorySpec(category!)?.type
           type && (token.$type = type)
         }
-        if (!('$type' in token) && '$type' in referencedToken) {
-          // @ts-expect-error todo
+        if (
+          !Object.hasOwn(token, '$type') &&
+          Object.hasOwn(referencedToken, '$type')
+        ) {
           token.$type = referencedToken.$type
         }
-        if ('$type' in token && '$category' in token) {
+        if (
+          Object.hasOwn(token, '$type') &&
+          Object.hasOwn(token, '$category')
+        ) {
           break
         }
       }
 
-      if (!('$type' in token) || !('$category' in token)) {
+      if (
+        !Object.hasOwn(token, '$type') ||
+        !Object.hasOwn(token, '$category')
+      ) {
         tokensWithUnknownCategoryOrType.push(token)
       }
     }
 
     // collect tokens
-    traverseObj(this.tokenObject, (obj, _, keys) => {
+    traverseObj(this.tokenTree, (obj, _, keys) => {
       if (!isToken(obj)) return
       if (obj.$type) {
         this.tokens.push(obj)
@@ -229,7 +239,7 @@ export class Collection {
   //   return Object.assign(collection, data)
   // }
 
-  #mergeTokenObjects(
+  #mergeTokenTrees(
     { target, source }: { target: object; source: object },
     { onCollision }: { onCollision?: (keys: Array<string>) => void } = {}
   ): void {
@@ -263,11 +273,11 @@ export class Collection {
     })
   }
 
-  #preprocess(tokenObject: object) {
+  #preprocess(tokenTree: object) {
     // @ts-expect-error todo
     const tokenSetsWithWildcardVariant = []
 
-    traverseObj(tokenObject, (obj, key, keys) => {
+    traverseObj(tokenTree, (obj, key, keys) => {
       if (!isToken(obj) || !obj.$variant || key !== '$variant') return
 
       const component = keys[1]
@@ -279,7 +289,7 @@ export class Collection {
         if (variantValue !== '*') return
 
         // @ts-expect-error todo
-        const variants = tokenObject.component[component].$variant[variantKey]
+        const variants = tokenTree.component[component].$variant[variantKey]
         // @ts-expect-error todo
         wildcardVariants[variantKey] = Object.keys(variants)
       })
@@ -309,7 +319,7 @@ export class Collection {
       const isTokenSet = keys[keys.length - 2] === '$set'
 
       if (isTokenSet) {
-        const tokenSet = getObjValue(tokenObject, keys.slice(0, -1))
+        const tokenSet = getObjValue(tokenTree, keys.slice(0, -1))
         tokenSet.push({
           $index: keys.at(-1),
           // @ts-expect-error todo
@@ -318,7 +328,7 @@ export class Collection {
         tokenSetsWithWildcardVariant.push(tokenSet)
       } else {
         // * convert to $set if not a set
-        const token = getObjValue(tokenObject, keys)
+        const token = getObjValue(tokenTree, keys)
         // @ts-expect-error todo
         token.$set = wildcardVariantTokens
         delete token.$value
@@ -351,7 +361,7 @@ export class Collection {
     const refs = getReferences(value)
 
     refs.forEach((ref) => {
-      const referenced = getObjValue(this.tokenObject, ref.split('.'))
+      const referenced = getObjValue(this.tokenTree, ref.split('.'))
       const refString = `{${ref}}`
 
       if (typeof referenced === 'undefined') {

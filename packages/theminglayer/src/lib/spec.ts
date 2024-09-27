@@ -83,7 +83,7 @@ export type TokenType =
   | 'keyframes'
   | 'animation'
 
-export const FontWeightMap = {
+export const FONT_WEIGHT_MAP = {
   thin: '100',
   hairline: '100',
   extralight: '200',
@@ -104,7 +104,7 @@ export const FontWeightMap = {
   ultrablack: '950',
 } as const
 
-export const TokenCategorySpec: Record<TokenCategory, { type: TokenType }> = {
+export const TOKEN_CATEGORY_SPEC: Record<TokenCategory, { type: TokenType }> = {
   screen: {
     type: 'dimension',
   },

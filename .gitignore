@@ -26,6 +26,7 @@ out
 .svelte
 **/*.min.*
 .astro
+stats.html
 
 # Personal
 ideas.md

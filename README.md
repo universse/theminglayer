@@ -547,7 +547,7 @@ export const plugin: PluginCreator<PluginOptions> = (options = {}) => {
 
 - `collection`
 
-  - `collection.tokenObject` merged object from token source files
+  - `collection.tokenTree` merged object from token source files
   - `collection.tokens` flattened list of tokens
     <br />
 

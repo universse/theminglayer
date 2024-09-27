@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
+import nodePath from 'node:path'
+import watcher from '@parcel/watcher'
 import { cac } from 'cac'
-import chokidar from 'chokidar'
 import kleur from 'kleur'
 import micromatch from 'micromatch'
 
@@ -81,21 +82,6 @@ export default defineConfig({
         watchMode.activate()
       }
 
-      const poll = false
-      const POLL_INTERVAL = 10
-
-      const watcherOptions = {
-        atomic: true,
-        usePolling: poll,
-        interval: POLL_INTERVAL,
-        ignoreInitial: true,
-        ignorePermissionErrors: true,
-        awaitWriteFinish:
-          poll || process.platform === 'win32'
-            ? { stabilityThreshold: 50, pollInterval: POLL_INTERVAL }
-            : false,
-      }
-
       const configFilePath = findConfigFilePath()
 
       await buildAndOptionallyWatch()
@@ -107,80 +93,118 @@ export default defineConfig({
           await loadConfigFile(configFilePath)
 
         const buildResults = await promises.mapSerial(config, async (c, i) => {
-          appLogger.log(
-            `Building token collection ${i! + 1}/${config.length}...`
-          )
-
           const {
-            _internal: { resolvedSources },
+            _internal: { resolvedTokenSources },
           } = await build(c)
 
           appLogger.log(`Built token collection ${i! + 1}/${config.length}`)
 
           return {
-            resolvedSources: resolvedSources.reduce<Array<string>>(
-              (acc, { type, source }) => {
-                if (
-                  (type === 'glob' || type === 'file') &&
-                  !source.includes('node_modules')
-                ) {
-                  acc.push(source)
+            sourcesToWatch: resolvedTokenSources.reduce<
+              Array<
+                | {
+                    type: 'glob'
+                    source: string
+                    parent: string
+                    pattern: string
+                  }
+                | { type: 'file'; source: string; parent: string }
+              >
+            >((acc, resolvedTokenSource) => {
+              if (resolvedTokenSource.type === 'glob') {
+                const { parent, pattern } = resolvedTokenSource
+                const source = `${parent}/${pattern}`
+                if (!source.includes('/node_modules/')) {
+                  acc.push({ ...resolvedTokenSource, source })
                 }
-                return acc
-              },
-              []
-            ),
+              }
+              if (resolvedTokenSource.type === 'file') {
+                if (!resolvedTokenSource.source.includes('/node_modules/')) {
+                  acc.push(resolvedTokenSource)
+                }
+              }
+              return acc
+            }, []),
           }
         })
 
         if (!watchMode.active) return process.exit(0)
 
-        async function changeHandler(changedTokenFilePath: string) {
-          await promises.mapSerial(
-            buildResults,
-            async ({ resolvedSources }, i) => {
-              // check if changedTokenFilePath is in at least 1 of the collection's resolved sources
-              if (
-                resolvedSources.some((resolvedSource) =>
-                  micromatch.isMatch(changedTokenFilePath, resolvedSource)
-                )
-              ) {
-                appLogger.log(
-                  `Rebuilding token collection ${i! + 1}/${config.length}`
-                )
-                await build(config[i!]!)
-                appLogger.log(
-                  `Rebuilt token collection ${i! + 1}/${config.length}`
-                )
-              }
-            }
-          )
-        }
+        const tokenDirectories = buildResults.reduce<Set<string>>(
+          (acc, { sourcesToWatch }) => {
+            sourcesToWatch.forEach((source) => {
+              acc.add(source.parent)
+            })
+            return acc
+          },
+          new Set()
+        )
 
-        const tokenWatcher = chokidar
-          .watch(
-            buildResults.flatMap(({ resolvedSources }) => resolvedSources),
-            watcherOptions
-          )
-          .on('add', changeHandler)
-          .on('change', changeHandler)
-          .on('unlink', changeHandler)
+        const watcherPromises: Array<Promise<watcher.AsyncSubscription>> = []
 
-        const configWatcher = chokidar.watch(configDependencies, watcherOptions)
+        tokenDirectories.forEach((directory) => {
+          watcherPromises.push(
+            watcher.subscribe(directory, (_err, events) => {
+              events.forEach(async (event) => {
+                await promises.mapSerial(
+                  buildResults,
+                  async ({ sourcesToWatch }, i) => {
+                    // check if event.path is in at least 1 of the collection's resolved sources
+                    if (
+                      sourcesToWatch.some((s) =>
+                        micromatch.isMatch(event.path, s.source)
+                      )
+                    ) {
+                      await build(config[i!]!)
+                      appLogger.log(
+                        `Rebuilt token collection ${i! + 1}/${config.length}`
+                      )
+                    }
+                  }
+                )
+              })
+            })
+          )
+        })
+
+        const configDirectories = configDependencies.reduce<Set<string>>(
+          (acc, path) => {
+            const dir = nodePath.dirname(path)
+            acc.add(dir)
+            return acc
+          },
+          new Set()
+        )
+
+        configDirectories.forEach((directory) => {
+          watcherPromises.push(
+            watcher.subscribe(directory, (_err, events) => {
+              events.forEach(async (event) => {
+                await promises.mapSerial(
+                  configDependencies,
+                  async (dependency) => {
+                    if (micromatch.isMatch(event.path, dependency)) {
+                      process.off('SIGINT', closeWatchers)
+                      await closeWatchers()
+                      appLogger.log('Config change detected')
+                      await buildAndOptionallyWatch()
+                    }
+                  }
+                )
+              })
+            })
+          )
+        })
+
+        const watchers = await Promise.all(watcherPromises)
 
         async function closeWatchers() {
-          await promises.parallel(tokenWatcher.close(), configWatcher.close())
+          await promises.mapParallel(watchers, (watcher) =>
+            watcher.unsubscribe()
+          )
         }
 
         process.once('SIGINT', closeWatchers)
-
-        configWatcher.on('change', async () => {
-          process.off('SIGINT', closeWatchers)
-          await closeWatchers()
-
-          appLogger.log('Config change detected')
-          await buildAndOptionallyWatch()
-        })
       }
     })
 

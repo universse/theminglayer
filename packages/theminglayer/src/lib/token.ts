@@ -3,7 +3,7 @@ import nodePath from 'node:path'
 import yaml from 'js-yaml'
 import JSON5 from 'json5'
 
-import { TokenCategorySpec } from '~/lib/spec'
+import { TOKEN_CATEGORY_SPEC } from '~/lib/spec'
 import { watchMode } from '~/lib/watch-mode'
 import type { Token, TokenSet } from '~/types'
 import { importJs } from '~/utils/import-js'
@@ -137,19 +137,19 @@ export function getReferences(value: unknown): Array<string> {
 
 export function getCategorySpec(
   category: string | null
-): (typeof TokenCategorySpec)[keyof typeof TokenCategorySpec] | null {
+): (typeof TOKEN_CATEGORY_SPEC)[keyof typeof TOKEN_CATEGORY_SPEC] | null {
   if (category === null) return null
-  return TokenCategorySpec[toSnakeCase(category)] || null
+  return TOKEN_CATEGORY_SPEC[toSnakeCase(category)] || null
 }
 
 export function isToken(obj: unknown): obj is Token {
   if (typeof obj !== 'object' || obj === null) return false
-  return '$value' in obj
+  return Object.hasOwn(obj, '$value')
 }
 
 export function isTokenSet(obj: unknown): obj is TokenSet {
   if (typeof obj !== 'object' || obj === null) return false
-  return '$set' in obj
+  return Object.hasOwn(obj, '$set')
 }
 
 // TODO arg should be token?

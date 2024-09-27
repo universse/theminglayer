@@ -4,7 +4,7 @@ import groupBy from 'lodash.groupby'
 
 import type { Collection } from '~/lib/collection'
 import { cssNameFromKeys, isSimpleIsSelector } from '~/lib/css-utils'
-import { FontWeightMap, type TokenType } from '~/lib/spec'
+import { FONT_WEIGHT_MAP, type TokenType } from '~/lib/spec'
 import {
   generateTokenNameKeys,
   getReferences,
@@ -23,7 +23,7 @@ import {
   traverseObj,
 } from '~/utils/misc'
 
-const SystemColors = new Set([
+const SYSTEM_COLORS = new Set([
   'Canvas',
   'CanvasText',
   'LinkText',
@@ -45,14 +45,14 @@ const SystemColors = new Set([
   'AccentColorText',
 ])
 
-const TypographyKeys = [
+const TYPOGRAPHY_KEYS = new Set([
   'font-family',
   'font-size',
   'font-style',
   'font-weight',
   'letter-spacing',
   'line-height',
-]
+])
 
 export class CssFormatter {
   constructor(
@@ -189,105 +189,8 @@ export class CssFormatter {
     return rules
   }
 
-  convertToCssTypographyValues(
-    { value }: { value: unknown },
-    { keepAliases = false } = {}
-  ) {
-    const properties: Array<{ type: TokenType; prop: string; value: any }> = [
-      {
-        type: 'font_family',
-        prop: 'font-family',
-        value: value.family || value.font_family || value.fontFamily,
-      },
-      {
-        type: 'dimension',
-        prop: 'font-size',
-        value: value.size || value.font_size || value.fontSize,
-      },
-      {
-        type: 'font_style',
-        prop: 'font-style',
-        value: value.style || value.font_style || value.fontStyle,
-      },
-      // {
-      //   type: 'font_stretch',
-      //   prop: 'font-stretch',
-      //   value:
-      //     value.stretch ||
-      //     value.font_stretch ||
-      //     value.fontStretch,
-      // },
-      // {
-      //   type: 'font_variant',
-      //   prop: 'font-variant',
-      //   value:
-      //     value.variant ||
-      //     value.font_variant ||
-      //     value.fontVariant,
-      // },
-      {
-        type: 'font_weight',
-        prop: 'font-weight',
-        value: value.weight || value.font_weight || value.fontWeight,
-      },
-      {
-        type: 'tracking',
-        prop: 'letter-spacing',
-        value: value.tracking || value.letter_spacing || value.letterSpacing,
-      },
-      {
-        type: 'leading',
-        prop: 'line-height',
-        value: value.leading || value.line_height || value.lineHeight,
-      },
-    ]
-
-    const result = []
-
-    properties.forEach(({ type, prop, value }) => {
-      if (isNullish(value)) return
-      result.push({
-        prop,
-        value: this.convertToCssValue({ type, value }, { keepAliases }),
-      })
-    })
-
-    return result
-  }
-
-  aliasTokenToCssTypographyValue(tokenOrSet) {
-    const customPropertyName = this.tokenToCustomPropertyName(tokenOrSet)
-
-    return [
-      {
-        prop: 'font-family',
-        value: `var(${customPropertyName}-font-family)`,
-      },
-      {
-        prop: 'font-size',
-        value: `var(${customPropertyName}-font-size)`,
-      },
-      {
-        prop: 'font-style',
-        value: `var(${customPropertyName}-font-style)`,
-      },
-      {
-        prop: 'font-weight',
-        value: `var(${customPropertyName}-font-weight)`,
-      },
-      {
-        prop: 'letter-spacing',
-        value: `var(${customPropertyName}-letter-spacing)`,
-      },
-      {
-        prop: 'line-height',
-        value: `var(${customPropertyName}-line-height)`,
-      },
-    ]
-  }
-
   typographyTokenToCssRules(token: Token, { keepAliases = false } = {}) {
-    const { tokenObject } = this.collection
+    const { tokenTree } = this.collection
     const { prefix } = this.options
 
     let typographyValue = []
@@ -299,25 +202,25 @@ export class CssFormatter {
 
       while (isAlias(resolvedTokenOrSet.$value)) {
         const ref = getReferences(resolvedTokenOrSet.$value)[0]
-        resolvedTokenOrSet = getObjValue(tokenObject, ref.split('.'))
+        resolvedTokenOrSet = getObjValue(tokenTree, ref.split('.'))
       }
 
       // TODO here
       if (isToken(resolvedTokenOrSet)) {
         if (token === resolvedTokenOrSet) {
-          typographyValue = this.convertToCssTypographyValues(
+          typographyValue = this.#convertToCssTypographyValues(
             { value: resolvedTokenOrSet.$value },
             { keepAliases }
           )
         } else {
           if (
-            '$condition' in resolvedTokenOrSet ||
-            '$variant' in resolvedTokenOrSet
+            Object.hasOwn(resolvedTokenOrSet, '$condition') ||
+            Object.hasOwn(resolvedTokenOrSet, '$variant')
           ) {
             typographyValue =
               this.aliasTokenToCssTypographyValue(resolvedTokenOrSet)
           } else {
-            typographyValue = this.convertToCssTypographyValues(
+            typographyValue = this.#convertToCssTypographyValues(
               { value: resolvedTokenOrSet.$value },
               { keepAliases }
             )
@@ -392,6 +295,7 @@ export class CssFormatter {
   ) {
     switch (toSnakeCase(type) as TokenType) {
       case 'color': {
+        if (typeof value === 'string') return value
         return value
       }
       case 'cubic_bezier': {
@@ -399,10 +303,12 @@ export class CssFormatter {
         return `cubic-bezier(${value.join(', ')})`
       }
       case 'dimension': {
-        return String(value)
+        if (typeof value === 'string') return value
+        return `${value.value}${value.unit}`
       }
       case 'duration': {
-        return String(value)
+        if (typeof value === 'string') return value
+        return `${value.value}${value.unit}`
       }
       case 'font_family': {
         if (typeof value === 'string') return value
@@ -414,8 +320,8 @@ export class CssFormatter {
       case 'font_weight': {
         const normalizedValue = value.toLowerCase().replace(/[\s-_]/g, '')
 
-        if (FontWeightMap[normalizedValue]) {
-          return FontWeightMap[normalizedValue]
+        if (Object.hasOwn(FONT_WEIGHT_MAP, normalizedValue)) {
+          return FONT_WEIGHT_MAP[normalizedValue]
         }
 
         return value
@@ -466,14 +372,14 @@ export class CssFormatter {
         const parts: Array<{ type: TokenType; value: any }> = [
           {
             type: 'dimension',
-            value: value.offset_x || value.offsetX || value.x || 0,
+            value: value.offset_x || value.offsetX || value.x || '0px',
           },
           {
             type: 'dimension',
-            value: value.offset_y || value.offsetY || value.y || 0,
+            value: value.offset_y || value.offsetY || value.y || '0px',
           },
-          { type: 'dimension', value: value.blur || 0 },
-          { type: 'dimension', value: value.spread || 0 },
+          { type: 'dimension', value: value.blur || '0px' },
+          { type: 'dimension', value: value.spread || '0px' },
           { type: 'color', value: value.color || '#000000' },
         ]
 
@@ -517,7 +423,7 @@ export class CssFormatter {
             { type: 'transition_property', value: transitionProperty },
             {
               type: 'duration',
-              value: value.duration || 0,
+              value: value.duration || '0ms',
             },
             {
               type: 'cubic_bezier',
@@ -529,7 +435,7 @@ export class CssFormatter {
                 value.easing ||
                 'ease',
             },
-            { type: 'duration', value: value.delay || 0 },
+            { type: 'duration', value: value.delay || '0ms' },
           ]
 
           parts.forEach((part) => {
@@ -567,7 +473,7 @@ export class CssFormatter {
         // TODO warn missing outline style
         if (typeof value === 'string') return value
 
-        const outline = []
+        const outline: Array<string> = []
 
         const parts: Array<{ type: TokenType; value: any }> = [
           { type: 'dimension', value: value.width || 'medium' },
@@ -596,18 +502,18 @@ export class CssFormatter {
             .join(' ')
         }
 
-        const shadow = []
+        const shadow: Array<string> = []
 
         const parts: Array<{ type: TokenType; value: any }> = [
           {
             type: 'dimension',
-            value: value.offset_x || value.offsetX || value.x || 0,
+            value: value.offset_x || value.offsetX || value.x || '0px',
           },
           {
             type: 'dimension',
-            value: value.offset_y || value.offsetY || value.y || 0,
+            value: value.offset_y || value.offsetY || value.y || '0px',
           },
-          { type: 'dimension', value: value.blur || 0 },
+          { type: 'dimension', value: value.blur || '0px' },
           { type: 'color', value: value.color || '#000000' },
         ]
 
@@ -666,13 +572,16 @@ export class CssFormatter {
 
         refs.forEach((ref) => {
           const referenced = getObjValue(
-            this.collection.tokenObject,
+            this.collection.tokenTree,
             ref.split('.')
           )
           const refString = `{${ref}}`
 
           if (isToken(referenced)) {
-            if ('$condition' in referenced || '$variant' in referenced) {
+            if (
+              Object.hasOwn(referenced, '$condition') ||
+              Object.hasOwn(referenced, '$variant')
+            ) {
               obj[key] = obj[key].replace(
                 refString,
                 `var(${this.tokenToCustomPropertyName(referenced)})`
@@ -711,6 +620,37 @@ export class CssFormatter {
     })
 
     return clone.value as string
+  }
+
+  aliasTokenToCssTypographyValue(tokenOrSet) {
+    const customPropertyName = this.tokenToCustomPropertyName(tokenOrSet)
+
+    return [
+      {
+        prop: 'font-family',
+        value: `var(${customPropertyName}-font-family)`,
+      },
+      {
+        prop: 'font-size',
+        value: `var(${customPropertyName}-font-size)`,
+      },
+      {
+        prop: 'font-style',
+        value: `var(${customPropertyName}-font-style)`,
+      },
+      {
+        prop: 'font-weight',
+        value: `var(${customPropertyName}-font-weight)`,
+      },
+      {
+        prop: 'letter-spacing',
+        value: `var(${customPropertyName}-letter-spacing)`,
+      },
+      {
+        prop: 'line-height',
+        value: `var(${customPropertyName}-line-height)`,
+      },
+    ]
   }
 
   tokenToCustomPropertyName(tokenOrSet: Token | TokenSet): string {
@@ -873,7 +813,7 @@ export class CssFormatter {
     const refs = getReferences(value)
 
     refs.forEach((ref) => {
-      const obj = getObjValue(this.collection.tokenObject, ref.split('.'))
+      const obj = getObjValue(this.collection.tokenTree, ref.split('.'))
 
       if (isToken(obj) || isTokenSet(obj)) {
         const customProperty = `var(${this.tokenToCustomPropertyName(obj)})`
@@ -885,5 +825,71 @@ export class CssFormatter {
     })
 
     return value
+  }
+
+  #convertToCssTypographyValues(
+    { value }: { value: unknown },
+    { keepAliases = false } = {}
+  ) {
+    const properties: Array<{ type: TokenType; prop: string; value: any }> = [
+      {
+        type: 'font_family',
+        prop: 'font-family',
+        value: value.family || value.font_family || value.fontFamily,
+      },
+      {
+        type: 'dimension',
+        prop: 'font-size',
+        value: value.size || value.font_size || value.fontSize,
+      },
+      {
+        type: 'font_style',
+        prop: 'font-style',
+        value: value.style || value.font_style || value.fontStyle,
+      },
+      // {
+      //   type: 'font_stretch',
+      //   prop: 'font-stretch',
+      //   value:
+      //     value.stretch ||
+      //     value.font_stretch ||
+      //     value.fontStretch,
+      // },
+      // {
+      //   type: 'font_variant',
+      //   prop: 'font-variant',
+      //   value:
+      //     value.variant ||
+      //     value.font_variant ||
+      //     value.fontVariant,
+      // },
+      {
+        type: 'font_weight',
+        prop: 'font-weight',
+        value: value.weight || value.font_weight || value.fontWeight,
+      },
+      {
+        type: 'tracking',
+        prop: 'letter-spacing',
+        value: value.tracking || value.letter_spacing || value.letterSpacing,
+      },
+      {
+        type: 'leading',
+        prop: 'line-height',
+        value: value.leading || value.line_height || value.lineHeight,
+      },
+    ]
+
+    const result = []
+
+    properties.forEach(({ type, prop, value }) => {
+      if (isNullish(value)) return
+      result.push({
+        prop,
+        value: this.convertToCssValue({ type, value }, { keepAliases }),
+      })
+    })
+
+    return result
   }
 }

@@ -9,18 +9,18 @@
       },
     },
 
-    color_correction: {
+    color_adjust: {
       none: {
-        $value: '[data-color-correction="none"]',
+        $value: '[data-color-adjust="none"]',
       },
       red_green: {
-        $value: '[data-color-correction="red-green"]',
+        $value: '[data-color-adjust="red-green"]',
       },
       blue_yellow: {
-        $value: '[data-color-correction="blue-yellow"]',
+        $value: '[data-color-adjust="blue-yellow"]',
       },
       monochrome: {
-        $value: '[data-color-correction="monochrome"]',
+        $value: '[data-color-adjust="monochrome"]',
       },
     },
 

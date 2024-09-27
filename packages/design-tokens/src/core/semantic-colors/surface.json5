@@ -5,23 +5,23 @@
         $set: [
           {
             $condition: { color_scheme: 'light' },
-            $value: '{color.white}',
-          },
-          {
-            $condition: { color_scheme: 'dark' },
-            $value: '{color.gray_dark.4}',
-          },
-        ],
-      },
-      underlay: {
-        $set: [
-          {
-            $condition: { color_scheme: 'light' },
             $value: '{color.black_alpha.9}',
           },
           {
             $condition: { color_scheme: 'dark' },
             $value: '{color.black_alpha.11}',
+          },
+        ],
+      },
+      glass: {
+        $set: [
+          {
+            $condition: { color_scheme: 'light' },
+            $value: '{color.white_alpha.1}',
+          },
+          {
+            $condition: { color_scheme: 'dark' },
+            $value: '{color.black_alpha.1}',
           },
         ],
       },

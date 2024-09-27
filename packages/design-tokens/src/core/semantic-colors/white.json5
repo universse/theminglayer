@@ -4,6 +4,7 @@
       primary: {
         $set: [
           {
+            $condition: { contrast: 'standard' },
             $value: '{color.white_alpha.12}',
           },
           {
@@ -15,6 +16,7 @@
       secondary: {
         $set: [
           {
+            $condition: { contrast: 'standard' },
             $value: '{color.white_alpha.10}',
           },
           {
@@ -26,6 +28,7 @@
       muted: {
         $set: [
           {
+            $condition: { contrast: 'standard' },
             $value: '{color.white_alpha.8}',
           },
           {
@@ -34,6 +37,62 @@
           },
         ],
       },
+      on_bold_bg: {
+        primary: {
+          $value: '{text_color.black.primary}',
+        },
+        secondary: {
+          $value: '{text_color.black.secondary}',
+        },
+        muted: {
+          $value: '{text_color.black.muted}',
+        },
+      },
+    },
+  },
+  background_color: {
+    white: {
+      subtle: {
+        static: {
+          $value: '{color.white_alpha.4}',
+        },
+        hover: {
+          $value: '{color.white_alpha.5}',
+        },
+        pressed: {
+          $value: '{color.white_alpha.6}',
+        },
+      },
+      bold: {
+        muted: {
+          $value: '{color.white_alpha.8}',
+        },
+        static: {
+          $value: '{color.white_alpha.11}',
+        },
+        hover: {
+          $value: '{color.white_alpha.12}',
+        },
+        pressed: {
+          $value: '{color.white}',
+        },
+      },
+    },
+  },
+  border_color: {
+    white: {
+      subtle: {
+        $value: '{color.white_alpha.6}',
+      },
+      medium: {
+        $value: '{color.white_alpha.7}',
+      },
+      bold: {
+        $value: '{color.white_alpha.8}',
+      },
+      highlight: {
+        $value: '{color.white_alpha.9}',
+      },
     },
   },
   icon_color: {
@@ -41,6 +100,17 @@
       primary: { $value: '{color.white_alpha.10}' },
       secondary: { $value: '{color.white_alpha.8}' },
       muted: { $value: '{color.white_alpha.6}' },
+      on_bold_bg: {
+        primary: {
+          $value: '{icon_color.black.primary}',
+        },
+        secondary: {
+          $value: '{icon_color.black.secondary}',
+        },
+        muted: {
+          $value: '{icon_color.black.muted}',
+        },
+      },
     },
   },
 }

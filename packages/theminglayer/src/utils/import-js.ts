@@ -45,8 +45,14 @@ async function bundleFile(filePath: string) {
 
   return {
     code: bundle.outputFiles[0]!.text,
-    dependencies: Object.keys(bundle.metafile.inputs).filter(
-      (path) => !path.includes('node_modules')
+    dependencies: Object.keys(bundle.metafile.inputs).reduce<Array<string>>(
+      (acc, path) => {
+        if (!path.includes('/node_modules/')) {
+          acc.push(nodePath.resolve(path))
+        }
+        return acc
+      },
+      []
     ),
   }
 }

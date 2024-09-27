@@ -8,7 +8,7 @@
     colors: {
       $value: {
         transition_property: '{transition_property.colors}',
-        duration: '{duration.fast}',
+        duration: '{duration.short}',
         timing_function: '{timing_function.ease_in_out}',
         delay: '0ms',
       },

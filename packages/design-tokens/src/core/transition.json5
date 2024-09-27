@@ -3,14 +3,17 @@
     instant: {
       $value: '0ms',
     },
-    fast: {
+    short: {
       $value: '150ms',
     },
-    standard: {
+    medium: {
       $value: '300ms',
     },
-    slow: {
+    long: {
       $value: '450ms',
+    },
+    paused: {
+      $value: '2000ms',
     },
   },
   timing_function: {
@@ -30,5 +33,4 @@
       $value: [0.42, 0, 0.58, 1],
     },
   },
-  delay: {},
 }

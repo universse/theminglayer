@@ -84,7 +84,7 @@ export const tailwindPresetPlugin: PluginCreator<{
             }
 
             const { themeKeys, extend } =
-              ThemeConfigByCategory[$category! as TokenCategory] || {}
+              THEME_CONFIG_BY_CATEGORY[$category! as TokenCategory] || {}
 
             if (!themeKeys) return
 
@@ -206,7 +206,7 @@ type TailwindThemeKey =
   | 'animation'
   | 'zIndex'
 
-const ThemeConfigByCategory: Partial<
+const THEME_CONFIG_BY_CATEGORY: Partial<
   Record<
     TokenCategory,
     { extend?: boolean; themeKeys?: Array<TailwindThemeKey> }

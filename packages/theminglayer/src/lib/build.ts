@@ -23,107 +23,147 @@ function isRemote(str: string): boolean {
   }
 }
 
-type ResolvedSource =
+export type ResolvedTokenSource =
   | {
-      type: 'file' | 'glob' | 'url'
+      type: 'file'
       source: string
+      parent: string
+    }
+  | {
+      type: 'url'
+      source: string
+    }
+  | {
+      type: 'glob'
+      source: string
+      parent: string
+      pattern: string
     }
   | {
       type: 'object'
       source: object
     }
-  | { type: 'not_found'; source: null }
+  | { type: 'not_found' }
 
 const GLOB_PATTERN = '**/!(___*).{js,mjs,cjs,json,json5,yml,yaml}'
 
-async function resolveSource(source: string | object): Promise<ResolvedSource> {
+async function resolveSource(
+  source: string | object
+): Promise<ResolvedTokenSource> {
   if (typeof source === 'object') {
     return { type: 'object', source }
   } else if (isRemote(source)) {
     return { type: 'url', source }
+  } else if (glob.isDynamicPattern(source)) {
+    const parentDir = globParent(source)
+
+    let parentPath: string
+
+    if (fs.existsSync(parentDir)) {
+      parentPath = nodePath.resolve(parentDir)
+    } else {
+      parentPath = resolvePathFromPackage(parentDir)
+      if (!fs.existsSync(parentPath)) {
+        return { type: 'not_found' }
+      }
+    }
+
+    const pattern = source.replace(`${parentDir}/`, '')
+    const parent = slash(parentPath)
+
+    return {
+      type: 'glob',
+      source: `${parent}/${GLOB_PATTERN}`,
+      parent,
+      pattern,
+    }
   } else if (fs.existsSync(source)) {
     const path = nodePath.resolve(source)
     const stat = await fsp.stat(path)
     const isDirectory = stat.isDirectory()
 
-    return isDirectory
-      ? {
-          type: 'glob',
-          source: `${slash(path)}/${GLOB_PATTERN}`,
-        }
-      : { type: 'file', source: slash(path) }
-  } else if (glob.isDynamicPattern(source)) {
-    const parent = globParent(source)
+    if (isDirectory) {
+      const parent = slash(path)
 
-    let parentPath: string
-
-    if (fs.existsSync(parent)) {
-      parentPath = nodePath.resolve(parent)
-    } else {
-      parentPath = resolvePathFromPackage(parent)
-      if (!fs.existsSync(parentPath)) {
-        return { type: 'not_found', source: null }
+      return {
+        type: 'glob',
+        source: `${parent}/${GLOB_PATTERN}`,
+        parent,
+        pattern: GLOB_PATTERN,
       }
-    }
+    } else {
+      const source = slash(path)
+      const parent = slash(nodePath.dirname(source))
 
-    const pattern = source.replace(`${parent}/`, '')
-
-    return {
-      type: 'glob',
-      source: `${slash(parentPath)}/${pattern}`,
+      return { type: 'file', source, parent }
     }
   } else {
     const path = resolvePathFromPackage(source)
 
     if (!fs.existsSync(path)) {
-      return { type: 'not_found', source: null }
+      return { type: 'not_found' }
     }
 
     const stat = await fsp.stat(path)
     const isDirectory = stat.isDirectory()
 
-    return isDirectory
-      ? {
-          type: 'glob',
-          source: `${slash(path)}/${GLOB_PATTERN}`,
-        }
-      : { type: 'file', source: slash(path) }
+    if (isDirectory) {
+      const parent = slash(path)
+
+      return {
+        type: 'glob',
+        source: `${parent}/${GLOB_PATTERN}`,
+        parent,
+        pattern: GLOB_PATTERN,
+      }
+    } else {
+      const source = slash(path)
+      const parent = slash(nodePath.dirname(source))
+
+      return { type: 'file', source, parent }
+    }
   }
 }
 
-async function parseSource({
-  type,
-  source,
-}: ResolvedSource): Promise<
-  Array<{ sourceUnit: string; rawTokenObject: object }>
-> {
-  switch (type) {
+async function parseTokenSource(
+  resolvedTokenSource: ResolvedTokenSource
+): Promise<Array<{ tokenSrc: string; tokenTree: object }>> {
+  switch (resolvedTokenSource.type) {
     case 'file': {
       return [
-        { sourceUnit: source, rawTokenObject: await importTokens(source) },
-      ]
-    }
-    case 'glob': {
-      const filePaths = await glob(source)
-      return promises.mapParallel(filePaths, async (filePath) => {
-        return {
-          sourceUnit: filePath,
-          rawTokenObject: await importTokens(filePath),
-        }
-      })
-    }
-    case 'url': {
-      const response = await fetch(source)
-
-      return [
         {
-          sourceUnit: source,
-          rawTokenObject: parseTokenString(await response.text()),
+          tokenSrc: resolvedTokenSource.source,
+          tokenTree: await importTokens(resolvedTokenSource.source),
         },
       ]
     }
+
+    case 'glob': {
+      const filePaths = await glob(
+        `${resolvedTokenSource.parent}/${resolvedTokenSource.pattern}`
+      )
+
+      return promises.mapParallel(filePaths, async (filePath) => {
+        return {
+          tokenSrc: filePath,
+          tokenTree: await importTokens(filePath),
+        }
+      })
+    }
+
+    case 'url': {
+      const response = await fetch(resolvedTokenSource.source)
+
+      return [
+        {
+          tokenSrc: resolvedTokenSource.source,
+          tokenTree: parseTokenString(await response.text()),
+        },
+      ]
+    }
+
     case 'object': {
-      return [{ sourceUnit: '', rawTokenObject: source }]
+      return [{ tokenSrc: '', tokenTree: resolvedTokenSource.source }]
     }
 
     case 'not_found': {
@@ -140,15 +180,18 @@ export async function build({
 }: BuildOptions): Promise<{
   collection: Collection
   _internal: {
-    resolvedSources: Array<ResolvedSource>
+    resolvedTokenSources: Array<ResolvedTokenSource>
   }
 }> {
-  const resolvedSources = await promises.mapParallel(
+  const resolvedTokenSources = await promises.mapParallel(
     toArray(sources),
     resolveSource
   )
 
-  const tokenSources = await promises.mapParallel(resolvedSources, parseSource)
+  const tokenSources = await promises.mapParallel(
+    resolvedTokenSources,
+    parseTokenSource
+  )
 
   const collection = new Collection({ tokenSources })
 
@@ -194,6 +237,6 @@ export async function build({
 
   return {
     collection,
-    _internal: { resolvedSources },
+    _internal: { resolvedTokenSources },
   }
 }

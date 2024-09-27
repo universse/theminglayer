@@ -1,0 +1,15 @@
+{
+  group: {
+    scrollbar: {
+      track_color: {
+        $value: '{color.transparent}',
+      },
+      thumb_color: {
+        $value: '{background_color.neutral.subtle.static}',
+      },
+      thumb_color_pressed: {
+        $value: '{background_color.neutral.subtle.pressed}',
+      },
+    },
+  },
+}

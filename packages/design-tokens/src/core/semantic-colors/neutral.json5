@@ -152,33 +152,9 @@
             },
           ],
         },
-        glass: {
-          $set: [
-            {
-              $condition: { color_scheme: 'light' },
-              $value: '{color.white_alpha.1}',
-            },
-            {
-              $condition: { color_scheme: 'dark' },
-              $value: '{color.black_alpha.1}',
-            },
-          ],
-        },
       },
       subtle: {
         static: {
-          $set: [
-            {
-              $condition: { color_scheme: 'light' },
-              $value: '{color.gray.3}',
-            },
-            {
-              $condition: { color_scheme: 'dark' },
-              $value: '{color.gray_dark.3}',
-            },
-          ],
-        },
-        hover: {
           $set: [
             {
               $condition: { color_scheme: 'light' },
@@ -190,7 +166,7 @@
             },
           ],
         },
-        pressed: {
+        hover: {
           $set: [
             {
               $condition: { color_scheme: 'light' },
@@ -202,9 +178,7 @@
             },
           ],
         },
-      },
-      bold: {
-        muted: {
+        pressed: {
           $set: [
             {
               $condition: { color_scheme: 'light' },
@@ -213,6 +187,20 @@
             {
               $condition: { color_scheme: 'dark' },
               $value: '{color.gray_dark.6}',
+            },
+          ],
+        },
+      },
+      bold: {
+        muted: {
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{color.gray.9}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{color.gray_dark.9}',
             },
           ],
         },
@@ -347,13 +335,40 @@
       },
       on_bold_bg: {
         primary: {
-          $value: '{icon_color.white.primary}',
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{icon_color.white.primary}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{icon_color.black.primary}',
+            },
+          ],
         },
         secondary: {
-          $value: '{icon_color.white.secondary}',
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{icon_color.white.secondary}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{icon_color.black.secondary}',
+            },
+          ],
         },
         muted: {
-          $value: '{icon_color.white.muted}',
+          $set: [
+            {
+              $condition: { color_scheme: 'light' },
+              $value: '{icon_color.white.muted}',
+            },
+            {
+              $condition: { color_scheme: 'dark' },
+              $value: '{icon_color.black.muted}',
+            },
+          ],
         },
       },
     },
