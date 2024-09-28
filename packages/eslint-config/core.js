@@ -36,6 +36,9 @@ export const core = defineConfig(
         ...globals.es2022,
         ...globals.worker,
       },
+      parserOptions: {
+        projectService: true,
+      },
     },
   },
 
@@ -46,8 +49,10 @@ export const core = defineConfig(
       '@typescript-eslint/explicit-module-boundary-types': OFF,
       '@typescript-eslint/no-import-type-side-effects': ERROR,
       '@typescript-eslint/no-unused-vars': OFF,
-      '@typescript-eslint/no-unused-params': OFF,
-      'prefer-const': ERROR,
+      '@typescript-eslint/strict-boolean-expressions': [
+        ERROR,
+        { allowNumber: false },
+      ],
     },
   },
   prettierRecommended,

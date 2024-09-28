@@ -57,18 +57,18 @@ export function deepSetObj(obj, paths, value) {
   return setWith(obj, paths, value, Object)
 }
 
+export function isNullish(val: unknown): val is null | undefined {
+  return val == null
+}
+
 export function toArray<T>(value: T | Array<T>): Array<T> {
-  if (value == null) return []
+  if (isNullish(value)) return []
   if (Array.isArray(value)) return value
   return [value]
 }
 
 export function isPrimitive(val: unknown): boolean {
   return Object(val) !== val
-}
-
-export function isNullish(val: unknown): boolean {
-  return typeof val === 'undefined' || val === null
 }
 
 export function generateKeyString(keys: Array<string>): string {
@@ -110,7 +110,7 @@ export function cartesian<T>(arrays: Array<Array<T>>): Array<Array<T>> {
     for (let j = 0, l = arrays[i]!.length; j < l; j++) {
       const clone = [...array]
       clone.push(arrays[i]![j]!)
-      if (i == max) result.push(clone)
+      if (i === max) result.push(clone)
       else helper(clone, i + 1)
     }
   }

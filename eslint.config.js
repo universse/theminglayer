@@ -1,3 +1,3 @@
-import { configs, defineConfig } from '@theminglayer/eslint-config'
+import { configs } from '@theminglayer/eslint-config'
 
-export default defineConfig(...configs.core)
+export default configs.core
