@@ -1,3 +1,5 @@
+import pRetry from 'p-retry'
+
 export function parallel(...promises: Array<Promise<any>>) {
   return Promise.all(promises)
 }
@@ -106,3 +108,5 @@ export function batch<T, V>(items: Array<T>, cb: Callback<T, V>, size: number) {
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+export const retry = pRetry

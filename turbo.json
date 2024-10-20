@@ -3,17 +3,19 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "public/build/**", "functions/**"]
+      "outputs": ["dist/**"]
     },
     "deploy": {
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "^deploy"]
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "test": {},
     "test:watch": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     }
   }
 }

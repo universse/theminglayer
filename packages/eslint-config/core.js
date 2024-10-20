@@ -1,5 +1,6 @@
 import { fixupPluginRules } from '@eslint/compat'
 import js from '@eslint/js'
+import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import importX from 'eslint-plugin-import-x'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
@@ -20,15 +21,21 @@ const OFF = 'off'
 const vitestFiles = ['**/__tests__/**/*', '**/*.test.*']
 const testFiles = ['**/tests/**', '**/#tests/**', ...vitestFiles]
 
-// https://github.com/ixahmedxi/orbitkit/tree/main/packages/config/eslint/src/configs
-// https://github.com/epicweb-dev/config/blob/main/eslint.js
-
 export const core = defineConfig(
   {
-    ignores: ['dist', 'build', 'public', '.astro', '*.min.js', '*.generated.*'],
+    ignores: [
+      'dist',
+      'build',
+      'public',
+      '.astro',
+      '.wrangler',
+      '*.min.js',
+      '*.generated.*',
+    ],
   },
 
   {
+    files: ['**/*.{js,mjs,jsx,ts,tsx}'],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -42,38 +49,56 @@ export const core = defineConfig(
     },
   },
 
-  js.configs.recommended,
-  ...ts.configs.recommended,
   {
+    files: ['**/*.{js,mjs,jsx}'],
+    ...js.configs.recommended,
+  },
+
+  ...ts.configs.recommended.map((config) => ({
+    ...config,
+    files: ['**/*.{ts,tsx}'],
+  })),
+  {
+    files: ['**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/explicit-module-boundary-types': OFF,
       '@typescript-eslint/no-import-type-side-effects': ERROR,
       '@typescript-eslint/no-unused-vars': OFF,
       '@typescript-eslint/strict-boolean-expressions': [
         ERROR,
-        { allowNumber: false },
+        {
+          allowNumber: false,
+          allowNullableBoolean: true,
+          allowNullableString: true,
+        },
       ],
     },
   },
-  prettierRecommended,
-
-  importX.flatConfigs.recommended,
   {
+    files: ['**/*.{js,mjs,jsx,ts,tsx}'],
+    ...prettierRecommended,
+  },
+
+  {
+    files: ['**/*.{js,mjs,jsx,ts,tsx}'],
+    ...importX.flatConfigs.recommended,
+  },
+  {
+    files: ['**/*.{js,mjs,jsx,ts,tsx}'],
     rules: {
       'import-x/no-unresolved': OFF,
     },
   },
-  importX.flatConfigs.typescript,
+  {
+    files: ['**/*.{js,mjs,jsx,ts,tsx}'],
+    ...importX.flatConfigs.typescript,
+  },
 
   {
-    files: ['**/*.tsx', '**/*.jsx'],
+    files: ['**/*.{jsx,tsx}'],
     plugins: {
       ...react.configs.flat.recommended.plugins,
       ...jsxA11y.flatConfigs.strict.plugins,
-      'react-hooks/exhaustive-deps': [
-        'warn',
-        { additionalHooks: '(useIsomorphicLayoutEffect)' },
-      ],
       'react-compiler': fixupPluginRules(reactCompiler),
     },
     languageOptions: {
@@ -91,6 +116,10 @@ export const core = defineConfig(
           reservedFirst: true,
         },
       ],
+      'react-hooks/exhaustive-deps': [
+        'warn',
+        { additionalHooks: '(useIsomorphicLayoutEffect)' },
+      ],
       'react-compiler/react-compiler': ERROR,
     },
     settings: {
@@ -100,13 +129,25 @@ export const core = defineConfig(
     },
   },
   {
-    files: ['**/*.ts?(x)', '**/*.js?(x)'],
+    files: ['**/*.{js,mjs,jsx,ts,tsx}'],
     plugins: {
       'react-hooks': fixupPluginRules(reactHooks),
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
     },
+  },
+
+  {
+    files: ['**/*.json'],
+    ignores: ['package-lock.json'],
+    language: 'json/json',
+    ...json.configs.recommended,
+  },
+  {
+    files: ['**/*.json5'],
+    language: 'json/json5',
+    ...json.configs.recommended,
   },
 
   ...markdown.configs.recommended,
